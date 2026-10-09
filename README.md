@@ -1,26 +1,23 @@
 # DuFuIsBusy · 杜甫很忙
 
-基于 Godot **4.7.2 stable**、Compatibility 渲染器的可点击中文 UI Demo。以纸张、墨绿、棕褐、朱红重建真实 `Control` 按钮、面板和统一 `Theme`，没有使用整页截图。
+基于 **Godot 4.7.2 stable / Compatibility** 的可点击中文 UI Demo。重用用户提供的宣纸、人物、SVG 图标和示例素材，以真实 `Control` 和统一 `Theme` 重建五页界面，不使用整页截图。
 
-## 当前可体验
+[打开 Web 预览](https://arino09.github.io/DuFuIsBusy/) · [验证记录与截图](docs/validation.md) · [素材来源与边界](docs/assets.md)
 
-- 首页 → 四类命题画卷 → 创作画布，支持返回和切换主题。
-- 自由创作入口、工具选择、贴纸分类目录和功能说明弹窗。
-- 「我的作品 / 灵感画廊」切换、六项文字构图示例。
-- 音量、音效、音乐和画质**偏好**本地存储；重启读取；恢复默认前确认。
-- Escape 关闭弹窗或回首页。「暂歇片刻」解释关闭网页标签页的方式。
+## 可以体验
 
-**绘画、贴纸放置、文字编辑、评分、保存作品、导出都未实现。** 音频不存在，音量和画质仅保存偏好，不伪装生效。个人画廊为空，不会伪造存档。
+- 首页、四类命题画卷、创作画布、双页签画廊、设置之间真实导航与返回。
+- 四主题配色和命题切换；更大的画布、可收起说明、明确禁用的撤销/重做。
+- 贴纸目录、武器原始拼图及两张场景参考大图。
+- 四张真实合成示例，按武侠、科幻、市井和脑洞筛选、查看大图；「我的作品」保留空态。
+- 音量、音效、音乐、画质偏好保存在本机；Web 使用同步 localStorage，原生使用 ConfigFile。刷新/重启可恢复，重置前确认。
+- Escape 关闭弹窗或返回首页；网页「暂歇片刻」提示用户自行关闭标签页。
 
-## 原型与素材状态
+**绘画、贴纸放置、文字编辑、评分、作品保存和导出尚未实现。** 画布与弹窗明确标为 UI 预览；预制成品不是用户作品或可编辑图层。没有音频，音量和画质仅保存偏好，不伪装生效。
 
-已读取上传 PPT 五页的文本结构和策划案。Library 五份附件在本云端工作区传输失败，按规定的一次重试仍失败，故**未完成原型像素核对及原始素材接入**。当前是独立可验收的界面骨架，不能宣称是 PPT 的最终视觉复刻。
+## 运行与导出
 
-首页原像、画布人物和画廊成品图均明确标为占位；画廊展示的是文字构图示例。没有使用第三方 IP 场景，也没有把合成成品图当作分层可编辑素材。纸张纹理和远山是项目代码绘制的简单装饰。
-
-## 本地运行与导出
-
-使用 Godot 4.7.2 和同版官方导出模板：
+安装 Godot 4.7.2 与同版官方导出模板：
 
 ```sh
 godot --editor --path .
@@ -30,21 +27,14 @@ godot --headless --export-release Web build/web/index.html
 python3 -m http.server 8080 --directory build/web
 ```
 
-Web 使用单线程，关闭 PWA，无 GDExtension、Wwise、后端、AI 或付费服务。构建产物不进入 git。基准画布 1440×900，窗口改变时等比缩放并保留全部控件；优先桌面或横屏体验，竖屏目前没有重排布局。
+Web 单线程，PWA 关闭，无 Wwise、GDExtension、AI、后端或付费服务。构建产物不进入 git。基准画布为 1440×900，等比缩放保留全部控件；推荐桌面或横屏，竖屏尚无专用布局。
 
-## GitHub Pages
+`.github/workflows/web.yml` 在 PR 中构建检查，在 master 推送或手动触发后部署 Pages。构建 job 只读仓库；部署 job 仅有 Pages 写入和 OIDC 权限，不使用 PAT。工具链下载使用官方 SHA-512 清单校验。
 
-`.github/workflows/web.yml` 在 PR 中构建检查，在 `master` 推送或手动触发后发布成功构建。构建只读仓库；部署 job 仅有 `pages: write` 与 `id-token: write`。不需要 PAT。
-
-首次启用：仓库 **Settings → Pages → Build and deployment → Source → GitHub Actions**。随后在 Actions 重新运行 `Godot Web Preview`。
-
-预期地址：<https://arino09.github.io/DuFuIsBusy/>。当前 build 已通过，但 deploy 因 Pages 未启用而返回 404；该地址尚不能标记为可用。详见验证报告。
-
-## 验证与截图
-
-见 [验证报告](docs/validation.md)。截图来自 Godot 原生渲染与真实鼠标输入，不是 HTML 模拟或浏览器验收截图。
+## 预览截图
 
 ![首页](docs/screenshots/home.png)
 ![画布](docs/screenshots/canvas.png)
+![画廊](docs/screenshots/gallery.png)
 
-字体来自环境安装的 Noto CJK 简体中文版本，按本 Demo 字符集子集化；OFL 许可证及来源保存在 `assets/fonts/LICENSE.txt`。后续新增文字时应重新生成字体子集。
+字体许可保存在 `assets/fonts/LICENSE.txt`。新增界面文字时，运行 `tools/subset-fonts.py` 更新字体子集。

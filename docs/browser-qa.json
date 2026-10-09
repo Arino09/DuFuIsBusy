@@ -1,0 +1,64 @@
+[
+  {
+    "pass": "web-final",
+    "checks": [
+      "WebGL boot under /DuFuIsBusy/",
+      "All four themes and returns",
+      "Original image, source sheet and two background previews, undo/redo disabled, collapsible notes, gallery actual filters and four full images, repeated clicks, local settings immediate reload/reset",
+      "1024x768, landscape 844x390, portrait 390x844 navigation and screenshots"
+    ],
+    "page_errors": [],
+    "failed_requests": [],
+    "console_errors": [],
+    "warnings": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x35640457a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x35640457a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x35640457a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x35640457a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      }
+    ],
+    "external_requests": [],
+    "browser_closed": true
+  },
+  {
+    "pass": "web-latest",
+    "checks": [
+      "WebGL boot under /DuFuIsBusy/",
+      "Final five screens and larger avatar reference; full original image still available"
+    ],
+    "page_errors": [],
+    "failed_requests": [],
+    "console_errors": [],
+    "warnings": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x1bf40570a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x1bf40570a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x1bf40570a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x1bf40570a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      }
+    ],
+    "external_requests": [],
+    "browser_closed": true
+  }
+]

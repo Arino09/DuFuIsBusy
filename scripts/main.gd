@@ -9,14 +9,20 @@ const SERIF = preload("res://assets/fonts/SourceSerifSC.otf")
 const SANS = preload("res://assets/fonts/SourceSansSC.otf")
 const Paper = preload("res://scripts/ink_paper.gd")
 const TOPICS = ["交通", "科幻", "武侠", "田园"]
+const TOPIC_COLORS = [Color("926736"), Color("486879"), Color("944f42"), Color("4e704f")]
+const TOPIC_TINTS = [Color("f4ead5"), Color("e4ebed"), Color("f2e4dc"), Color("e7ecdd")]
+const EXAMPLE_TOPICS = ["武侠", "科幻", "市井", "脑洞"]
+const EXAMPLE_IMAGES = ["sword-hero.jpg", "scifi-warrior.jpg", "night-market.jpg", "restroom.jpg"]
 const TITLES = ["行路人间", "机甲盛唐", "剑影江湖", "田园闲居"]
 const PROMPTS = ["至少出现一种交通工具", "让杜甫拥有一身未来机甲", "给诗人安排一次江湖奇遇", "让杜甫忙里偷闲，归园田居"]
-const IDEAS = ["骑车赶诗会", "机甲也吟诗", "剑气与诗意", "田间好时光", "星际送秋风", "雨夜逛长安"]
+const IDEAS = ["剑影江湖", "机甲诗圣", "夜市小憩", "人有三急"]
 var page: Control
 var overlay: Control
 var current := "home"
 var topic := 0
 var gallery_tab := 0
+var gallery_filter := "全部"
+var canvas_info_open := false
 var selected_tool := "笔刷"
 var settings := {"volume": 70.0, "sound": true, "music": true, "quality": 1, "motion": false}
 var settings_status := "设置保存在本机；不进行云端同步。"
@@ -29,6 +35,16 @@ func _ready() -> void:
 	if config.load("user://settings.cfg") == OK:
 		for key in settings:
 			settings[key] = config.get_value("settings", key, settings[key])
+	if OS.has_feature("web"):
+		var saved: Variant = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('DuFuIsBusy.settings.v1') || '';}catch(e){return '';}})()")
+		if saved is String and not saved.is_empty():
+			var parsed: Variant = JSON.parse_string(saved)
+			if parsed is Dictionary:
+				for key in settings:
+					if parsed.has(key) and (typeof(parsed[key]) == typeof(settings[key]) or (parsed[key] is float and settings[key] is int)):
+						settings[key] = parsed[key]
+				settings.volume = clampf(float(settings.volume), 0.0, 100.0)
+				settings.quality = clampi(int(settings.quality), 0, 1)
 	show_page("home")
 
 func box(color: Color, border: Color = Color("d8cfb9"), width: int = 1, radius: int = 5) -> StyleBoxFlat:
@@ -84,6 +100,26 @@ func label_at(text: String, area: Rect2, font_size: int = 22, color: Color = INK
 	rect(l, area, parent)
 	return l
 
+func texture_at(path: String, area: Rect2, parent: Control = page) -> TextureRect:
+	var picture := TextureRect.new()
+	picture.texture = load(path) as Texture2D
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect(picture, area, parent)
+	return picture
+
+func button_icon(button: Button, icon_name: String, primary: bool) -> void:
+	button.icon = load("res://assets/ui/" + icon_name + ".svg") as Texture2D
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 23)
+	button.add_theme_constant_override("h_separation", 9)
+	var tint := PAPER if primary else INK
+	if icon_name in ["confirm", "brush", "language"]: tint = Color.WHITE
+	for state in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
+		button.add_theme_color_override(state, tint)
+	button.add_theme_color_override("icon_disabled_color", MUTED)
+
 func panel_at(area: Rect2, color: Color = PAPER, parent: Control = page, border: Color = Color("d8cfb9")) -> Panel:
 	var p := Panel.new()
 	p.add_theme_stylebox_override("panel", box(color, border))
@@ -101,6 +137,11 @@ func button_at(text: String, area: Rect2, callback: Callable, primary: bool = fa
 		b.add_theme_stylebox_override("pressed", box(Color("172b24"), INK))
 		for key in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 			b.add_theme_color_override(key, PAPER)
+	var icons := {"开始闯关":"pencil", "自由创作":"pencil", "画廊":"gallery", "设置":"settings", "暂歇":"power", "笔刷":"pencil", "橡皮":"eraser", "色盘":"palette", "贴纸":"gallery", "文字":"language", "撤销":"undo", "重做":"redo", "提交":"confirm", "换个主题":"theme", "展开画卷":"pencil", "查看大图":"gallery", "恢复默认":"brush"}
+	for prefix in icons:
+		if text.begins_with(prefix):
+			button_icon(b, icons[prefix], primary)
+			break
 	rect(b, area, parent)
 	b.pressed.connect(callback)
 	return b
@@ -161,25 +202,28 @@ func home() -> void:
 	line_at(Rect2(707, 138, 554, 12), BROWN)
 	line_at(Rect2(707, 753, 554, 12), BROWN)
 	label_at("诗\n圣\n今\n日\n休\n笔", Rect2(1165, 200, 45, 348), 26, BROWN, true)
-	label_at("杜\n甫", Rect2(792, 230, 164, 230), 92, INK, true)
-	label_at("很\n忙", Rect2(976, 305, 92, 184), 60, RED, true)
-	line_at(Rect2(788, 564, 340, 1))
-	label_at("原像素材待接入", Rect2(791, 590, 358, 38), 23, BROWN)
-	label_at("当前为排版占位，不是可编辑人物素材", Rect2(779, 639, 420, 34), 17, MUTED)
+	texture_at("res://assets/characters/dufu-avatar.png", Rect2(758, 203, 420, 420))
+	panel_at(Rect2(781, 186, 115, 39), RED, page, RED)
+	label_at("诗圣上线", Rect2(795, 187, 107, 38), 19, PAPER, true)
+	line_at(Rect2(788, 635, 340, 1))
+	label_at("不忙写诗，忙着出圈。", Rect2(790, 650, 391, 47), 27, INK, true)
+	label_at("一张画像 · 万千想象", Rect2(820, 704, 380, 34), 19, BROWN)
 
 func levels() -> void:
 	heading("命题画卷", "选一幅画卷，给杜甫一个忙起来的理由。所有主题都可自由试选。")
 	for i in range(4):
 		var x := 74 + i * 327
-		line_at(Rect2(x - 7, 267, 310, 10), BROWN)
-		panel_at(Rect2(x, 277, 296, 435), Color("f6f0e1"))
-		label_at("零" + ["一", "二", "三", "四"][i], Rect2(x + 24, 298, 80, 33), 19, RED, true)
-		label_at(TOPICS[i], Rect2(x + 34, 352, 238, 74), 49, INK, true)
+		var accent: Color = TOPIC_COLORS[i]
+		line_at(Rect2(x - 7, 267, 310, 10), accent)
+		panel_at(Rect2(x, 277, 296, 435), TOPIC_TINTS[i], page, accent)
+		label_at("零" + ["一", "二", "三", "四"][i], Rect2(x + 24, 298, 80, 33), 19, accent, true)
+		label_at(TOPICS[i], Rect2(x + 34, 352, 238, 74), 49, accent, true)
 		label_at(TITLES[i], Rect2(x + 36, 452, 238, 38), 24, BROWN, true)
 		var l := label_at(PROMPTS[i], Rect2(x + 30, 505, 242, 80), 19, BROWN)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button_at("展开画卷  →", Rect2(x + 28, 621, 240, 57), func(): topic = i; show_page("canvas"), true)
-		line_at(Rect2(x - 7, 712, 310, 10), BROWN)
+		var enter := button_at("展开画卷  →", Rect2(x + 28, 621, 240, 57), func(): topic = i; show_page("canvas"), true)
+		enter.add_theme_stylebox_override("normal", box(accent, accent))
+		line_at(Rect2(x - 7, 712, 310, 10), accent)
 	label_at("没有标准答案，也没有不及格。放心大胆地想。", Rect2(75, 766, 1020, 38), 22, BROWN, true)
 
 func canvas() -> void:
@@ -192,22 +236,33 @@ func canvas() -> void:
 	label_at("创作工具", Rect2(96, 344, 164, 35), 23, INK, true)
 	for i in range(5):
 		var tool: String = ["笔刷", "橡皮", "色盘", "贴纸", "文字"][i]
-		button_at(tool + (" · 已选" if selected_tool == tool else ""), Rect2(91, 397 + i * 65, 164, 52), func(): choose_tool(tool), tool == selected_tool)
+		var tool_button := button_at(tool + (" · 已选" if selected_tool == tool else ""), Rect2(91, 397 + i * 65, 164, 52), func(): choose_tool(tool), tool == selected_tool)
+		tool_button.add_theme_font_size_override("font_size", 18)
 	label_at("工具交互预览", Rect2(96, 741, 170, 32), 17, MUTED)
-	panel_at(Rect2(294, 327, 790, 471), Color("faf7ef"))
-	label_at("画布预览  /  尚未开放绘制", Rect2(323, 344, 700, 36), 19, BROWN)
-	line_at(Rect2(324, 392, 729, 1))
-	panel_at(Rect2(531, 419, 310, 191), Color("ede9df"), page, Color("d2c6b0"))
-	label_at("杜甫半身像", Rect2(571, 458, 250, 56), 32, INK, true)
-	label_at("原始素材待接入 · 保留区域", Rect2(554, 527, 282, 35), 17, MUTED)
-	panel_at(Rect2(450, 632, 474, 124), Color("f1f1e4"), page, Color("bac4ad"))
-	label_at("待补区域", Rect2(613, 646, 200, 38), 24, INK, true)
-	label_at("以后在这里，把脑洞画出来", Rect2(548, 694, 350, 35), 19, BROWN)
-	panel_at(Rect2(1106, 327, 262, 471), Color("ebe5d7"))
-	label_at("创作小笺", Rect2(1130, 348, 216, 44), 29, INK, true)
-	var note := label_at("画得好不好不重要，\n好玩就很了不起。\n\n本次仅展示 UI。\n绘画、拼贴、评分、\n保存与导出尚未实现。", Rect2(1130, 413, 222, 230), 19, BROWN)
-	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	button_at("提交说明", Rect2(1128, 683, 218, 55), func(): info("这次先看界面", "还没有作品被绘制、评分或保存。\n当前演示仅支持主题与工具界面切换。"), true)
+	panel_at(Rect2(294, 327, 1074, 471), Color("faf7ef"))
+	label_at("画布预览 · 尚未开放绘制", Rect2(323, 344, 385, 36), 19, BROWN)
+	for i in range(2):
+		var action: String = ["撤销", "重做"][i]
+		var unavailable := button_at(action, Rect2(755 + i * 126, 339, 110, 45), func(): pass)
+		unavailable.disabled = true
+		unavailable.tooltip_text = "绘画尚未实现，没有可撤销或重做的操作。"
+	button_at("收起说明" if canvas_info_open else "展开说明", Rect2(1115, 339, 232, 45), func(): canvas_info_open = not canvas_info_open; show_page("canvas"))
+	line_at(Rect2(324, 397, 1023, 1))
+	var center_x := 701.0 if canvas_info_open else 831.0
+	panel_at(Rect2(center_x - 300, 413, 600, 197), Color.WHITE)
+	texture_at("res://assets/characters/dufu-avatar.png", Rect2(center_x - 121, 406, 242, 202))
+	label_at("原像保留", Rect2(center_x - 279, 425, 150, 35), 18, BROWN, true)
+	button_at("查看原像", Rect2(center_x + 146, 558, 133, 39), func(): image_dialog("杜甫原像", "res://assets/characters/dufu-halfbody.jpg", "白底原始参考图；本次 UI 预览不会修改画像。", "返回画布"))
+	panel_at(Rect2(center_x - 278, 620, 556, 110), Color("f1f1e4"), page, Color("bac4ad"))
+	label_at("待补区域", Rect2(center_x - 60, 628, 200, 38), 24, INK, true)
+	label_at("以后在这里，把脑洞画出来", Rect2(center_x - 135, 678, 350, 35), 19, BROWN)
+	label_at("绘画未开放，撤销与重做暂不可用。", Rect2(324, 751, 720, 30), 17, MUTED)
+	button_at("提交说明", Rect2(1131, 743, 213, 43), func(): info("这次先看界面", "还没有作品被绘制、评分或保存。\n当前演示仅支持主题与工具界面切换。"), true)
+	if canvas_info_open:
+		panel_at(Rect2(1067, 416, 279, 313), Color("ebe5d7"))
+		label_at("创作小笺", Rect2(1086, 431, 236, 47), 29, INK, true)
+		var note := label_at("画得好不好不重要，\n好玩就很了不起。\n\n本次仅展示 UI。\n绘画、拼贴、评分、\n保存与导出尚未实现。", Rect2(1088, 492, 240, 210), 19, BROWN)
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 func choose_tool(tool: String) -> void:
 	selected_tool = tool
@@ -220,34 +275,51 @@ func gallery() -> void:
 	heading("画廊", "同一张画像，也能有万千种忙法。")
 	button_at("我的作品", Rect2(74, 238, 220, 57), func(): gallery_tab = 0; show_page("gallery"), gallery_tab == 0)
 	button_at("灵感画廊", Rect2(309, 238, 220, 57), func(): gallery_tab = 1; show_page("gallery"), gallery_tab == 1)
-	label_at("构图示例 · 非保存作品", Rect2(1040, 246, 330, 38), 18, BROWN)
+	label_at("合成示例 · 仅供欣赏", Rect2(1040, 246, 330, 38), 18, BROWN)
 	if gallery_tab == 0:
 		panel_at(Rect2(74, 322, 1294, 475))
 		label_at("画卷尚空，脑洞先行。", Rect2(414, 425, 800, 66), 42, INK, true)
 		label_at("本次 UI 预览不会创建或保存作品。", Rect2(485, 527, 600, 39), 22, BROWN)
 		button_at("去看看创作画布", Rect2(559, 613, 320, 61), func(): topic = -1; show_page("canvas"), true)
 	else:
-		for i in range(6):
-			var x := 74 + (i % 3) * 440
-			var y := 321 + (i / 3) * 247
-			panel_at(Rect2(x, y, 414, 226))
-			panel_at(Rect2(x + 16, y + 16, 122, 146), Color("e5e4d6"))
-			label_at(["行", "机", "侠", "田", "星", "雨"][i], Rect2(x + 45, y + 35, 100, 90), 60, INK, true)
-			label_at(IDEAS[i], Rect2(x + 157, y + 26, 240, 52), 29, INK, true)
-			label_at("文字构图示意", Rect2(x + 158, y + 88, 240, 32), 17, MUTED)
-			button_at("查看示例  →", Rect2(x + 157, y + 131, 238, 53), func(): example(i))
-			label_at("原始示例图片待接入", Rect2(x + 18, y + 180, 370, 30), 15, MUTED)
+		label_at("主题筛选", Rect2(74, 309, 130, 44), 20, BROWN)
+		var filters := ["全部", "武侠", "科幻", "市井", "脑洞"]
+		for i in range(filters.size()):
+			var filter: String = filters[i]
+			button_at(filter, Rect2(205 + i * 136, 309, 121, 44), func(): gallery_filter = filter; show_page("gallery"), gallery_filter == filter)
+		var visible_indices: Array[int] = []
+		for i in range(IDEAS.size()):
+			if gallery_filter == "全部" or EXAMPLE_TOPICS[i] == gallery_filter:
+				visible_indices.append(i)
+		label_at("显示 %d 幅示例" % visible_indices.size(), Rect2(1142, 312, 230, 38), 18, BROWN)
+		for slot in range(visible_indices.size()):
+			var i := visible_indices[slot]
+			var x := 74 + (slot % 2) * 660
+			var y := 373 + (slot / 2) * 214
+			panel_at(Rect2(x, y, 634, 199))
+			panel_at(Rect2(x + 13, y + 13, 275, 173), Color("e4dfd2"))
+			texture_at("res://assets/examples/" + EXAMPLE_IMAGES[i], Rect2(x + 16, y + 16, 269, 167))
+			label_at(IDEAS[i], Rect2(x + 311, y + 14, 302, 47), 30, INK, true)
+			label_at(EXAMPLE_TOPICS[i] + " · 预制示例", Rect2(x + 313, y + 70, 290, 32), 18, MUTED)
+			button_at("查看大图", Rect2(x + 309, y + 111, 299, 48), func(): example(i))
+			label_at("合成图片，不可分层编辑", Rect2(x + 313, y + 165, 300, 26), 15, MUTED)
+		print("UI_FILTER:", gallery_filter, ":", visible_indices.size())
 
 func example(index: int) -> void:
-	var descriptions := ["想象杜甫骑着自行车，\n一手扶车把，一路收集诗意。", "想象墨色机甲与一卷古诗相遇，\n诗圣也可以拥有未来装备。", "想象披风随风，长剑在侧，\n今天的诗人也有侠客心。", "想象一头牛、一把锄头，\n让忙碌的杜甫休息一下。", "想象一艘飞船穿过星河，\n把秋风送到更远的地方。", "想象霓虹点亮长安雨夜，\n诗意藏在街头巷尾。"]
-	info(IDEAS[index], descriptions[index] + "\n\n这是文字构图示例，不是原始成品图或可编辑素材。")
+	image_dialog(IDEAS[index], "res://assets/examples/" + EXAMPLE_IMAGES[index], EXAMPLE_TOPICS[index] + " · 原始合成示例，仅供欣赏，不是已保存作品或可编辑图层。", "返回画廊")
+
+func image_dialog(title: String, path: String, caption: String, back_label: String, back_action: Callable = Callable()) -> void:
+	modal(title, caption, true)
+	texture_at(path, Rect2(214, 218, 1012, 467), overlay)
+	button_at(back_label, Rect2(1010, 717, 216, 48), back_action if back_action.is_valid() else close_overlay, true, overlay)
 
 func settings_page() -> void:
 	heading("设置", "调整体验，让想象按自己的节奏来。")
 	panel_at(Rect2(74, 248, 626, 558))
 	panel_at(Rect2(730, 248, 638, 558), Color("e8e7d9"))
 	label_at("体验偏好", Rect2(104, 265, 540, 56), 29, INK, true)
-	label_at("音量", Rect2(106, 344, 122, 45), 22)
+	texture_at("res://assets/ui/volume.svg", Rect2(106, 351, 28, 28))
+	label_at("音量", Rect2(151, 344, 100, 45), 22)
 	var volume := HSlider.new()
 	volume.min_value = 0
 	volume.max_value = 100
@@ -258,15 +330,18 @@ func settings_page() -> void:
 	volume.value_changed.connect(func(v): settings.volume = v; value_label.text = str(int(v)) + "%"; save_settings())
 	for i in range(2):
 		var key: String = ["sound", "music"][i]
-		label_at(["音效偏好", "音乐偏好"][i], Rect2(106, 413 + i * 62, 235, 46), 22)
+		texture_at("res://assets/ui/" + ("volume-up.svg" if i == 0 else "audio.svg"), Rect2(106, 422 + i * 62, 28, 28))
+		label_at(["音效偏好", "音乐偏好"][i], Rect2(151, 413 + i * 62, 235, 46), 22)
 		var toggle := CheckButton.new()
 		toggle.text = "开启" if settings[key] else "关闭"
 		toggle.button_pressed = settings[key]
 		rect(toggle, Rect2(440, 413 + i * 62, 209, 46))
 		toggle.toggled.connect(func(v): settings[key] = v; toggle.text = "开启" if v else "关闭"; save_settings())
-	label_at("语言", Rect2(106, 543, 125, 43), 22)
+	texture_at("res://assets/ui/language.svg", Rect2(106, 551, 28, 28))
+	label_at("语言", Rect2(151, 543, 125, 43), 22)
 	label_at("简体中文", Rect2(440, 543, 210, 43), 22, BROWN)
-	label_at("画质偏好", Rect2(106, 606, 234, 46), 22)
+	texture_at("res://assets/ui/target.svg", Rect2(106, 616, 28, 28))
+	label_at("画质偏好", Rect2(151, 606, 234, 46), 22)
 	var quality := OptionButton.new()
 	quality.add_item("标准")
 	quality.add_item("高清")
@@ -283,8 +358,13 @@ func settings_page() -> void:
 
 func save_settings() -> void:
 	for key in settings: config.set_value("settings", key, settings[key])
-	var result := config.save("user://settings.cfg")
-	settings_status = "设置已保存在本机；不进行云端同步。" if result == OK else "本地写入失败；偏好仅在当前会话生效。"
+	var saved_ok: bool
+	if OS.has_feature("web"):
+		var payload := JSON.stringify(JSON.stringify(settings))
+		saved_ok = JavaScriptBridge.eval("(function(){try{localStorage.setItem('DuFuIsBusy.settings.v1', %s);return true;}catch(e){return false;}})()" % payload) == true
+	else:
+		saved_ok = config.save("user://settings.cfg") == OK
+	settings_status = "设置已保存在本机；不进行云端同步。" if saved_ok else "本地写入失败；偏好仅在当前会话生效。"
 
 func reset_confirm() -> void:
 	modal("恢复默认设置？", "仅重置音量、音效、音乐和画质偏好。\n不会删除任何作品；此预览没有作品存档。")
@@ -294,7 +374,7 @@ func reset_confirm() -> void:
 func exit_info() -> void:
 	info("诗圣先歇一会儿", "网页不会擅自关闭你的标签页。\n想休息时直接关闭本页，随时可以回来继续看。")
 
-func modal(title: String, body: String) -> void:
+func modal(title: String, body: String, large: bool = false) -> void:
 	close_overlay()
 	for control in page.find_children("*", "Control", true, false):
 		if control.focus_mode != Control.FOCUS_NONE:
@@ -308,6 +388,14 @@ func modal(title: String, body: String) -> void:
 	var shade := ColorRect.new()
 	shade.color = Color(0.1, 0.16, 0.12, 0.58)
 	rect(shade, Rect2(0, 0, 1440, 900), overlay)
+	if large:
+		panel_at(Rect2(182, 140, 1076, 648), PAPER, overlay)
+		label_at(title, Rect2(214, 157, 906, 54), 32, INK, true, overlay)
+		var caption := label_at(body, Rect2(216, 708, 771, 62), 18, BROWN, false, overlay)
+		caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button_at("×", Rect2(1186, 157, 48, 48), close_overlay, false, overlay).grab_focus()
+		print("UI_DIALOG:", title)
+		return
 	panel_at(Rect2(395, 252, 650, 414), PAPER, overlay)
 	label_at(title, Rect2(433, 288, 570, 69), 36, INK, true, overlay)
 	var l := label_at(body, Rect2(435, 378, 570, 159), 22, BROWN, false, overlay)
@@ -320,11 +408,17 @@ func info(title: String, body: String) -> void:
 	button_at("知道了", Rect2(793, 575, 207, 57), close_overlay, true, overlay)
 
 func sticker_list() -> void:
-	modal("贴纸目录 · UI 预览", "")
-	for i in range(4):
-		button_at(["交通工具", "未来机甲", "江湖物件", "田园风物"][i], Rect2(434 + (i % 2) * 285, 371 + (i / 2) * 72, 267, 56), func(): info("素材准备中", "贴纸资源尚未接入，当前不能放置或拖拽。\n白底拼图和合成示例不会当作分层贴纸使用。"), false, overlay)
-	label_at("仅目录预览，尚未提供可放置贴纸。", Rect2(438, 538, 568, 38), 19, MUTED, false, overlay)
-	button_at("返回画布", Rect2(793, 587, 207, 52), close_overlay, true, overlay)
+	modal("贴纸目录 · UI 预览", "仅查看源素材，尚不能放置、拖拽或编辑贴纸。", true)
+	panel_at(Rect2(218, 228, 375, 462), Color.WHITE, overlay)
+	texture_at("res://assets/stickers/weapon-sheet.jpg", Rect2(230, 239, 351, 435), overlay)
+	label_at("幻想武器", Rect2(643, 231, 530, 52), 30, INK, true, overlay)
+	label_at("五件武器的白底源拼图，尚未拆分为贴纸。", Rect2(645, 287, 559, 38), 19, BROWN, false, overlay)
+	button_at("查看武器源图", Rect2(645, 344, 558, 55), func(): image_dialog("幻想武器源图", "res://assets/stickers/weapon-sheet.jpg", "白底拼图仅作目录预览，不是五张独立透明贴纸。", "返回目录", sticker_list), true, overlay)
+	label_at("场景参考", Rect2(643, 427, 530, 44), 26, INK, true, overlay)
+	button_at("科幻都市", Rect2(645, 489, 266, 55), func(): image_dialog("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list), false, overlay)
+	button_at("烟火夜市", Rect2(931, 489, 272, 55), func(): image_dialog("烟火夜市", "res://assets/backgrounds/night-market.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list), false, overlay)
+	label_at("交通与田园素材仍待补充。", Rect2(645, 587, 557, 45), 19, MUTED, false, overlay)
+	button_at("返回画布", Rect2(1010, 717, 216, 48), close_overlay, true, overlay)
 
 func close_overlay() -> void:
 	for control in suspended_focus:
