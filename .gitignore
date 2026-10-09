@@ -1,0 +1,8 @@
+# Godot 4+ generated files
+.godot/
+
+# Android export files
+/android/
+
+# Generated translations
+*.translation
