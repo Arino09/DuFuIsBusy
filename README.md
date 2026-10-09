@@ -38,7 +38,7 @@ Web 使用单线程，关闭 PWA，无 GDExtension、Wwise、后端、AI 或付�
 
 首次启用：仓库 **Settings → Pages → Build and deployment → Source → GitHub Actions**。随后在 Actions 重新运行 `Godot Web Preview`。
 
-预期地址：<https://arino09.github.io/DuFuIsBusy/>。发布状态以 Actions 和实际公开页面为准。
+预期地址：<https://arino09.github.io/DuFuIsBusy/>。当前 build 已通过，但 deploy 因 Pages 未启用而返回 404；该地址尚不能标记为可用。详见验证报告。
 
 ## 验证与截图
 

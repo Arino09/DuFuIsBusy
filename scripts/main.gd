@@ -54,9 +54,13 @@ func make_theme() -> Theme:
 		t.set_stylebox("pressed", type, box(Color("d4decd"), INK, 2))
 		t.set_stylebox("focus", type, box(Color(0, 0, 0, 0), RED, 3))
 		t.set_stylebox("disabled", type, box(Color("eae4d6")))
-		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 			t.set_color(state, type, INK)
 		t.set_color("font_disabled_color", type, MUTED)
+	t.set_stylebox("panel", "PopupMenu", box(PAPER, BROWN))
+	t.set_stylebox("hover", "PopupMenu", box(Color("e2e7d9"), INK))
+	t.set_color("font_color", "PopupMenu", INK)
+	t.set_color("font_hover_color", "PopupMenu", INK)
 	t.set_stylebox("panel", "Panel", box(PAPER))
 	t.set_stylebox("slider", "HSlider", box(Color("d6cdb9"), Color("d6cdb9"), 0, 3))
 	t.set_stylebox("grabber_area", "HSlider", box(INK, INK, 0, 3))
@@ -95,7 +99,7 @@ func button_at(text: String, area: Rect2, callback: Callable, primary: bool = fa
 		b.add_theme_stylebox_override("normal", box(INK, INK))
 		b.add_theme_stylebox_override("hover", box(Color("365448"), INK))
 		b.add_theme_stylebox_override("pressed", box(Color("172b24"), INK))
-		for key in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		for key in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 			b.add_theme_color_override(key, PAPER)
 	rect(b, area, parent)
 	b.pressed.connect(callback)
