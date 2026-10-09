@@ -1,0 +1,57 @@
+name: Godot Web Preview
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dufu-web-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified Godot 4.7.2 and matching templates
+        run: bash tools/install-godot.sh
+      - name: Import project
+        run: godot --headless --editor --import --quit 2>&1 | tee import.log
+      - name: Run scene smoke check
+        run: |
+          godot --headless --path . --quit-after 10 2>&1 | tee smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' import.log smoke.log; then exit 1; fi
+      - name: Export single-threaded Web
+        run: |
+          mkdir -p build/web
+          godot --headless --export-release Web build/web/index.html 2>&1 | tee export.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' export.log; then exit 1; fi
+          test -s build/web/index.html
+          test -s build/web/index.wasm
+          test -s build/web/index.pck
+          touch build/web/.nojekyll
+      - name: Preserve Web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dufu-web
+          path: build/web
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

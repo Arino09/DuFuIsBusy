@@ -1,14 +1,21 @@
-; Engine configuration file.
-; Edit using the Godot editor when possible.
-
 config_version=5
 
 [application]
-
 config/name="DuFuIsBusy"
-config/features=PackedStringArray("4.0", "GL Compatibility")
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/description="杜甫很忙 · 可点击 UI 预览"
+
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/size/window_width_override=1152
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
 
 [rendering]
-
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.94, 0.91, 0.84, 1)

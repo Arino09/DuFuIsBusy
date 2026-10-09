@@ -6,3 +6,7 @@
 
 # Generated translations
 *.translation
+
+# Local exports and QA artifacts
+build/
+*.log
