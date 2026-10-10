@@ -24,9 +24,14 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' import.log smoke.log; then exit 1; fi
       - name: Test drawing and editable object history
         run: |
-          godot --headless --path . --script tests/drawing_test.gd 2>&1 | tee drawing-test.log
+          timeout 60s godot --headless --path . --script tests/drawing_test.gd 2>&1 | tee drawing-test.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' drawing-test.log; then exit 1; fi
           grep 'DRAWING_TESTS_PASSED' drawing-test.log
+      - name: Test persistent layer serialization
+        run: |
+          timeout 60s godot --headless --path . --script tests/storage_test.gd 2>&1 | tee storage-test.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' storage-test.log; then exit 1; fi
+          grep 'STORAGE_TESTS_PASSED' storage-test.log
       - name: Export single-threaded Web
         run: |
           mkdir -p build/web

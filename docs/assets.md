@@ -31,3 +31,7 @@
 - `assets/fonts/CreativeSansSC.otf` 为环境安装的官方开源 Noto Sans CJK SC 完整字体，直接从 `NotoSansCJK-Regular.ttc` 的 SC face 提取，未按预置文案删字。沿用同目录 OFL 许可证；提取步骤见 `tools/copy-creative-font.py`。界面字体仍为较小子集。
 - 用户输入支持完整字体覆盖的汉字、拉丁字母和常用标点；不支持字形会拒绝应用并提示替换，不静默显示方框。输入最多 24 字。
 - 未新增外部图片下载、在线字体服务或收费素材。
+
+## 保存阶段
+
+没有新增外部素材。草稿存储透明笔迹和可编辑对象信息；完成作品同时存储相同图层及合成 PNG。下载样例 `docs/screenshots/exported-artwork.png` 来自自动化测试实际触发的浏览器下载，测试用中文文字与图形不代表用户的既有作品。

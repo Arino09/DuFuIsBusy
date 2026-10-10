@@ -7,6 +7,12 @@ const PAPER = Color("f8f4e9")
 const MUTED = Color("857b68")
 const SERIF = preload("res://assets/fonts/SourceSerifSC.otf")
 const SANS = preload("res://assets/fonts/SourceSansSC.otf")
+const LocalStore = preload("res://scripts/local_store.gd")
+var local_store := LocalStore.new()
+var storage_hint: Label
+var storage_retry: Button
+var gallery_page := 0
+var storage_status := ""
 const Drawing = preload("res://scripts/drawing_surface.gd")
 var web_blur_callback: JavaScriptObject
 var drawings: Dictionary = {}
@@ -49,6 +55,8 @@ func _ready() -> void:
 		web_blur_callback = JavaScriptBridge.create_callback(_web_focus_lost)
 		JavaScriptBridge.get_interface("window").addEventListener("blur", web_blur_callback)
 		JavaScriptBridge.get_interface("document").addEventListener("visibilitychange", web_blur_callback)
+		JavaScriptBridge.get_interface("window").addEventListener("pagehide", web_blur_callback)
+		JavaScriptBridge.get_interface("window").addEventListener("beforeunload", web_blur_callback)
 		var saved: Variant = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('DuFuIsBusy.settings.v1') || '';}catch(e){return '';}})()")
 		if saved is String and not saved.is_empty():
 			var parsed: Variant = JSON.parse_string(saved)
@@ -58,15 +66,25 @@ func _ready() -> void:
 						settings[key] = parsed[key]
 				settings.volume = clampf(float(settings.volume), 0.0, 100.0)
 				settings.quality = clampi(int(settings.quality), 0, 1)
-	show_page("home")
+	local_store.read_document()
+	for key in local_store.document.drafts:
+		drawings[int(key)] = LocalStore.decode(local_store.document.drafts[key])
+	topic = int(local_store.document.topic)
+	pen_color = Color.html(local_store.document.tools.color)
+	pen_width = int(local_store.document.tools.width)
+	selected_tool = local_store.document.tools.tool
+	show_page(local_store.document.page)
 
 func _web_focus_lost(_arguments: Array) -> void:
 	if is_instance_valid(drawing): drawing.finish()
+	if is_instance_valid(page): autosave()
 
 func _exit_tree() -> void:
 	if OS.has_feature("web") and web_blur_callback:
 		JavaScriptBridge.get_interface("window").removeEventListener("blur", web_blur_callback)
 		JavaScriptBridge.get_interface("document").removeEventListener("visibilitychange", web_blur_callback)
+		JavaScriptBridge.get_interface("window").removeEventListener("pagehide", web_blur_callback)
+		JavaScriptBridge.get_interface("window").removeEventListener("beforeunload", web_blur_callback)
 
 func box(color: Color, border: Color = Color("d8cfb9"), width: int = 1, radius: int = 5) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
@@ -191,7 +209,17 @@ func show_page(id: String) -> void:
 		"canvas": canvas()
 		"gallery": gallery()
 		"settings": settings_page()
+	storage_hint = label_at("", Rect2(52, 807, 1110, 33), 15, BROWN)
+	storage_retry = button_at("重试本地保存", Rect2(1180, 806, 208, 36), retry_storage)
+	storage_retry.add_theme_font_size_override("font_size", 16)
+	for mode in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var compact := box(PAPER, RED)
+		compact.content_margin_top = 2
+		compact.content_margin_bottom = 2
+		storage_retry.add_theme_stylebox_override(mode, compact)
+	storage_retry.size = Vector2(208, 36)
 	is_busy = false
+	autosave()
 	print("UI_PAGE:", id)
 
 func heading(title: String, subtitle: String) -> void:
@@ -283,10 +311,10 @@ func canvas() -> void:
 	drawing.erasing = selected_tool == "橡皮"
 	drawing.selecting = selected_tool == "移动"
 	rect(drawing, Rect2(311, 397, 1040, 330))
-	drawing.changed.connect(update_drawing_controls)
+	drawing.changed.connect(func(): update_drawing_controls(); autosave())
 	drawing.selection_changed.connect(update_drawing_controls)
 	update_drawing_controls()
-	label_at("画卷仅在本次打开期间保留；刷新会清空。", Rect2(313, 767, 735, 24), 15, MUTED)
+	label_at("草稿自动保存于此浏览器；完成后提交并存入画廊。", Rect2(313, 767, 735, 24), 15, MUTED)
 	button_at("提交作品 →", Rect2(1131, 743, 213, 43), submit_artwork, true)
 
 func update_drawing_controls() -> void:
@@ -417,7 +445,7 @@ func sticker_picker() -> void:
 		button_at("添加贴纸", Rect2(254 + i * 323, 535, 240, 56), func(): drawing.add_object(kind); selected_tool = "移动"; show_page("canvas"), true, overlay)
 
 func restart_confirm() -> void:
-	modal("重新创作？", "将清空当前命题的文字、贴纸、笔迹、历史和点评，杜甫回到原位。其他命题不受影响。")
+	modal("重新创作？", "将重建当前命题草稿，杜甫回到原位。已存入画廊的作品不受影响。")
 	button_at("取消", Rect2(566, 575, 202, 58), close_overlay, false, overlay)
 	button_at("清空画卷", Rect2(795, 575, 202, 58), func(): drawings[topic] = Drawing.new_state(); show_page("canvas"), true, overlay)
 
@@ -430,7 +458,7 @@ func submit_artwork() -> void:
 		print("SUBMIT_EMPTY")
 		return
 	var state: Dictionary = drawings[topic]
-	if state.submitted != state.revision:
+	if state.submitted != state.revision or state.result == null:
 		submitting = true
 		# Block interaction during the one-frame offscreen capture.
 		modal("正在装裱", "请稍候，正在合成当前画卷。")
@@ -440,7 +468,8 @@ func submit_artwork() -> void:
 		state.submitted = state.revision
 	var remarks := ["车到山前必有路，诗圣今天不走路。", "安得机甲千万套，大庇诗人不加班。", "笔下自有江湖在，杜某先干一碗茶。", "采菊东篱下，今天不打卡。"]
 	var remark: String = remarks[topic] if topic >= 0 else "这脑洞，连我的胡子都忍不住翘起来了。"
-	modal("妙哉！本关已通过", "本地趣味点评 · 有创作就过关，不分析画意、不评分。", true)
+	modal("妙哉！本关已通过", "本地点评 · 有创作就过关。
+草稿自动保存；画廊需点击保存。", true)
 	var art := TextureRect.new()
 	art.texture = state.result
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -450,18 +479,148 @@ func submit_artwork() -> void:
 	button_at("重新创作", Rect2(462, 644, 235, 49), restart_confirm, false, overlay)
 	button_at("继续编辑", Rect2(718, 644, 235, 49), close_overlay, false, overlay)
 	button_at("选下一幅", Rect2(974, 644, 235, 49), func(): show_page("levels"), true, overlay)
+	button_at("保存新版本" if not state.get("work_id", "").is_empty() else "保存到画廊", Rect2(216, 644, 224, 49), func(): save_work(false), true, overlay)
+	button_at("另存新作", Rect2(746, 716, 225, 48), func(): save_work(true), false, overlay)
+	button_at("下载 PNG", Rect2(991, 716, 218, 48), func(): download_image(state.result.get_image()), false, overlay)
+	autosave()
 	print("SUBMIT_OK:", topic, ":", state.submitted)
+
+func storage_candidate() -> Dictionary:
+	var candidate: Dictionary = local_store.document.duplicate(true)
+	for key in drawings: candidate.drafts[str(key)] = LocalStore.encode(drawings[key])
+	candidate.page = current
+	candidate.topic = topic
+	candidate.tools = {"color":pen_color.to_html(false),"width":pen_width,"tool":selected_tool}
+	return candidate
+
+func update_storage_status(ok: bool) -> void:
+	if is_instance_valid(storage_retry): storage_retry.visible = not ok
+	storage_status = "草稿已自动保存 · 仅此浏览器与此站点，清理站点数据会丢失。" if ok else local_store.error
+	if is_instance_valid(storage_hint):
+		storage_hint.text = storage_status
+		storage_hint.add_theme_color_override("font_color", BROWN if ok else RED)
+	print("STORAGE_OK" if ok else "STORAGE_ERROR:", "" if ok else local_store.error)
+
+func autosave() -> void:
+	if not is_instance_valid(page): return
+	update_storage_status(local_store.write_document(storage_candidate()))
+
+func retry_storage() -> void:
+	if not local_store.writable:
+		var retry := LocalStore.new()
+		if retry.read_document():
+			local_store = retry
+			for key in local_store.document.drafts:
+				var restored_topic := int(key)
+				if not drawings.has(restored_topic) or drawings[restored_topic].revision == 0:
+					drawings[restored_topic] = LocalStore.decode(local_store.document.drafts[key])
+			show_page(current)
+			return
+	autosave()
+	if not local_store.error.is_empty(): info("本地保存未完成", local_store.error)
+
+func save_work(as_new: bool) -> void:
+	var state: Dictionary = drawings[topic]
+	if state.result == null or state.submitted != state.revision:
+		info("先看看最新画卷", "请重新提交当前画卷后再保存作品。")
+		return
+	var candidate := storage_candidate()
+	var id: String = "" if as_new else state.get("work_id", "")
+	var index := -1
+	for i in range(candidate.works.size()):
+		if candidate.works[i].id == id: index = i
+	# Completed works are immutable: changed drafts become new versions.
+	if index >= 0 and candidate.works[index].data.revision != state.revision: index = -1
+	if index == -1:
+		id = "work-%d" % int(candidate.next_id)
+		candidate.next_id += 1
+	var encoded := LocalStore.encode(state)
+	encoded.work_id = id
+	var title: String = candidate.works[index].title if index >= 0 else (TOPICS[topic] if topic >= 0 else "自由创作") + " · " + id.trim_prefix("work-")
+	var work := {"id":id,"topic":topic,"title":title,"data":encoded,"preview":Marshalls.raw_to_base64(state.result.get_image().save_png_to_buffer())}
+	if index == -1: candidate.works.append(work)
+	candidate.drafts[str(topic)] = encoded
+	if not local_store.write_document(candidate):
+		update_storage_status(false)
+		info("作品尚未保存", local_store.error + "\n原有画廊作品没有被改动。可返回点评页下载 PNG。")
+		return
+	state.work_id = id
+	update_storage_status(true)
+	modal("已保存到我的画廊", title + "\n草稿可继续编辑；修改后保存为新版本，不覆盖画廊旧作。")
+	button_at("继续编辑", Rect2(566, 575, 202, 58), close_overlay, false, overlay)
+	button_at("我的画廊", Rect2(795, 575, 202, 58), func(): gallery_tab = 0; gallery_page = 0; show_page("gallery"), true, overlay)
+	print("WORK_SAVED:", id, ":", local_store.document.works.size())
+
+func work_texture(work: Dictionary) -> ImageTexture:
+	var image := Image.new()
+	image.load_png_from_buffer(Marshalls.base64_to_raw(work.preview))
+	return ImageTexture.create_from_image(image)
+
+func my_gallery() -> void:
+	var works: Array = local_store.document.works
+	label_at("本地完成作品 · %d 幅" % works.size(), Rect2(74, 307, 580, 42), 20, BROWN)
+	if works.is_empty():
+		panel_at(Rect2(74, 359, 1294, 427))
+		label_at("画卷尚空，脑洞先行。", Rect2(414, 422, 800, 66), 42, INK, true)
+		label_at("草稿在画布自动保存；提交后可存入这里。", Rect2(420, 528, 760, 39), 22, BROWN)
+		button_at("去创作", Rect2(559, 623, 320, 61), func(): show_page("canvas"), true)
+		return
+	gallery_page = clampi(gallery_page, 0, (works.size() - 1) / 4)
+	button_at("上一页", Rect2(1000, 308, 168, 42), func(): gallery_page -= 1; show_page("gallery")).disabled = gallery_page == 0
+	button_at("下一页", Rect2(1190, 308, 178, 42), func(): gallery_page += 1; show_page("gallery")).disabled = (gallery_page + 1) * 4 >= works.size()
+	for slot in range(mini(4, works.size() - gallery_page * 4)):
+		var work: Dictionary = works[works.size() - 1 - gallery_page * 4 - slot]
+		var x := 74 + (slot % 2) * 660
+		var y := 365 + (slot / 2) * 213
+		panel_at(Rect2(x, y, 634, 199))
+		var picture := TextureRect.new()
+		picture.texture = work_texture(work)
+		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		rect(picture, Rect2(x + 15, y + 15, 280, 165))
+		label_at(work.title, Rect2(x + 310, y + 16, 306, 46), 24, INK, true)
+		button_at("查看作品", Rect2(x + 310, y + 77, 302, 46), func(): view_work(work))
+		button_at("打开编辑", Rect2(x + 310, y + 134, 302, 46), func(): open_work_confirm(work))
+
+func view_work(work: Dictionary) -> void:
+	modal(work.title, "本地保存的完成作品。打开编辑只生成草稿，旧作保持不变。", true)
+	var picture := TextureRect.new()
+	picture.texture = work_texture(work)
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect(picture, Rect2(214, 230, 1012, 420), overlay)
+	button_at("打开编辑", Rect2(740, 654, 220, 49), func(): open_work_confirm(work), true, overlay)
+	button_at("下载 PNG", Rect2(985, 654, 220, 49), func(): download_image(picture.texture.get_image()), false, overlay)
+	print("WORK_VIEW:", work.id)
+
+func open_work_confirm(work: Dictionary) -> void:
+	modal("打开已存画作？", "将替换该命题当前草稿，画廊原作保持不变。\n要保留当前草稿，请先将它存入画廊。")
+	button_at("取消", Rect2(566, 575, 202, 58), close_overlay, false, overlay)
+	button_at("打开编辑", Rect2(795, 575, 202, 58), func():
+		topic = int(work.topic)
+		drawings[topic] = LocalStore.decode(work.data)
+		drawings[topic].work_id = work.id
+		selected_tool = "移动"
+		show_page("canvas")
+		print("WORK_OPEN:", work.id), true, overlay)
+
+func download_image(image: Image) -> void:
+	var filename := "dufu-artwork.png"
+	if OS.has_feature("web"):
+		JavaScriptBridge.download_buffer(image.save_png_to_buffer(), filename, "image/png")
+		print("PNG_DOWNLOAD_REQUESTED")
+	else:
+		var path := "user://" + filename
+		if image.save_png(path) == OK: info("PNG 已导出", ProjectSettings.globalize_path(path))
+		else: info("PNG 导出失败", "无法写入本地文件。")
 
 func gallery() -> void:
 	heading("画廊", "同一张画像，也能有万千种忙法。")
 	button_at("我的作品", Rect2(74, 238, 220, 57), func(): gallery_tab = 0; show_page("gallery"), gallery_tab == 0)
 	button_at("灵感画廊", Rect2(309, 238, 220, 57), func(): gallery_tab = 1; show_page("gallery"), gallery_tab == 1)
-	label_at("合成示例 · 仅供欣赏", Rect2(1040, 246, 330, 38), 18, BROWN)
+	label_at("合成示例 · 仅供欣赏" if gallery_tab == 1 else "可编辑图层 · 本机保存", Rect2(1040, 246, 330, 38), 18, BROWN)
 	if gallery_tab == 0:
-		panel_at(Rect2(74, 322, 1294, 475))
-		label_at("画卷尚空，脑洞先行。", Rect2(414, 425, 800, 66), 42, INK, true)
-		label_at("作品暂保留在各命题画布；尚无永久作品存档。", Rect2(485, 527, 600, 39), 22, BROWN)
-		button_at("去看看创作画布", Rect2(559, 613, 320, 61), func(): topic = -1; show_page("canvas"), true)
+		my_gallery()
 	else:
 		label_at("主题筛选", Rect2(74, 309, 130, 44), 20, BROWN)
 		var filters := ["全部", "武侠", "科幻", "市井", "脑洞"]
@@ -568,7 +727,7 @@ func modal(title: String, body: String, large: bool = false) -> void:
 	if large:
 		panel_at(Rect2(182, 140, 1076, 648), PAPER, overlay)
 		label_at(title, Rect2(214, 157, 906, 54), 32, INK, true, overlay)
-		var caption := label_at(body, Rect2(216, 708, 771, 62), 18, BROWN, false, overlay)
+		var caption := label_at(body, Rect2(216, 708, 500, 62), 18, BROWN, false, overlay)
 		caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button_at("×", Rect2(1186, 157, 48, 48), close_overlay, false, overlay).grab_focus()
 		print("UI_DIALOG:", title)
