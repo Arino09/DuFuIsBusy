@@ -7,7 +7,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--source-dir', type=Path, default=Path('/usr/share/fonts/opentype/noto'))
 args = parser.parse_args()
 root = Path(__file__).resolve().parent.parent
-chars = ''.join(p.read_text() for p in (root / 'scripts').glob('*.gd'))
+chars = ''.join(
+    p.read_text(encoding='utf-8')
+    for folder, pattern in [('scripts', '*.gd'), ('scenes', '*.tscn')]
+    for p in (root / folder).rglob(pattern)
+)
 chars += ''.join(chr(i) for i in range(32, 127))
 for kind in ['Sans', 'Serif']:
     font = TTFont(args.source_dir / f'Noto{kind}CJK-Regular.ttc', fontNumber=2)

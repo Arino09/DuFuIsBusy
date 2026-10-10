@@ -1,0 +1,328 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/pages/gallery_page.gd" id="Controller"]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/gallery_work_card.tscn" id="WorkCard"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/gallery_example_card.tscn" id="ExampleCard"]
+
+[ext_resource type="Texture2D" path="res://assets/examples/sword-hero.jpg" id="Example1Texture"]
+
+[ext_resource type="Texture2D" path="res://assets/examples/scifi-warrior.jpg" id="Example2Texture"]
+
+[ext_resource type="Texture2D" path="res://assets/examples/night-market.jpg" id="Example3Texture"]
+
+[ext_resource type="Texture2D" path="res://assets/examples/restroom.jpg" id="Example4Texture"]
+
+[node name="Gallery" type="Control"]
+script = ExtResource("Controller")
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+theme = ExtResource("Theme")
+
+[node name="Frame" parent="." instance=ExtResource("Frame")]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+
+[node name="Title" parent="Frame" index="8"]
+text = "画廊"
+
+[node name="Subtitle" parent="Frame" index="9"]
+text = "同一张画像，也能有万千种忙法。"
+
+[node name="MyWorksTab" type="Button" parent="."]
+offset_left = 74.0
+offset_top = 238.0
+offset_right = 294.0
+offset_bottom = 295.0
+mouse_default_cursor_shape = 2
+text = "我的作品"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+button_pressed = true
+
+[node name="ExamplesTab" type="Button" parent="."]
+offset_left = 309.0
+offset_top = 238.0
+offset_right = 529.0
+offset_bottom = 295.0
+mouse_default_cursor_shape = 2
+text = "灵感画廊"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+
+[node name="GalleryDescription" type="Label" parent="."]
+offset_left = 1040.0
+offset_top = 246.0
+offset_right = 1370.0
+offset_bottom = 284.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 18
+text = "可编辑图层 · 本机保存"
+vertical_alignment = 1
+
+[node name="MyWorks" type="Control" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+mouse_filter = 2
+
+[node name="CountLabel" type="Label" parent="MyWorks"]
+offset_left = 74.0
+offset_top = 307.0
+offset_right = 654.0
+offset_bottom = 349.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 20
+text = "本地完成作品 · 0 幅"
+vertical_alignment = 1
+
+[node name="PreviousButton" type="Button" parent="MyWorks"]
+offset_left = 1000.0
+offset_top = 308.0
+offset_right = 1168.0
+offset_bottom = 350.0
+mouse_default_cursor_shape = 2
+text = "上一页"
+visible = false
+
+[node name="NextButton" type="Button" parent="MyWorks"]
+offset_left = 1190.0
+offset_top = 308.0
+offset_right = 1368.0
+offset_bottom = 350.0
+mouse_default_cursor_shape = 2
+text = "下一页"
+visible = false
+
+[node name="EmptyState" type="Panel" parent="MyWorks"]
+offset_left = 74.0
+offset_top = 359.0
+offset_right = 1368.0
+offset_bottom = 786.0
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="MyWorks/EmptyState"]
+offset_left = 340.0
+offset_top = 63.0
+offset_right = 1140.0
+offset_bottom = 129.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 42
+text = "画卷尚空，脑洞先行。"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Subtitle" type="Label" parent="MyWorks/EmptyState"]
+offset_left = 346.0
+offset_top = 169.0
+offset_right = 1106.0
+offset_bottom = 208.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 22
+text = "草稿在画布自动保存；提交后可存入这里。"
+vertical_alignment = 1
+
+[node name="CreateButton" type="Button" parent="MyWorks/EmptyState"]
+offset_left = 485.0
+offset_top = 264.0
+offset_right = 805.0
+offset_bottom = 325.0
+mouse_default_cursor_shape = 2
+text = "去创作"
+theme_type_variation = &"PrimaryButton"
+
+[node name="Cards" type="GridContainer" parent="MyWorks"]
+offset_left = 74.0
+offset_top = 365.0
+offset_right = 1368.0
+offset_bottom = 777.0
+visible = false
+mouse_filter = 2
+theme_override_constants/h_separation = 26
+theme_override_constants/v_separation = 14
+columns = 2
+
+[node name="Work1" parent="MyWorks/Cards" instance=ExtResource("WorkCard")]
+layout_mode = 2
+
+[node name="Work2" parent="MyWorks/Cards" instance=ExtResource("WorkCard")]
+layout_mode = 2
+
+[node name="Work3" parent="MyWorks/Cards" instance=ExtResource("WorkCard")]
+layout_mode = 2
+
+[node name="Work4" parent="MyWorks/Cards" instance=ExtResource("WorkCard")]
+layout_mode = 2
+
+[node name="Examples" type="Control" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+visible = false
+mouse_filter = 2
+
+[node name="FilterLabel" type="Label" parent="Examples"]
+offset_left = 74.0
+offset_top = 309.0
+offset_right = 204.0
+offset_bottom = 353.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 20
+text = "主题筛选"
+vertical_alignment = 1
+
+[node name="FilterAll" type="Button" parent="Examples"]
+offset_left = 205.0
+offset_top = 309.0
+offset_right = 326.0
+offset_bottom = 353.0
+mouse_default_cursor_shape = 2
+text = "全部"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+button_pressed = true
+
+[node name="FilterWuxia" type="Button" parent="Examples"]
+offset_left = 341.0
+offset_top = 309.0
+offset_right = 462.0
+offset_bottom = 353.0
+mouse_default_cursor_shape = 2
+text = "武侠"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+
+[node name="FilterSciFi" type="Button" parent="Examples"]
+offset_left = 477.0
+offset_top = 309.0
+offset_right = 598.0
+offset_bottom = 353.0
+mouse_default_cursor_shape = 2
+text = "科幻"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+
+[node name="FilterMarket" type="Button" parent="Examples"]
+offset_left = 613.0
+offset_top = 309.0
+offset_right = 734.0
+offset_bottom = 353.0
+mouse_default_cursor_shape = 2
+text = "市井"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+
+[node name="FilterFun" type="Button" parent="Examples"]
+offset_left = 749.0
+offset_top = 309.0
+offset_right = 870.0
+offset_bottom = 353.0
+mouse_default_cursor_shape = 2
+text = "脑洞"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+
+[node name="CountLabel" type="Label" parent="Examples"]
+offset_left = 1142.0
+offset_top = 312.0
+offset_right = 1372.0
+offset_bottom = 350.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 18
+text = "显示 4 幅示例"
+vertical_alignment = 1
+
+[node name="Cards" type="GridContainer" parent="Examples"]
+offset_left = 74.0
+offset_top = 373.0
+offset_right = 1368.0
+offset_bottom = 786.0
+mouse_filter = 2
+theme_override_constants/h_separation = 26
+theme_override_constants/v_separation = 15
+columns = 2
+
+[node name="Example1" parent="Examples/Cards" instance=ExtResource("ExampleCard")]
+layout_mode = 2
+metadata/example_id = 0
+metadata/topic = "武侠"
+
+[node name="Picture" parent="Examples/Cards/Example1" index="1"]
+texture = ExtResource("Example1Texture")
+
+[node name="Title" parent="Examples/Cards/Example1" index="2"]
+text = "剑影江湖"
+
+[node name="TopicLabel" parent="Examples/Cards/Example1" index="3"]
+text = "武侠 · 预制示例"
+
+[node name="Example2" parent="Examples/Cards" instance=ExtResource("ExampleCard")]
+layout_mode = 2
+metadata/example_id = 1
+metadata/topic = "科幻"
+
+[node name="Picture" parent="Examples/Cards/Example2" index="1"]
+texture = ExtResource("Example2Texture")
+
+[node name="Title" parent="Examples/Cards/Example2" index="2"]
+text = "机甲诗圣"
+
+[node name="TopicLabel" parent="Examples/Cards/Example2" index="3"]
+text = "科幻 · 预制示例"
+
+[node name="Example3" parent="Examples/Cards" instance=ExtResource("ExampleCard")]
+layout_mode = 2
+metadata/example_id = 2
+metadata/topic = "市井"
+
+[node name="Picture" parent="Examples/Cards/Example3" index="1"]
+texture = ExtResource("Example3Texture")
+
+[node name="Title" parent="Examples/Cards/Example3" index="2"]
+text = "夜市小憩"
+
+[node name="TopicLabel" parent="Examples/Cards/Example3" index="3"]
+text = "市井 · 预制示例"
+
+[node name="Example4" parent="Examples/Cards" instance=ExtResource("ExampleCard")]
+layout_mode = 2
+metadata/example_id = 3
+metadata/topic = "脑洞"
+
+[node name="Picture" parent="Examples/Cards/Example4" index="1"]
+texture = ExtResource("Example4Texture")
+
+[node name="Title" parent="Examples/Cards/Example4" index="2"]
+text = "人有三急"
+
+[node name="TopicLabel" parent="Examples/Cards/Example4" index="3"]
+text = "脑洞 · 预制示例"
+
+[editable path="Frame"]
+
+[editable path="Examples/Cards/Example1"]
+
+[editable path="Examples/Cards/Example2"]
+
+[editable path="Examples/Cards/Example3"]
+
+[editable path="Examples/Cards/Example4"]

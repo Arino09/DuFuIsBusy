@@ -1,0 +1,120 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="4_creative"]
+
+[ext_resource type="Script" path="res://scripts/dialogs/text_editor_dialog.gd" id="5_script"]
+
+[node name="TextEditor" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("5_script")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "添加文字"
+
+[node name="Body" parent="Frame" index="3"]
+text = ""
+visible = false
+
+[node name="TextLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 353.0
+offset_right = 985.0
+offset_bottom = 391.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.4627451, 0.38039216, 0.28235294, 1)
+theme_override_font_sizes/font_size = 19
+text = "文字（最多 24 字）"
+vertical_alignment = 1
+
+[node name="TextInput" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 397.0
+offset_right = 1002.0
+offset_bottom = 446.0
+theme_override_fonts/font = ExtResource("4_creative")
+placeholder_text = "给诗圣配一句台词"
+max_length = 24
+
+[node name="FontSizeLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 470.0
+offset_right = 525.0
+offset_bottom = 514.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 19
+text = "字号"
+vertical_alignment = 1
+
+[node name="FontSizeInput" type="SpinBox" parent="."]
+layout_mode = 0
+offset_left = 525.0
+offset_top = 470.0
+offset_right = 662.0
+offset_bottom = 514.0
+min_value = 16.0
+max_value = 64.0
+step = 2.0
+value = 32.0
+
+[node name="ColorLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 702.0
+offset_top = 470.0
+offset_right = 788.0
+offset_bottom = 514.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 19
+text = "色号"
+vertical_alignment = 1
+
+[node name="ColorInput" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 788.0
+offset_top = 470.0
+offset_right = 1002.0
+offset_bottom = 514.0
+text = "243d35"
+max_length = 6
+
+[node name="ErrorLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 523.0
+offset_right = 1005.0
+offset_bottom = 563.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.66666667, 0.28627451, 0.21568627, 1)
+theme_override_font_sizes/font_size = 17
+text = ""
+vertical_alignment = 1
+
+[node name="ApplyButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 793.0
+offset_top = 575.0
+offset_right = 1000.0
+offset_bottom = 632.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "应用文字"
+
+[editable path="Frame"]

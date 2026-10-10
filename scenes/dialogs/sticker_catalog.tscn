@@ -1,0 +1,152 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-sheet.jpg" id="4_weapons"]
+
+[sub_resource type="StyleBoxFlat" id="ReferencePanel"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(1.0, 1.0, 1.0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.84705882, 0.81176471, 0.7254902, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[node name="StickerCatalog" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "贴纸目录 · UI 预览"
+
+[node name="Body" parent="Frame" index="3"]
+text = "仅查看源素材，尚不能放置、拖拽或编辑贴纸。"
+
+[node name="ReferencePanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 218.0
+offset_top = 228.0
+offset_right = 593.0
+offset_bottom = 690.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("ReferencePanel")
+
+[node name="ReferencePicture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 230.0
+offset_top = 239.0
+offset_right = 581.0
+offset_bottom = 674.0
+mouse_filter = 2
+texture = ExtResource("4_weapons")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WeaponTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 643.0
+offset_top = 231.0
+offset_right = 1173.0
+offset_bottom = 283.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("3_serif")
+text = "幻想武器"
+vertical_alignment = 1
+
+[node name="WeaponCaption" type="Label" parent="."]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 287.0
+offset_right = 1204.0
+offset_bottom = 325.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.4627451, 0.38039216, 0.28235294, 1)
+theme_override_font_sizes/font_size = 19
+text = "五件武器的白底源拼图，尚未拆分为贴纸。"
+vertical_alignment = 1
+
+[node name="WeaponButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 344.0
+offset_right = 1203.0
+offset_bottom = 399.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "查看武器源图"
+
+[node name="SceneTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 643.0
+offset_top = 427.0
+offset_right = 1173.0
+offset_bottom = 471.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3_serif")
+text = "场景参考"
+vertical_alignment = 1
+
+[node name="CityButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 489.0
+offset_right = 911.0
+offset_bottom = 544.0
+mouse_default_cursor_shape = 2
+text = "科幻都市"
+
+[node name="MarketButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 931.0
+offset_top = 489.0
+offset_right = 1203.0
+offset_bottom = 544.0
+mouse_default_cursor_shape = 2
+text = "烟火夜市"
+
+[node name="MissingMaterialsNote" type="Label" parent="."]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 587.0
+offset_right = 1202.0
+offset_bottom = 632.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.52156863, 0.48235294, 0.40784314, 1)
+theme_override_font_sizes/font_size = 19
+text = "交通与田园素材仍待补充。"
+vertical_alignment = 1
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1010.0
+offset_top = 717.0
+offset_right = 1226.0
+offset_bottom = 765.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "返回画布"
+
+[editable path="Frame"]

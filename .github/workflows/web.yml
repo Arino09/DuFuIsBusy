@@ -32,6 +32,24 @@ jobs:
           timeout 60s godot --headless --path . --script tests/storage_test.gd 2>&1 | tee storage-test.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' storage-test.log; then exit 1; fi
           grep 'STORAGE_TESTS_PASSED' storage-test.log
+      - name: Test authored UI scenes and interactions
+        run: |
+          timeout 60s godot --headless --path . --script tests/ui_scene_test.gd 2>&1 | tee ui-scene-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' ui-scene-test.log; then exit 1; fi
+          grep 'UI_SCENE_TESTS_PASSED' ui-scene-test.log
+      - name: Test draft encoding cache
+        run: |
+          timeout 60s godot --headless --path . --script tests/draft_cache_test.gd 2>&1 | tee draft-cache-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' draft-cache-test.log; then exit 1; fi
+          grep 'DRAFT_CACHE_TESTS_PASSED' draft-cache-test.log
+      - name: Test settings validation and authored content
+        run: |
+          timeout 60s godot --headless --path . --script tests/settings_test.gd 2>&1 | tee settings-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' settings-test.log; then exit 1; fi
+          grep 'SETTINGS_TESTS_PASSED' settings-test.log
+          timeout 60s godot --headless --path . --script tests/content_catalog_test.gd 2>&1 | tee content-catalog-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' content-catalog-test.log; then exit 1; fi
+          grep 'CONTENT_CATALOG_TESTS_PASSED' content-catalog-test.log
       - name: Export single-threaded Web
         run: |
           mkdir -p build/web

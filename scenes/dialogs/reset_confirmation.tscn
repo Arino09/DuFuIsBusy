@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[node name="ResetConfirmation" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "恢复默认设置？"
+
+[node name="Body" parent="Frame" index="3"]
+text = "仅重置音量、音效、音乐和画质偏好。\n不会删除当前会话的画卷。"
+
+[node name="CancelButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 566.0
+offset_top = 575.0
+offset_right = 768.0
+offset_bottom = 633.0
+mouse_default_cursor_shape = 2
+text = "取消"
+
+[node name="ConfirmButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 795.0
+offset_top = 575.0
+offset_right = 997.0
+offset_bottom = 633.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "确认恢复"
+
+[editable path="Frame"]

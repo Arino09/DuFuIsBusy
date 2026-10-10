@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+
+[node name="GalleryWorkCard" type="Panel"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 634.0
+offset_bottom = 199.0
+custom_minimum_size = Vector2(634, 199)
+theme = ExtResource("Theme")
+mouse_filter = 2
+
+[node name="Picture" type="TextureRect" parent="."]
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 295.0
+offset_bottom = 180.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="."]
+offset_left = 310.0
+offset_top = 16.0
+offset_right = 616.0
+offset_bottom = 62.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 24
+text = "作品标题"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="ViewButton" type="Button" parent="."]
+offset_left = 310.0
+offset_top = 77.0
+offset_right = 612.0
+offset_bottom = 123.0
+mouse_default_cursor_shape = 2
+text = "查看作品"
+
+[node name="EditButton" type="Button" parent="."]
+offset_left = 310.0
+offset_top = 134.0
+offset_right = 612.0
+offset_bottom = 180.0
+mouse_default_cursor_shape = 2
+text = "打开编辑"

@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## Original procedural paper decoration: no presentation artwork.
 func _ready() -> void:

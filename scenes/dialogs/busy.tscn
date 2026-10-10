@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[node name="Busy" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "正在装裱"
+
+[node name="Body" parent="Frame" index="3"]
+text = "请稍候，正在合成当前画卷。"
+
+[node name="CloseButton" parent="Frame" index="4"]
+visible = false
+
+[editable path="Frame"]

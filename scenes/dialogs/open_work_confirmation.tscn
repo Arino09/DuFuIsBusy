@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[node name="OpenWorkConfirmation" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "打开已存画作？"
+
+[node name="Body" parent="Frame" index="3"]
+text = "将替换该命题当前草稿，画廊原作保持不变。\n要保留当前草稿，请先将它存入画廊。"
+
+[node name="CancelButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 566.0
+offset_top = 575.0
+offset_right = 768.0
+offset_bottom = 633.0
+mouse_default_cursor_shape = 2
+text = "取消"
+
+[node name="ConfirmButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 795.0
+offset_top = 575.0
+offset_right = 997.0
+offset_bottom = 633.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "打开编辑"
+
+[editable path="Frame"]

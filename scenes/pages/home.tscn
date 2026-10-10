@@ -1,0 +1,252 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
+
+[ext_resource type="Texture2D" path="res://assets/characters/dufu-avatar.png" id="PortraitTexture"]
+
+[sub_resource type="StyleBoxFlat" id="PortraitPaperStyle"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.929411765, 0.905882353, 0.847058824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.733333333, 0.682352941, 0.564705882, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="SealStyle"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.666666667, 0.286274510, 0.215686275, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666666667, 0.286274510, 0.215686275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[node name="Home" type="Control"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+theme = ExtResource("Theme")
+
+[node name="Frame" parent="." instance=ExtResource("Frame")]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+
+[node name="Title" parent="Frame" index="8"]
+visible = false
+
+[node name="Subtitle" parent="Frame" index="9"]
+visible = false
+
+[node name="BackButton" parent="Frame" index="10"]
+visible = false
+
+[node name="Intro" type="Label" parent="."]
+offset_left = 98.0
+offset_top = 154.0
+offset_right = 608.0
+offset_bottom = 196.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 23
+text = "一张画像，无数种可能"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="GameTitle" type="Label" parent="."]
+offset_left = 89.0
+offset_top = 207.0
+offset_right = 719.0
+offset_bottom = 323.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 90
+text = "杜甫很忙"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Tagline" type="Label" parent="."]
+offset_left = 98.0
+offset_top = 338.0
+offset_right = 618.0
+offset_bottom = 382.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 25
+text = "今天，给诗圣安排点新活儿。"
+vertical_alignment = 1
+
+[node name="LevelsButton" type="Button" parent="."]
+offset_left = 100.0
+offset_top = 414.0
+offset_right = 445.0
+offset_bottom = 482.0
+mouse_default_cursor_shape = 2
+text = "开始闯关   →"
+theme_type_variation = &"PrimaryButton"
+
+[node name="FreeDrawButton" type="Button" parent="."]
+metadata/prompt = "自由创作：诗人今天想怎么忙，就怎么忙"
+metadata/remark = "这脑洞，连我的胡子都忍不住翘起来了。"
+offset_left = 100.0
+offset_top = 498.0
+offset_right = 445.0
+offset_bottom = 560.0
+mouse_default_cursor_shape = 2
+text = "自由创作"
+
+[node name="GalleryButton" type="Button" parent="."]
+offset_left = 100.0
+offset_top = 576.0
+offset_right = 265.0
+offset_bottom = 634.0
+mouse_default_cursor_shape = 2
+text = "画廊"
+
+[node name="SettingsButton" type="Button" parent="."]
+offset_left = 280.0
+offset_top = 576.0
+offset_right = 445.0
+offset_bottom = 634.0
+mouse_default_cursor_shape = 2
+text = "设置"
+
+[node name="ExitButton" type="Button" parent="."]
+offset_left = 100.0
+offset_top = 653.0
+offset_right = 445.0
+offset_bottom = 705.0
+mouse_default_cursor_shape = 2
+text = "暂歇片刻"
+
+[node name="Encouragement" type="Label" parent="."]
+offset_left = 101.0
+offset_top = 732.0
+offset_right = 581.0
+offset_bottom = 767.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "无需评分，脑洞就是答案。"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="PortraitPaper" type="Panel" parent="."]
+offset_left = 728.0
+offset_top = 150.0
+offset_right = 1238.0
+offset_bottom = 756.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("PortraitPaperStyle")
+
+[node name="ScrollTop" type="ColorRect" parent="."]
+offset_left = 707.0
+offset_top = 138.0
+offset_right = 1261.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+
+[node name="ScrollBottom" type="ColorRect" parent="."]
+offset_left = 707.0
+offset_top = 753.0
+offset_right = 1261.0
+offset_bottom = 765.0
+mouse_filter = 2
+color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+
+[node name="PortraitSideNote" type="Label" parent="."]
+offset_left = 1165.0
+offset_top = 200.0
+offset_right = 1210.0
+offset_bottom = 548.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 26
+text = "诗\n圣\n今\n日\n休\n笔"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Portrait" type="TextureRect" parent="."]
+offset_left = 758.0
+offset_top = 203.0
+offset_right = 1178.0
+offset_bottom = 623.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("PortraitTexture")
+
+[node name="Seal" type="Panel" parent="."]
+offset_left = 781.0
+offset_top = 186.0
+offset_right = 896.0
+offset_bottom = 225.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SealStyle")
+
+[node name="SealText" type="Label" parent="."]
+offset_left = 795.0
+offset_top = 187.0
+offset_right = 902.0
+offset_bottom = 225.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.972549020, 0.956862745, 0.913725490, 1)
+theme_override_font_sizes/font_size = 19
+text = "诗圣上线"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="PortraitDivider" type="ColorRect" parent="."]
+offset_left = 788.0
+offset_top = 635.0
+offset_right = 1128.0
+offset_bottom = 636.0
+mouse_filter = 2
+color = Color(0.823529412, 0.784313725, 0.694117647, 1)
+
+[node name="PortraitCaption" type="Label" parent="."]
+offset_left = 790.0
+offset_top = 650.0
+offset_right = 1181.0
+offset_bottom = 697.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 27
+text = "不忙写诗，忙着出圈。"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="PortraitFooter" type="Label" parent="."]
+offset_left = 820.0
+offset_top = 704.0
+offset_right = 1200.0
+offset_bottom = 738.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "一张画像 · 万千想象"
+vertical_alignment = 1
+
+[editable path="Frame"]

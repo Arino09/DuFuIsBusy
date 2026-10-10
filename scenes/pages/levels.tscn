@@ -1,0 +1,576 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
+
+[sub_resource type="StyleBoxFlat" id="Topic1Paper"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.956862745, 0.917647059, 0.835294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic1Button"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic2Paper"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.894117647, 0.921568627, 0.929411765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic2Button"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic3Paper"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.949019608, 0.894117647, 0.862745098, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic3Button"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic4Paper"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.905882353, 0.925490196, 0.866666667, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="Topic4Button"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[node name="Levels" type="Control"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+theme = ExtResource("Theme")
+
+[node name="Frame" parent="." instance=ExtResource("Frame")]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+
+[node name="Title" parent="Frame" index="8"]
+text = "命题画卷"
+
+[node name="Subtitle" parent="Frame" index="9"]
+text = "选一幅画卷，给杜甫一个忙起来的理由。所有主题都可自由试选。"
+
+[node name="Topic1" type="Control" parent="."]
+metadata/topic_id = 0
+metadata/remark = "车到山前必有路，诗圣今天不走路。"
+offset_left = 74.0
+offset_top = 267.0
+offset_right = 370.0
+offset_bottom = 722.0
+mouse_filter = 2
+
+[node name="ScrollTop" type="ColorRect" parent="Topic1"]
+offset_left = -7.0
+offset_top = 0.0
+offset_right = 303.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+
+[node name="Paper" type="Panel" parent="Topic1"]
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 296.0
+offset_bottom = 445.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Topic1Paper")
+
+[node name="Number" type="Label" parent="Topic1"]
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 104.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+theme_override_font_sizes/font_size = 19
+text = "零一"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Title" type="Label" parent="Topic1"]
+offset_left = 34.0
+offset_top = 85.0
+offset_right = 272.0
+offset_bottom = 159.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+theme_override_font_sizes/font_size = 49
+text = "交通"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Subtitle" type="Label" parent="Topic1"]
+offset_left = 36.0
+offset_top = 185.0
+offset_right = 274.0
+offset_bottom = 223.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 24
+text = "行路人间"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Prompt" type="Label" parent="Topic1"]
+offset_left = 30.0
+offset_top = 238.0
+offset_right = 272.0
+offset_bottom = 318.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "至少出现一种交通工具"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Topic1"]
+offset_left = 30.0
+offset_top = 315.0
+offset_right = 272.0
+offset_bottom = 344.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+vertical_alignment = 1
+
+[node name="EnterButton" type="Button" parent="Topic1"]
+offset_left = 28.0
+offset_top = 354.0
+offset_right = 268.0
+offset_bottom = 411.0
+mouse_default_cursor_shape = 2
+text = "展开画卷  →"
+theme_type_variation = &"PrimaryButton"
+theme_override_styles/normal = SubResource("Topic1Button")
+
+[node name="ScrollBottom" type="ColorRect" parent="Topic1"]
+offset_left = -7.0
+offset_top = 445.0
+offset_right = 303.0
+offset_bottom = 455.0
+mouse_filter = 2
+color = Color(0.572549020, 0.403921569, 0.211764706, 1)
+
+[node name="Topic2" type="Control" parent="."]
+metadata/topic_id = 1
+metadata/remark = "安得机甲千万套，大庇诗人不加班。"
+offset_left = 401.0
+offset_top = 267.0
+offset_right = 697.0
+offset_bottom = 722.0
+mouse_filter = 2
+
+[node name="ScrollTop" type="ColorRect" parent="Topic2"]
+offset_left = -7.0
+offset_top = 0.0
+offset_right = 303.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+
+[node name="Paper" type="Panel" parent="Topic2"]
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 296.0
+offset_bottom = 445.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Topic2Paper")
+
+[node name="Number" type="Label" parent="Topic2"]
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 104.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+theme_override_font_sizes/font_size = 19
+text = "零二"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Title" type="Label" parent="Topic2"]
+offset_left = 34.0
+offset_top = 85.0
+offset_right = 272.0
+offset_bottom = 159.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+theme_override_font_sizes/font_size = 49
+text = "科幻"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Subtitle" type="Label" parent="Topic2"]
+offset_left = 36.0
+offset_top = 185.0
+offset_right = 274.0
+offset_bottom = 223.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 24
+text = "机甲盛唐"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Prompt" type="Label" parent="Topic2"]
+offset_left = 30.0
+offset_top = 238.0
+offset_right = 272.0
+offset_bottom = 318.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "让杜甫拥有一身未来机甲"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Topic2"]
+offset_left = 30.0
+offset_top = 315.0
+offset_right = 272.0
+offset_bottom = 344.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+vertical_alignment = 1
+
+[node name="EnterButton" type="Button" parent="Topic2"]
+offset_left = 28.0
+offset_top = 354.0
+offset_right = 268.0
+offset_bottom = 411.0
+mouse_default_cursor_shape = 2
+text = "展开画卷  →"
+theme_type_variation = &"PrimaryButton"
+theme_override_styles/normal = SubResource("Topic2Button")
+
+[node name="ScrollBottom" type="ColorRect" parent="Topic2"]
+offset_left = -7.0
+offset_top = 445.0
+offset_right = 303.0
+offset_bottom = 455.0
+mouse_filter = 2
+color = Color(0.282352941, 0.407843137, 0.474509804, 1)
+
+[node name="Topic3" type="Control" parent="."]
+metadata/topic_id = 2
+metadata/remark = "笔下自有江湖在，杜某先干一碗茶。"
+offset_left = 728.0
+offset_top = 267.0
+offset_right = 1024.0
+offset_bottom = 722.0
+mouse_filter = 2
+
+[node name="ScrollTop" type="ColorRect" parent="Topic3"]
+offset_left = -7.0
+offset_top = 0.0
+offset_right = 303.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+
+[node name="Paper" type="Panel" parent="Topic3"]
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 296.0
+offset_bottom = 445.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Topic3Paper")
+
+[node name="Number" type="Label" parent="Topic3"]
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 104.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+theme_override_font_sizes/font_size = 19
+text = "零三"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Title" type="Label" parent="Topic3"]
+offset_left = 34.0
+offset_top = 85.0
+offset_right = 272.0
+offset_bottom = 159.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+theme_override_font_sizes/font_size = 49
+text = "武侠"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Subtitle" type="Label" parent="Topic3"]
+offset_left = 36.0
+offset_top = 185.0
+offset_right = 274.0
+offset_bottom = 223.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 24
+text = "剑影江湖"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Prompt" type="Label" parent="Topic3"]
+offset_left = 30.0
+offset_top = 238.0
+offset_right = 272.0
+offset_bottom = 318.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "给诗人安排一次江湖奇遇"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Topic3"]
+offset_left = 30.0
+offset_top = 315.0
+offset_right = 272.0
+offset_bottom = 344.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+vertical_alignment = 1
+
+[node name="EnterButton" type="Button" parent="Topic3"]
+offset_left = 28.0
+offset_top = 354.0
+offset_right = 268.0
+offset_bottom = 411.0
+mouse_default_cursor_shape = 2
+text = "展开画卷  →"
+theme_type_variation = &"PrimaryButton"
+theme_override_styles/normal = SubResource("Topic3Button")
+
+[node name="ScrollBottom" type="ColorRect" parent="Topic3"]
+offset_left = -7.0
+offset_top = 445.0
+offset_right = 303.0
+offset_bottom = 455.0
+mouse_filter = 2
+color = Color(0.580392157, 0.309803922, 0.258823529, 1)
+
+[node name="Topic4" type="Control" parent="."]
+metadata/topic_id = 3
+metadata/remark = "采菊东篱下，今天不打卡。"
+offset_left = 1055.0
+offset_top = 267.0
+offset_right = 1351.0
+offset_bottom = 722.0
+mouse_filter = 2
+
+[node name="ScrollTop" type="ColorRect" parent="Topic4"]
+offset_left = -7.0
+offset_top = 0.0
+offset_right = 303.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+
+[node name="Paper" type="Panel" parent="Topic4"]
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 296.0
+offset_bottom = 445.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Topic4Paper")
+
+[node name="Number" type="Label" parent="Topic4"]
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 104.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+theme_override_font_sizes/font_size = 19
+text = "零四"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Title" type="Label" parent="Topic4"]
+offset_left = 34.0
+offset_top = 85.0
+offset_right = 272.0
+offset_bottom = 159.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+theme_override_font_sizes/font_size = 49
+text = "田园"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Subtitle" type="Label" parent="Topic4"]
+offset_left = 36.0
+offset_top = 185.0
+offset_right = 274.0
+offset_bottom = 223.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 24
+text = "田园闲居"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="Prompt" type="Label" parent="Topic4"]
+offset_left = 30.0
+offset_top = 238.0
+offset_right = 272.0
+offset_bottom = 318.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 19
+text = "让杜甫忙里偷闲，归园田居"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Topic4"]
+offset_left = 30.0
+offset_top = 315.0
+offset_right = 272.0
+offset_bottom = 344.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+vertical_alignment = 1
+
+[node name="EnterButton" type="Button" parent="Topic4"]
+offset_left = 28.0
+offset_top = 354.0
+offset_right = 268.0
+offset_bottom = 411.0
+mouse_default_cursor_shape = 2
+text = "展开画卷  →"
+theme_type_variation = &"PrimaryButton"
+theme_override_styles/normal = SubResource("Topic4Button")
+
+[node name="ScrollBottom" type="ColorRect" parent="Topic4"]
+offset_left = -7.0
+offset_top = 445.0
+offset_right = 303.0
+offset_bottom = 455.0
+mouse_filter = 2
+color = Color(0.305882353, 0.439215686, 0.309803922, 1)
+
+[node name="Encouragement" type="Label" parent="."]
+offset_left = 75.0
+offset_top = 766.0
+offset_right = 1095.0
+offset_bottom = 804.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 22
+text = "没有标准答案，也没有不及格。放心大胆地想。"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[editable path="Frame"]

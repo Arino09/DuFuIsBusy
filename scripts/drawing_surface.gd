@@ -6,12 +6,13 @@ const WIDTH = 1040
 const HEIGHT = 330
 const CREATIVE_FONT = preload("res://assets/fonts/CreativeSansSC.otf")
 const DEFAULT_POSITION = Vector2(152.5, 162.5)
-var state: Dictionary
+var state: Dictionary = new_state()
 var ink := Color("243d35")
 var pen_width := 12
 var erasing := false
 var selecting := false
-var preview_only := false
+@export var preview_only := false
+@export_enum("none", "star", "cloud", "seal") var preview_kind: String = "none"
 var active := false
 var pointer := -2
 var previous := Vector2.ZERO
@@ -25,6 +26,10 @@ static func new_state() -> Dictionary:
 	return {"pixels": pixels, "objects": [{"id": 0, "kind": "avatar", "position": DEFAULT_POSITION, "scale": 1.0, "rotation": 0.0}], "selected": -1, "next_id": 1, "undo": [], "redo": [], "revision": 0, "submitted": -1, "result": null}
 
 func _ready() -> void:
+	if preview_kind != "none":
+		state = new_state()
+		state.objects = [{"id": 1, "kind": preview_kind, "position": Vector2(120, 90), "scale": 1.3, "rotation": 0.0}]
+		preview_only = true
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_IGNORE if preview_only else Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_MOVE if selecting else Control.CURSOR_CROSS

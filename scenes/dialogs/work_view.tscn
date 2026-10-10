@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[node name="WorkView" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "本地画作"
+
+[node name="Body" parent="Frame" index="3"]
+text = "本地保存的完成作品。打开编辑只生成草稿，旧作保持不变。"
+
+[node name="Artwork" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 214.0
+offset_top = 230.0
+offset_right = 1226.0
+offset_bottom = 650.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EditButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 740.0
+offset_top = 654.0
+offset_right = 960.0
+offset_bottom = 703.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "打开编辑"
+
+[node name="DownloadButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 985.0
+offset_top = 654.0
+offset_right = 1205.0
+offset_bottom = 703.0
+mouse_default_cursor_shape = 2
+text = "下载 PNG"
+
+[editable path="Frame"]

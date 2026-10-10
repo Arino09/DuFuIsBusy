@@ -1,0 +1,130 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="2_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+
+[ext_resource type="Script" path="res://scripts/drawing_surface.gd" id="4_drawing"]
+
+[node name="StickerPicker" type="Control"]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 900.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Frame" parent="." instance=ExtResource("2_frame")]
+layout_mode = 0
+
+[node name="Title" parent="Frame" index="2"]
+text = "原创贴纸"
+
+[node name="Body" parent="Frame" index="3"]
+text = "原创代码图形，可移动、缩放、旋转与删除。"
+
+[node name="SampleStar" type="Control" parent="."]
+layout_mode = 0
+offset_left = 254.0
+offset_top = 254.0
+offset_right = 494.0
+offset_bottom = 444.0
+mouse_filter = 2
+script = ExtResource("4_drawing")
+preview_only = true
+preview_kind = "star"
+
+[node name="StarLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 254.0
+offset_top = 466.0
+offset_right = 494.0
+offset_bottom = 511.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("3_serif")
+text = "星星"
+vertical_alignment = 1
+
+[node name="AddStarButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 254.0
+offset_top = 535.0
+offset_right = 494.0
+offset_bottom = 591.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "添加贴纸"
+
+[node name="SampleCloud" type="Control" parent="."]
+layout_mode = 0
+offset_left = 577.0
+offset_top = 254.0
+offset_right = 817.0
+offset_bottom = 444.0
+mouse_filter = 2
+script = ExtResource("4_drawing")
+preview_only = true
+preview_kind = "cloud"
+
+[node name="CloudLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 577.0
+offset_top = 466.0
+offset_right = 817.0
+offset_bottom = 511.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("3_serif")
+text = "祥云"
+vertical_alignment = 1
+
+[node name="AddCloudButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 577.0
+offset_top = 535.0
+offset_right = 817.0
+offset_bottom = 591.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "添加贴纸"
+
+[node name="SampleSeal" type="Control" parent="."]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 254.0
+offset_right = 1140.0
+offset_bottom = 444.0
+mouse_filter = 2
+script = ExtResource("4_drawing")
+preview_only = true
+preview_kind = "seal"
+
+[node name="SealLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 466.0
+offset_right = 1140.0
+offset_bottom = 511.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("3_serif")
+text = "忙字印章"
+vertical_alignment = 1
+
+[node name="AddSealButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 535.0
+offset_right = 1140.0
+offset_bottom = 591.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "添加贴纸"
+
+[editable path="Frame"]

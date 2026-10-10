@@ -1,0 +1,357 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+
+[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
+
+[ext_resource type="Script" path="res://scripts/drawing_surface.gd" id="Drawing"]
+
+[ext_resource type="Script" path="res://scripts/pages/canvas_page.gd" id="Controller"]
+
+[sub_resource type="StyleBoxFlat" id="TopicBannerStyle"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.886274510, 0.905882353, 0.850980392, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.847058824, 0.811764706, 0.725490196, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="PaletteButtonStyle"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.972549020, 0.956862745, 0.913725490, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[node name="Canvas" type="Control"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+theme = ExtResource("Theme")
+script = ExtResource("Controller")
+
+[node name="Frame" parent="." instance=ExtResource("Frame")]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1440.0
+offset_bottom = 900.0
+
+[node name="Title" parent="Frame" index="8"]
+text = "创作画布"
+
+[node name="Subtitle" parent="Frame" index="9"]
+text = "绘画、文字、贴纸与诗圣自由摆放 · 鼠标或单指操作"
+
+[node name="TopicBanner" type="Panel" parent="."]
+offset_left = 74.0
+offset_top = 238.0
+offset_right = 1368.0
+offset_bottom = 305.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("TopicBannerStyle")
+
+[node name="TopicLabel" type="Label" parent="."]
+offset_left = 95.0
+offset_top = 249.0
+offset_right = 220.0
+offset_bottom = 291.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 21
+text = "本关命题"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="TopicPrompt" type="Label" parent="."]
+offset_left = 234.0
+offset_top = 249.0
+offset_right = 1117.0
+offset_bottom = 291.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 23
+text = "至少出现一种交通工具"
+vertical_alignment = 1
+
+[node name="ChangeTopicButton" type="Button" parent="."]
+offset_left = 1193.0
+offset_top = 249.0
+offset_right = 1349.0
+offset_bottom = 293.0
+mouse_default_cursor_shape = 2
+text = "换个主题"
+
+[node name="ToolPanel" type="Panel" parent="."]
+offset_left = 74.0
+offset_top = 327.0
+offset_right = 272.0
+offset_bottom = 798.0
+mouse_filter = 2
+
+[node name="ToolsTitle" type="Label" parent="."]
+offset_left = 96.0
+offset_top = 340.0
+offset_right = 260.0
+offset_bottom = 375.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
+theme_override_font_sizes/font_size = 23
+text = "创作工具"
+vertical_alignment = 1
+theme_override_fonts/font = ExtResource("Serif")
+
+[node name="ToolBrush" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 389.0
+offset_right = 169.0
+offset_bottom = 434.0
+mouse_default_cursor_shape = 2
+text = "笔刷"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+theme_override_font_sizes/font_size = 18
+button_pressed = true
+
+[node name="ToolEraser" type="Button" parent="."]
+offset_left = 177.0
+offset_top = 389.0
+offset_right = 255.0
+offset_bottom = 434.0
+mouse_default_cursor_shape = 2
+text = "橡皮"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+theme_override_font_sizes/font_size = 18
+
+[node name="ToolMove" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 444.0
+offset_right = 255.0
+offset_bottom = 489.0
+mouse_default_cursor_shape = 2
+text = "选择 / 移动"
+theme_type_variation = &"SelectableButton"
+toggle_mode = true
+theme_override_font_sizes/font_size = 18
+
+[node name="AddTextButton" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 499.0
+offset_right = 169.0
+offset_bottom = 544.0
+mouse_default_cursor_shape = 2
+text = "文字"
+theme_override_font_sizes/font_size = 18
+
+[node name="StickerButton" type="Button" parent="."]
+offset_left = 177.0
+offset_top = 499.0
+offset_right = 255.0
+offset_bottom = 544.0
+mouse_default_cursor_shape = 2
+text = "贴纸"
+theme_override_font_sizes/font_size = 18
+
+[node name="PaletteButton" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 554.0
+offset_right = 255.0
+offset_bottom = 599.0
+mouse_default_cursor_shape = 2
+text = "调色盘"
+theme_override_styles/normal = SubResource("PaletteButtonStyle")
+tooltip_text = "当前画笔色号：#243d35"
+
+[node name="WidthLabel" type="Label" parent="."]
+offset_left = 94.0
+offset_top = 604.0
+offset_right = 249.0
+offset_bottom = 632.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 18
+text = "笔宽 · 12"
+vertical_alignment = 1
+
+[node name="WidthSlider" type="HSlider" parent="."]
+offset_left = 91.0
+offset_top = 637.0
+offset_right = 255.0
+offset_bottom = 664.0
+min_value = 4.0
+max_value = 56.0
+step = 4.0
+value = 12.0
+
+[node name="ReferenceButton" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 683.0
+offset_right = 255.0
+offset_bottom = 726.0
+mouse_default_cursor_shape = 2
+text = "素材参考"
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 91.0
+offset_top = 736.0
+offset_right = 255.0
+offset_bottom = 779.0
+mouse_default_cursor_shape = 2
+text = "重新创作"
+
+[node name="CanvasPanel" type="Panel" parent="."]
+offset_left = 294.0
+offset_top = 327.0
+offset_right = 1368.0
+offset_bottom = 798.0
+mouse_filter = 2
+
+[node name="EditObjectButton" type="Button" parent="."]
+offset_left = 311.0
+offset_top = 337.0
+offset_right = 410.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "编辑"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="ShrinkButton" type="Button" parent="."]
+offset_left = 418.0
+offset_top = 337.0
+offset_right = 517.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "缩小"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="GrowButton" type="Button" parent="."]
+offset_left = 525.0
+offset_top = 337.0
+offset_right = 624.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "放大"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="RotateLeftButton" type="Button" parent="."]
+offset_left = 632.0
+offset_top = 337.0
+offset_right = 731.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "左转"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="RotateRightButton" type="Button" parent="."]
+offset_left = 739.0
+offset_top = 337.0
+offset_right = 838.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "右转"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="DeleteObjectButton" type="Button" parent="."]
+offset_left = 846.0
+offset_top = 337.0
+offset_right = 945.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "删除"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="DeselectButton" type="Button" parent="."]
+offset_left = 953.0
+offset_top = 337.0
+offset_right = 1052.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "取消"
+theme_override_font_sizes/font_size = 18
+disabled = true
+
+[node name="UndoButton" type="Button" parent="."]
+offset_left = 1080.0
+offset_top = 337.0
+offset_right = 1200.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "撤销"
+disabled = true
+
+[node name="RedoButton" type="Button" parent="."]
+offset_left = 1216.0
+offset_top = 337.0
+offset_right = 1348.0
+offset_bottom = 379.0
+mouse_default_cursor_shape = 2
+text = "重做"
+disabled = true
+
+[node name="DrawingStatus" type="Label" parent="."]
+offset_left = 313.0
+offset_top = 733.0
+offset_right = 1123.0
+offset_bottom = 762.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_font_sizes/font_size = 16
+text = "画笔不会移动对象 · 历史 0 / 20"
+vertical_alignment = 1
+
+[node name="DrawingSurface" type="Control" parent="."]
+offset_left = 311.0
+offset_top = 397.0
+offset_right = 1351.0
+offset_bottom = 727.0
+clip_contents = true
+mouse_default_cursor_shape = 3
+script = ExtResource("Drawing")
+
+[node name="AutosaveHint" type="Label" parent="."]
+offset_left = 313.0
+offset_top = 767.0
+offset_right = 1048.0
+offset_bottom = 791.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.521568627, 0.482352941, 0.407843137, 1)
+theme_override_font_sizes/font_size = 15
+text = "草稿自动保存于此浏览器；完成后提交并存入画廊。"
+vertical_alignment = 1
+
+[node name="SubmitButton" type="Button" parent="."]
+offset_left = 1131.0
+offset_top = 743.0
+offset_right = 1344.0
+offset_bottom = 786.0
+mouse_default_cursor_shape = 2
+text = "提交作品 →"
+theme_type_variation = &"PrimaryButton"
+
+[editable path="Frame"]
