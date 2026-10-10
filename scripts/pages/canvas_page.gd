@@ -77,9 +77,9 @@ func refresh_tools(tool: String, color: Color, width: int) -> void:
 	for name in tool_buttons:
 		tool_buttons[name].set_pressed_no_signal(name == tool)
 	width_slider.set_value_no_signal(width)
-	width_label.text = "笔宽 · %d" % width
+	width_label.text = "粗细  %d" % width
 	palette_style.border_color = color
-	palette_button.tooltip_text = "当前画笔色号：#" + color.to_html(false)
+	palette_button.tooltip_text = "颜色 #" + color.to_html(false)
 	surface.queue_redraw()
 	update_controls()
 
@@ -95,11 +95,9 @@ func update_controls() -> void:
 	var avatar_selected: bool = not object.is_empty() and object.kind == "avatar"
 	for action in ["左转", "右转"]:
 		object_buttons[action].disabled = object.is_empty() or avatar_selected
-		object_buttons[action].tooltip_text = "杜甫可移动、缩放，不可旋转" if avatar_selected else ""
-	var tip := "选择 / 移动：点选对象后拖动；空白处取消" if surface.selecting else "橡皮只擦笔迹" if surface.erasing else "画笔不会移动对象"
-	if not object.is_empty(): tip = "已选：" + OBJECT_NAMES[object.kind] + " · 拖动移动，上方可变换"
-	if avatar_selected: tip = "已选：杜甫 · 拖动移动，可缩放"
-	drawing_status.text = tip + " · 历史 %d / 20" % state.undo.size()
+		object_buttons[action].tooltip_text = "杜甫可移动、缩放，不可旋转" if avatar_selected else "向左旋转 15 度" if action == "左转" else "向右旋转 15 度"
+	drawing_status.text = "未选中" if surface.selecting else "橡皮" if surface.erasing else "画笔"
+	if not object.is_empty(): drawing_status.text = "已选中：" + OBJECT_NAMES[object.kind]
 	print("DRAW_STATE:", topic_id, ":", state.revision, ":", surface.has_creation(), ":", state.undo.size(), ":", state.redo.size())
 	print("OBJECT_STATE:", state.objects.size(), ":", state.selected)
 
@@ -125,7 +123,7 @@ func _request_action(action: String) -> void:
 func _on_width_changed(value: float) -> void:
 	var width := int(value)
 	surface.pen_width = width
-	width_label.text = "笔宽 · %d" % width
+	width_label.text = "粗细  %d" % width
 	print("DRAW_WIDTH:", width)
 	width_changed.emit(width)
 

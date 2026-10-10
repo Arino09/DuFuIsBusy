@@ -40,7 +40,6 @@ func _ready() -> void:
 func refresh(works: Array, tab: int, filter: String, requested_page: int, texture_provider: Callable) -> void:
 	$MyWorksTab.set_pressed_no_signal(tab == 0)
 	$ExamplesTab.set_pressed_no_signal(tab == 1)
-	$GalleryDescription.text = "合成示例 · 仅供欣赏" if tab == 1 else "可编辑图层 · 本机保存"
 	_my_works.visible = tab == 0
 	_examples.visible = tab == 1
 	page_index = clampi(requested_page, 0, maxi(0, ceili(works.size() / 4.0) - 1))
@@ -53,7 +52,7 @@ func _refresh_works(works: Array, texture_provider: Callable) -> void:
 	var draft_count := 0
 	for work in works:
 		if work.get("draft", false): draft_count += 1
-	$MyWorks/CountLabel.text = "草稿 · %d 幅    完成作品 · %d 幅" % [draft_count, works.size() - draft_count]
+	$MyWorks/CountLabel.text = "%d 幅草稿，%d 幅完成作品" % [draft_count, works.size() - draft_count]
 	$MyWorks/EmptyState.visible = works.is_empty()
 	$MyWorks/Cards.visible = not works.is_empty()
 	_previous_button.visible = not works.is_empty()

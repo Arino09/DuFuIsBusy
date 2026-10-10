@@ -70,7 +70,7 @@ func read_document() -> bool:
 		var response: Variant = JSON.parse_string(raw) if raw is String else null
 		if not response is Dictionary or not response.get("ok", false):
 			writable = false
-			error = "浏览器存储不可用；创作仅在内存中，关闭会丢失。"
+			error = "无法读取浏览器存档。请下载图片备份，再检查站点存储权限。"
 			return false
 		raw = response.value
 	else:
@@ -82,7 +82,7 @@ func read_document() -> bool:
 	var data: Variant = parser.data if parsed_ok else null
 	if not validate_document(data):
 		writable = false
-		error = "本地存档格式异常，已保护原数据，停止写入；请勿清理浏览器数据。"
+		error = "存档无法读取，原数据已保留。请先下载图片备份。"
 		return false
 	document = data
 	return true
@@ -123,21 +123,21 @@ func write_document(candidate: Dictionary) -> bool:
 		var code := "(function(){try{if((localStorage.getItem(%s)||'')!==%s)return 'conflict';localStorage.setItem(%s,%s);return 'ok';}catch(e){return e.name==='QuotaExceededError'?'quota':'unavailable';}})()" % [JSON.stringify(KEY),JSON.stringify(previous_raw),JSON.stringify(KEY),JSON.stringify(raw)]
 		var result: Variant = JavaScriptBridge.eval(code)
 		if result != "ok":
-			if result == "conflict": error = "其他标签页已修改存档；本页未覆盖。请先导出当前画作，再刷新。"
-			elif result == "quota": error = "存储空间不足，尚未保存；请导出 PNG 备份，再整理浏览器存储。"
-			else: error = "浏览器拒绝写入，尚未保存；请导出 PNG 并检查站点存储权限。"
+			if result == "conflict": error = "其他标签页修改了存档。请先下载当前图片，再刷新本页。"
+			elif result == "quota": error = "存储空间不足。请先下载图片备份，再清理浏览器存储。"
+			else: error = "浏览器无法保存。请下载图片备份，并检查站点存储权限。"
 			return false
 	else:
 		var file := FileAccess.open(TEMP_PATH, FileAccess.WRITE)
 		if file == null:
-			error = "本地文件无法写入，尚未保存。"
+			error = "文件无法写入，请检查存储空间和写入权限后重试。"
 			return false
 		file.store_string(raw)
 		file.flush()
 		var status := file.get_error()
 		file.close()
 		if status != OK or DirAccess.rename_absolute(TEMP_PATH, PATH) != OK:
-			error = "本地写入失败，尚未保存。"
+			error = "保存失败，请检查存储空间和写入权限后重试。"
 			return false
 	document = candidate
 	previous_raw = raw

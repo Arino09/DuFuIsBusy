@@ -31,7 +31,7 @@ func run() -> void:
 	for kind in ["text", "weapon_du"]:
 		surface.add_object(kind, "杜甫")
 		assert(not page.object_buttons["左转"].disabled and not page.object_buttons["右转"].disabled)
-		assert(page.object_buttons["左转"].tooltip_text.is_empty())
+		assert(page.object_buttons["左转"].tooltip_text == "向左旋转 15 度")
 		page.object_action("右转")
 		assert(is_equal_approx(surface.selected_object().rotation, PI / 12))
 		page.object_action("左转")

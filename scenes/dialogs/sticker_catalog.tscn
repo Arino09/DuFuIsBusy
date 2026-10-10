@@ -24,10 +24,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.84705882, 0.81176471, 0.7254902, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
 
 [node name="StickerCatalog" type="Control"]
 layout_mode = 0
@@ -41,11 +41,11 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "素材目录"
+text = "素材"
 
 [node name="Body" parent="Frame" index="3"]
 theme_override_fonts/font = ExtResource("9_font")
-text = "武器贴纸可添加到画布，场景图片可打开参考。"
+text = ""
 
 [node name="ReferencePanel" type="Panel" parent="."]
 layout_mode = 0
@@ -118,10 +118,10 @@ offset_top = 231.0
 offset_right = 1173.0
 offset_bottom = 283.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_fonts/font = ExtResource("3_serif")
-text = "幻想武器"
+text = "武器贴纸"
 vertical_alignment = 1
 
 [node name="WeaponCaption" type="Label" parent="."]
@@ -131,10 +131,10 @@ offset_top = 287.0
 offset_right = 1204.0
 offset_bottom = 325.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.4627451, 0.38039216, 0.28235294, 1)
+theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
 theme_override_font_sizes/font_size = 19
 theme_override_fonts/font = ExtResource("9_font")
-text = "五款独立透明贴纸，可移动、缩放和旋转。"
+text = "5 款"
 vertical_alignment = 1
 
 [node name="WeaponButton" type="Button" parent="."]
@@ -145,7 +145,7 @@ offset_right = 1203.0
 offset_bottom = 399.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "选择武器贴纸"
+text = "选择贴纸"
 
 [node name="SceneTitle" type="Label" parent="."]
 layout_mode = 0
@@ -154,7 +154,7 @@ offset_top = 427.0
 offset_right = 1173.0
 offset_bottom = 471.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 26
 theme_override_fonts/font = ExtResource("3_serif")
 text = "场景参考"
@@ -187,7 +187,7 @@ offset_bottom = 632.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.52156863, 0.48235294, 0.40784314, 1)
 theme_override_font_sizes/font_size = 19
-text = "交通与田园素材仍待补充。"
+text = ""
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]

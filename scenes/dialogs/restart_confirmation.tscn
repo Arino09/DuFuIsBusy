@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "重新创作？"
+text = "清空草稿？"
 
 [node name="Body" parent="Frame" index="3"]
-text = "将清空当前命题草稿，杜甫回到原位。已保存的完成作品和关卡进度不受影响。"
+text = "本关草稿将被清空，杜甫回到原位，无法撤销。\n完成作品和关卡进度会保留。"
 
 [node name="CancelButton" type="Button" parent="."]
 layout_mode = 0
@@ -40,6 +40,6 @@ offset_right = 997.0
 offset_bottom = 633.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "清空画卷"
+text = "清空草稿"
 
 [editable path="Frame"]

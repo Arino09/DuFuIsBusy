@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "诗圣先歇一会儿"
+text = "提示"
 
 [node name="Body" parent="Frame" index="3"]
-text = "网页不会擅自关闭你的标签页。\n想休息时直接关闭本页，随时可以回来继续看。"
+text = ""
 
 [node name="OkayButton" type="Button" parent="."]
 layout_mode = 0
@@ -31,6 +31,6 @@ offset_right = 1000.0
 offset_bottom = 632.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "知道了"
+text = "关闭"
 
 [editable path="Frame"]

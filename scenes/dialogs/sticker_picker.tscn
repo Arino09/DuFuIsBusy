@@ -38,7 +38,7 @@ text = "武器贴纸"
 [node name="Body" parent="Frame" index="3"]
 offset_right = 1216.0
 theme_override_fonts/font = ExtResource("3_font")
-text = "选择一件武器加入画布，再自由移动、缩放、旋转或删除。"
+text = ""
 
 [node name="DuCard" type="Panel" parent="."]
 layout_mode = 0
@@ -67,7 +67,7 @@ offset_top = 577.0
 offset_right = 400.0
 offset_bottom = 619.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3_font")
 text = "杜甫重剑"
@@ -83,7 +83,7 @@ offset_bottom = 681.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 tooltip_text = "添加杜甫重剑到画布"
-text = "添加贴纸"
+text = "使用"
 
 [node name="PinkCard" type="Panel" parent="."]
 layout_mode = 0
@@ -112,7 +112,7 @@ offset_top = 577.0
 offset_right = 602.0
 offset_bottom = 619.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3_font")
 text = "粉刃短刀"
@@ -128,7 +128,7 @@ offset_bottom = 681.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 tooltip_text = "添加粉刃短刀到画布"
-text = "添加贴纸"
+text = "使用"
 
 [node name="SilverCard" type="Panel" parent="."]
 layout_mode = 0
@@ -157,7 +157,7 @@ offset_top = 577.0
 offset_right = 804.0
 offset_bottom = 619.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3_font")
 text = "银纹长剑"
@@ -173,7 +173,7 @@ offset_bottom = 681.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 tooltip_text = "添加银纹长剑到画布"
-text = "添加贴纸"
+text = "使用"
 
 [node name="BlueCard" type="Panel" parent="."]
 layout_mode = 0
@@ -202,7 +202,7 @@ offset_top = 577.0
 offset_right = 1006.0
 offset_bottom = 619.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3_font")
 text = "冰蓝长刃"
@@ -218,7 +218,7 @@ offset_bottom = 681.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 tooltip_text = "添加冰蓝长刃到画布"
-text = "添加贴纸"
+text = "使用"
 
 [node name="VioletCard" type="Panel" parent="."]
 layout_mode = 0
@@ -247,7 +247,7 @@ offset_top = 577.0
 offset_right = 1208.0
 offset_bottom = 619.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3_font")
 text = "紫晶巨剑"
@@ -263,6 +263,6 @@ offset_bottom = 681.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 tooltip_text = "添加紫晶巨剑到画布"
-text = "添加贴纸"
+text = "使用"
 
 [editable path="Frame"]

@@ -60,7 +60,7 @@ try:
      session.send('Input.insertText',{'text':text})
      session.detach()
     page.wait_for_timeout(250)
-   click(260,530,'UI_PAGE:canvas')
+   click(292,552,'UI_PAGE:canvas')
    click(130,520,'UI_DIALOG:添加文字')
    fill(640,420,'山川异域，风月同天。')
    fill(579,490,'36');fill(882,490,'156789')

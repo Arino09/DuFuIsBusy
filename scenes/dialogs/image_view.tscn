@@ -21,7 +21,7 @@ layout_mode = 0
 text = "作品预览"
 
 [node name="Body" parent="Frame" index="3"]
-text = "原始合成示例，仅供欣赏，不是已保存作品或可编辑图层。"
+text = "示例"
 
 [node name="Picture" type="TextureRect" parent="."]
 layout_mode = 0

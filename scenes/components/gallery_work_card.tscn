@@ -1,12 +1,10 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
-
 [ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
-
 [ext_resource type="PackedScene" path="res://scenes/components/artwork_preview.tscn" id="DraftPreview"]
 
-[node name="GalleryWorkCard" type="Panel"]
+[node name="GalleryWorkCard" type="Control"]
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 634.0
@@ -16,9 +14,9 @@ theme = ExtResource("Theme")
 mouse_filter = 2
 
 [node name="Picture" type="TextureRect" parent="."]
-offset_left = 15.0
-offset_top = 15.0
-offset_right = 295.0
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 407.0
 offset_bottom = 180.0
 mouse_filter = 2
 expand_mode = 1
@@ -26,35 +24,38 @@ stretch_mode = 5
 
 [node name="DraftPreview" parent="." instance=ExtResource("DraftPreview")]
 visible = false
-offset_left = 15.0
-offset_top = 15.0
-offset_right = 295.0
+offset_left = 0.0
+offset_top = 10.0
+offset_right = 407.0
 offset_bottom = 180.0
 
 [node name="Title" type="Label" parent="."]
-offset_left = 310.0
-offset_top = 16.0
-offset_right = 616.0
-offset_bottom = 62.0
+offset_left = 430.0
+offset_top = 6.0
+offset_right = 630.0
+offset_bottom = 68.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("Serif")
 text = "作品标题"
 vertical_alignment = 1
-theme_override_fonts/font = ExtResource("Serif")
+autowrap_mode = 3
 
 [node name="ViewButton" type="Button" parent="."]
-offset_left = 310.0
-offset_top = 77.0
-offset_right = 612.0
-offset_bottom = 123.0
+offset_left = 430.0
+offset_top = 82.0
+offset_right = 630.0
+offset_bottom = 125.0
 mouse_default_cursor_shape = 2
-text = "查看作品"
+text = "查看"
+theme_type_variation = &"QuietButton"
 
 [node name="EditButton" type="Button" parent="."]
-offset_left = 310.0
-offset_top = 134.0
-offset_right = 612.0
-offset_bottom = 180.0
+offset_left = 430.0
+offset_top = 136.0
+offset_right = 630.0
+offset_bottom = 179.0
 mouse_default_cursor_shape = 2
-text = "打开编辑"
+text = "继续画"
+theme_type_variation = &"QuietButton"

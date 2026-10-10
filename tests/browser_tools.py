@@ -60,7 +60,7 @@ try:
      session.send('Input.insertText',{'text':text})
      session.detach()
     page.wait_for_timeout(250)
-   click(260,530,'UI_PAGE:canvas');shot('canvas-empty')
+   click(292,552,'UI_PAGE:canvas');shot('canvas-empty')
    click(1230,760,'SUBMIT_EMPTY');page.keyboard.press('Escape')
    click(130,520,'UI_DIALOG:添加文字');shot('text-editor')
    click(890,604);assert 'TEXT_APPLIED' not in str(logs)
@@ -76,7 +76,7 @@ try:
    click(1140,359)
    checks.append('Chinese input/edit, font size and color, text move/scale/rotate/delete, undo/redo; text-only creation')
    # Text alone qualifies and the preview must actually render it.
-   click(1230,760,'SUBMIT_OK:-1:');shot('text-review');click(830,670)
+   click(1230,760,'SUBMIT_OK:-1:');shot('text-review');click(328,650)
    click(215,520,'UI_DIALOG:武器贴纸');shot('sticker-picker');click(316,657,'UI_PAGE:canvas')
    stroke([(891,562),(700,480)])
    click(788,359);click(574,359);shot('weapon-transformed')
@@ -98,14 +98,14 @@ try:
    # Move Dufu far to the right, retaining all other elements.
    stroke([(460,555),(1150,635)]);shot('objects-composed')
    checks.append('All five weapon stickers, object selection/drag/transforms; touch drag and touch toolbar; Dufu free placement')
-   click(170,577,'UI_DIALOG:调色盘');shot('palette')
+   click(170,577,'UI_DIALOG:颜色');shot('palette')
    fill(600,525,'ZZZZZZ');click(900,525);assert not any('COLOR_CHANGED:' in e['text'] for e in logs)
    fill(600,525,'00AABB');click(900,525,'COLOR_CHANGED:00aabb')
    click(200,650,'DRAW_WIDTH:');stroke([(610,650),(750,670),(850,630)])
    shot('canvas');click(1230,760,'SUBMIT_OK:-1:');shot('review')
    submitted=[e['text'] for e in logs if 'SUBMIT_OK:' in e['text']][-1]
-   click(830,670);click(1230,760,'SUBMIT_OK:-1:');assert [e['text'] for e in logs if 'SUBMIT_OK:' in e['text']][-1]==submitted
-   click(830,670);before=state();back();click(260,530,'UI_PAGE:canvas');assert before==state()
+   click(328,650);click(1230,760,'SUBMIT_OK:-1:');assert [e['text'] for e in logs if 'SUBMIT_OK:' in e['text']][-1]==submitted
+   click(328,650);before=state();back();click(292,552,'UI_PAGE:canvas');assert before==state()
    checks.append('custom RGB color validation; pen input remains independent; actual full composition; repeat submit and navigation persistence')
    click(170,466,'UI_PAGE:canvas');click(1290,705);assert objects().endswith(':-1')
    click(360,359);assert 'UI_DIALOG:编辑文字' not in str(logs[-2:])
@@ -114,12 +114,12 @@ try:
    page.evaluate("window.dispatchEvent(new Event('blur'))");page.wait_for_timeout(250)
    assert before!=state();finished=state();page.mouse.move(990,480);page.mouse.up();assert finished==state()
    page.set_viewport_size({'width':1024,'height':768});page.wait_for_timeout(350);shot('canvas-1024x768')
-   click(1230,760,'SUBMIT_OK:-1:');shot('review-1024x768');click(830,670)
+   click(1230,760,'SUBMIT_OK:-1:');shot('review-1024x768');click(328,650)
    page.set_viewport_size({'width':844,'height':390});page.wait_for_timeout(350);shot('canvas-844x390')
    page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(350);shot('canvas-390x844')
    page.set_viewport_size({'width':1440,'height':900});page.wait_for_timeout(350)
-   click(175,758,'UI_DIALOG:重新创作');click(650,603);assert ':true:' in state()
-   click(175,758,'UI_DIALOG:重新创作');click(870,603,'UI_PAGE:canvas');assert ':false:0:0' in state();assert objects()=='OBJECT_STATE:1:-1'
+   click(175,758,'UI_DIALOG:清空草稿');click(650,603);assert ':true:' in state()
+   click(175,758,'UI_DIALOG:清空草稿');click(870,603,'UI_PAGE:canvas');assert ':false:0:0' in state();assert objects()=='OBJECT_STATE:1:-1'
    click(1230,760,'SUBMIT_EMPTY');page.keyboard.press('Escape')
    checks.append('cancel selection, disabled object actions, blur, responsive layout and submit, restart cancel/confirm reset all layers')
    # Only relocating Dufu is valid creative work, including touch placement.
@@ -128,7 +128,7 @@ try:
    cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':900,'y':560}]})
    cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
    page.wait_for_timeout(300);assert ':true:1:0' in state(),state()
-   click(1230,760,'SUBMIT_OK:-1:');shot('dufu-only-review');click(830,670)
+   click(1230,760,'SUBMIT_OK:-1:');shot('dufu-only-review');click(328,650)
    click(1140,359);assert ':false:0:1' in state(),state()
    checks.append('touch Dufu-only creation passes; undo to original is empty again')
    assert not errors,errors

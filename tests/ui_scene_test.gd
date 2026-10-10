@@ -141,8 +141,8 @@ func verify_authored_scenes() -> bool:
 				assert(scene.get_node("Frame/Body") is Label)
 			scene.free()
 	var theme: Theme = load("res://themes/ui_theme.tres")
-	assert(theme.get_stylebox("pressed", "SelectableButton").bg_color == Color("243d35"))
-	assert(theme.get_color("font_pressed_color", "SelectableButton") == Color("f8f4e9"))
+	assert(theme.get_stylebox("pressed", "SelectableButton").bg_color.is_equal_approx(Color("292824")))
+	assert(theme.get_color("font_pressed_color", "SelectableButton").is_equal_approx(Color("fbfaf5")))
 	assert(theme.get_stylebox("normal", "CompactRetryButton").content_margin_top == 2.0)
 	return true
 
@@ -435,7 +435,7 @@ func run() -> void:
 	app.page.get_node("VolumeSlider").value = 51
 	app.flush_pending_saves()
 	assert(app._settings_pending and app.settings_store.stored.volume == 70)
-	assert(app.page.get_node("SettingsNote").text.contains("本地写入失败"))
+	assert(app.page.get_node("SettingsNote").text.contains("设置保存失败"))
 	app.settings_store.fail_writes = false
 	app._web_focus_lost([])
 	assert(not app._settings_pending and app.settings_store.stored.volume == 51)

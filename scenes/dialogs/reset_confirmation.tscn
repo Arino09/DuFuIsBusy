@@ -21,7 +21,7 @@ layout_mode = 0
 text = "恢复默认设置？"
 
 [node name="Body" parent="Frame" index="3"]
-text = "仅重置音量、音效、音乐和画质偏好。\n不会删除当前会话的画卷。"
+text = "音量、音效、音乐、画质和减少动画将恢复默认。\n草稿、作品和关卡进度会保留。"
 
 [node name="CancelButton" type="Button" parent="."]
 layout_mode = 0
@@ -40,6 +40,6 @@ offset_right = 997.0
 offset_bottom = 633.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "确认恢复"
+text = "恢复默认"
 
 [editable path="Frame"]

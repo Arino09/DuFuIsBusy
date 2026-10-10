@@ -48,8 +48,8 @@ try:
     page.mouse.up();page.wait_for_timeout(200)
    def state():
     return [e['text'] for e in logs if 'DRAW_STATE:' in e['text']][-1]
-   click(265,450,'UI_PAGE:levels');shot('levels')
-   click(220,650,'UI_PAGE:canvas');shot('canvas-empty')
+   click(292,475,'UI_PAGE:levels');shot('levels')
+   click(1268,308,'UI_PAGE:canvas');shot('canvas-empty')
    click(1230,760,'SUBMIT_EMPTY');shot('empty-rejected');page.keyboard.press('Escape')
    stroke([(700,540),(850,540)])
    assert ':true:1:0' in state(),state()
@@ -63,21 +63,24 @@ try:
    shot('undo-restored')
    click(1280,359);assert ':false:2:0' in state(),state()
    click(1140,359);click(130,412,'UI_PAGE:canvas')
-   click(170,577,'UI_DIALOG:调色盘');click(474,295,'COLOR_CHANGED:aa4937')
+   click(170,577,'UI_DIALOG:颜色');click(474,295,'COLOR_CHANGED:aa4937')
    # Adjust pen width through the real slider.
    click(230,650,'DRAW_WIDTH:');assert [e['text'] for e in logs if 'DRAW_WIDTH:' in e['text']][-1]!='DRAW_WIDTH:12'
    stroke([(680,600),(760,650),(870,580),(980,650)])
    shot('canvas')
    click(1230,760,'SUBMIT_OK:0:');shot('review')
    submit=[e['text'] for e in logs if 'SUBMIT_OK' in e['text']][-1]
-   click(830,670);click(1230,760,'SUBMIT_OK:0:')
+   click(328,650);click(1230,760,'SUBMIT_OK:0:')
    assert [e['text'] for e in logs if 'SUBMIT_OK' in e['text']][-1]==submit
-   click(830,670)
-   before=state();back();click(265,450,'UI_PAGE:levels');click(220,650,'UI_PAGE:canvas')
+   # Saving the completed first artwork unlocks the next topic; submitting alone does not.
+   assert page.evaluate("JSON.parse(localStorage.getItem('DuFuIsBusy.art.v2')).completed_topics")==[]
+   click(1097,650,'WORK_SAVED:work-1:1');click(650,603)
+   assert page.evaluate("JSON.parse(localStorage.getItem('DuFuIsBusy.art.v2')).completed_topics")==[0]
+   before=state();back();click(292,475,'UI_PAGE:levels');click(1268,308,'UI_PAGE:canvas')
    assert state()==before,(before,state())
-   click(1270,270,'UI_PAGE:levels');click(547,650,'UI_PAGE:canvas')
+   click(1270,270,'UI_PAGE:levels');click(1268,436,'UI_PAGE:canvas')
    assert ':false:0:0' in state(),state()
-   click(1270,270,'UI_PAGE:levels');click(220,650,'UI_PAGE:canvas')
+   click(1270,270,'UI_PAGE:levels');click(1268,308,'UI_PAGE:canvas')
    assert state()==before
    checks.append('blank and erased rejection; raster undo/redo; color/width; actual artwork review; repeat submission; per-topic navigation persistence')
    # Boundary exits terminate the stroke, returning while held does not bridge.
@@ -113,11 +116,11 @@ try:
    page.set_viewport_size({'width':844,'height':390});page.wait_for_timeout(400);shot('canvas-844x390')
    page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(400);shot('canvas-390x844')
    page.set_viewport_size({'width':1440,'height':900});page.wait_for_timeout(400)
-   click(175,758,'UI_DIALOG:重新创作');click(650,603);assert ':true:' in state()
-   click(175,758,'UI_DIALOG:重新创作');click(870,603,'UI_PAGE:canvas');assert ':false:0:0' in state()
+   click(175,758,'UI_DIALOG:清空草稿');click(650,603);assert ':true:' in state()
+   click(175,758,'UI_DIALOG:清空草稿');click(870,603,'UI_PAGE:canvas');assert ':false:0:0' in state()
    checks.append('scaled drawing/submission at 1024; landscape/portrait; restart cancel/confirm')
-   back();click(175,608,'UI_PAGE:gallery');shot('gallery');back()
-   click(365,606,'UI_PAGE:settings');shot('settings');back();shot('home')
+   back();click(172,634,'UI_PAGE:gallery');shot('gallery');back()
+   click(282,634,'UI_PAGE:settings');shot('settings');back();shot('home')
    assert not errors,errors
    assert not failed,failed
    assert not blocked,blocked

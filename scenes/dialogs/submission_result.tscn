@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "妙哉！画卷已装裱"
+text = "完成作品"
 
 [node name="Body" parent="Frame" index="3"]
-text = "保存完成作品后解锁下一关。\n草稿已自动存入我的作品。"
+text = "保存后解锁下一关。"
 
 [node name="Artwork" type="TextureRect" parent="."]
 layout_mode = 0
@@ -38,68 +38,51 @@ layout_mode = 0
 offset_left = 235.0
 offset_top = 581.0
 offset_right = 1215.0
-offset_bottom = 641.0
+offset_bottom = 612.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.14117647, 0.23921569, 0.20784314, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_font_sizes/font_size = 20
 theme_override_fonts/font = ExtResource("3_serif")
-text = "车到山前必有路，诗圣今天不走路。"
+text = ""
 vertical_alignment = 1
 
-[node name="RestartButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 462.0
-offset_top = 644.0
-offset_right = 697.0
-offset_bottom = 693.0
-mouse_default_cursor_shape = 2
-text = "重新创作"
 
 [node name="ContinueButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 718.0
-offset_top = 644.0
-offset_right = 953.0
-offset_bottom = 693.0
+offset_left = 216.0
+offset_top = 626.0
+offset_right = 440.0
+offset_bottom = 675.0
 mouse_default_cursor_shape = 2
 text = "继续编辑"
 
-[node name="NextButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 974.0
-offset_top = 644.0
-offset_right = 1209.0
-offset_bottom = 693.0
-mouse_default_cursor_shape = 2
-theme_type_variation = &"PrimaryButton"
-text = "返回选关"
 
 [node name="SaveButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 216.0
-offset_top = 644.0
-offset_right = 440.0
-offset_bottom = 693.0
+offset_left = 985.0
+offset_top = 626.0
+offset_right = 1209.0
+offset_bottom = 675.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "保存完成作品"
+text = "保存作品"
 
 [node name="SaveAsButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 746.0
-offset_top = 716.0
-offset_right = 971.0
-offset_bottom = 764.0
+offset_left = 731.0
+offset_top = 626.0
+offset_right = 955.0
+offset_bottom = 675.0
 mouse_default_cursor_shape = 2
-text = "另存新作"
+text = "保存副本"
 
 [node name="DownloadButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 991.0
-offset_top = 716.0
-offset_right = 1209.0
-offset_bottom = 764.0
+offset_left = 477.0
+offset_top = 626.0
+offset_right = 701.0
+offset_bottom = 675.0
 mouse_default_cursor_shape = 2
-text = "下载 PNG"
+text = "下载图片"
 
 [editable path="Frame"]

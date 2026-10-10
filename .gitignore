@@ -10,3 +10,7 @@
 # Local exports and QA artifacts
 build/
 *.log
+/docs/《杜甫很忙》游戏原型展示.pptx
+/docs/杜甫很忙_开发分工任务表.xlsx
+/docs/聚光灯-杜甫很忙策划案.docx
+/docs/需求分工任务表.xlsx

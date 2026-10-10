@@ -1,25 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="2_serif"]
-
-[ext_resource type="Script" path="res://scripts/ink_paper.gd" id="3_paper"]
-
-[sub_resource type="StyleBoxFlat" id="PreviewBadge"]
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-bg_color = Color(0.901960784, 0.866666667, 0.792156863, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.847058824, 0.811764706, 0.725490196, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+[ext_resource type="Script" path="res://scripts/ink_paper.gd" id="Paper"]
 
 [node name="PageFrame" type="Control"]
 layout_mode = 3
@@ -27,153 +10,83 @@ anchors_preset = 0
 offset_right = 1440.0
 offset_bottom = 900.0
 mouse_filter = 2
-theme = ExtResource("1_theme")
+theme = ExtResource("Theme")
 
 [node name="Paper" type="Control" parent="."]
-layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 1440.0
 offset_bottom = 900.0
 mouse_filter = 2
-script = ExtResource("3_paper")
+script = ExtResource("Paper")
 
 [node name="BrandTitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 52.0
-offset_top = 25.0
-offset_right = 272.0
-offset_bottom = 63.0
+offset_left = 72.0
+offset_top = 24.0
+offset_right = 312.0
+offset_bottom = 62.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2_serif")
-text = "杜 甫 很 忙"
-vertical_alignment = 1
-
-[node name="BrandSubtitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 278.0
-offset_top = 30.0
-offset_right = 628.0
-offset_bottom = 60.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
-theme_override_font_sizes/font_size = 15
-text = "单机 · 命题续画 · 万千想象"
-vertical_alignment = 1
-
-[node name="PreviewBadge" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 1225.0
-offset_top = 26.0
-offset_right = 1388.0
-offset_bottom = 59.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("PreviewBadge")
-
-[node name="PreviewLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 1243.0
-offset_top = 26.0
-offset_right = 1398.0
-offset_bottom = 59.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
-theme_override_font_sizes/font_size = 15
-text = "本地创作 · 试玩版"
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_fonts/font = ExtResource("Serif")
+text = "杜甫很忙"
 vertical_alignment = 1
 
 [node name="HeaderRule" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 52.0
+offset_left = 72.0
 offset_top = 78.0
-offset_right = 1388.0
+offset_right = 1368.0
 offset_bottom = 79.0
 mouse_filter = 2
-color = Color(0.823529412, 0.784313725, 0.694117647, 1)
-
-[node name="FooterMotto" type="Label" parent="."]
-layout_mode = 0
-offset_left = 52.0
-offset_top = 845.0
-offset_right = 852.0
-offset_bottom = 875.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
-theme_override_font_sizes/font_size = 16
-theme_override_fonts/font = ExtResource("2_serif")
-text = "不必画得像，尽管想得妙。"
-vertical_alignment = 1
-
-[node name="FooterBrand" type="Label" parent="."]
-layout_mode = 0
-offset_left = 1160.0
-offset_top = 845.0
-offset_right = 1400.0
-offset_bottom = 875.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
-theme_override_font_sizes/font_size = 15
-text = "杜甫很忙  /  轻松续画"
-vertical_alignment = 1
+color = Color(0.847059, 0.831373, 0.792157, 1)
 
 [node name="Title" type="Label" parent="."]
-layout_mode = 0
 offset_left = 72.0
-offset_top = 106.0
-offset_right = 922.0
-offset_bottom = 170.0
+offset_top = 111.0
+offset_right = 1102.0
+offset_bottom = 173.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.141176471, 0.239215686, 0.207843137, 1)
-theme_override_font_sizes/font_size = 44
-theme_override_fonts/font = ExtResource("2_serif")
-text = "页面标题"
+theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_font_sizes/font_size = 42
+theme_override_fonts/font = ExtResource("Serif")
+text = ""
 vertical_alignment = 1
 
 [node name="Subtitle" type="Label" parent="."]
-layout_mode = 0
 offset_left = 74.0
-offset_top = 178.0
-offset_right = 1174.0
-offset_bottom = 214.0
+offset_top = 182.0
+offset_right = 1214.0
+offset_bottom = 216.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
+theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
 theme_override_font_sizes/font_size = 19
-text = "页面说明"
+text = ""
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1210.0
+offset_left = 1192.0
 offset_top = 104.0
-offset_right = 1388.0
+offset_right = 1368.0
 offset_bottom = 152.0
-mouse_filter = 0
 mouse_default_cursor_shape = 2
-text = "← 返回首页"
-
+text = "返回首页"
+theme_type_variation = &"QuietButton"
 
 [node name="StorageHint" type="Label" parent="."]
-layout_mode = 0
-offset_left = 52.0
-offset_top = 807.0
+offset_left = 72.0
+offset_top = 808.0
 offset_right = 1162.0
-offset_bottom = 840.0
+offset_bottom = 842.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
+theme_override_font_sizes/font_size = 16
 text = ""
 vertical_alignment = 1
 
 [node name="StorageRetry" type="Button" parent="."]
-layout_mode = 0
 offset_left = 1180.0
-offset_top = 806.0
-offset_right = 1388.0
-offset_bottom = 842.0
-mouse_filter = 0
+offset_top = 807.0
+offset_right = 1368.0
+offset_bottom = 845.0
 mouse_default_cursor_shape = 2
-text = "重试本地保存"
-visible = false
+text = "重试保存"
 theme_type_variation = &"CompactRetryButton"
+visible = false

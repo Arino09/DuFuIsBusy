@@ -34,14 +34,14 @@ func _clear_error(_value: String) -> void:
 func _apply_text() -> void:
 	var text := _editor.text.strip_edges()
 	if text.is_empty():
-		_error.text = "写点什么再应用吧。"
+		_error.text = "请输入文字。"
 		return
 	if not InputValidation.is_rgb_hex(_color_input.text):
-		_error.text = "请输入六位有效色号。"
+		_error.text = "色号需为 6 位，例如 3A9D8F。"
 		return
 	for character in text:
 		if not CREATIVE_FONT.has_char(character.unicode_at(0)):
-			_error.text = "有字形不支持，请换用汉字、英文或常用标点。"
+			_error.text = "无法显示“%s”，请替换这个字符。" % character
 			return
 	text_applied.emit(text, int(_font_size.value), Color.html(_color_input.text))
 

@@ -55,11 +55,11 @@ try:
   def raw():return page.evaluate('(k)=>localStorage.getItem(k)',key)
   def submit():click(1230,760,'SUBMIT_OK:')
   page.goto('http://127.0.0.1:8765/DuFuIsBusy/');wait('UI_PAGE:home')
-  click(260,530,'UI_PAGE:canvas')
+  click(292,552,'UI_PAGE:canvas')
   click(230,650,'DRAW_WIDTH:');assert data()['tools']['width']==52
   stroke((700,540),(860,580))
   page.evaluate("window.__nativeSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='DuFuIsBusy.art.v2')throw new DOMException('full','QuotaExceededError');return window.__nativeSet.call(this,k,v)};true")
-  submit();click(325,669,'UI_DIALOG:作品尚未保存');shot('quota-save-failed')
+  submit();click(1097,650,'UI_DIALOG:保存失败');shot('quota-save-failed')
   checks.append('Brush width is persisted immediately without blur; long storage error fits modal after layout fix')
   assert not errors and not failed and not blocked,(errors,failed,blocked)
   assert not [e for e in logs if e['type']=='error' or 'SCRIPT ERROR' in e['text']],logs[-20:]

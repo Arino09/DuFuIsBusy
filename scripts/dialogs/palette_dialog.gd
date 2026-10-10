@@ -30,6 +30,6 @@ func _apply_swatch(color: Color) -> void:
 
 func _apply_custom_color() -> void:
 	if not InputValidation.is_rgb_hex(_hex_input.text):
-		_error.text = "请输入六位有效色号，如 3A9D8F。"
+		_error.text = "色号需为 6 位，例如 3A9D8F。"
 		return
 	color_applied.emit(Color.html(_hex_input.text))

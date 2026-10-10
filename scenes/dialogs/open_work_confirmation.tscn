@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "打开已存画作？"
+text = "替换当前草稿？"
 
 [node name="Body" parent="Frame" index="3"]
-text = "将替换该命题当前草稿，已保存的完成作品保持不变。\n要保留当前草稿，请先提交并保存为完成作品。"
+text = "这幅作品会替换同一关的草稿，完成作品不受影响。\n若要保留草稿，请取消并先保存为完成作品。"
 
 [node name="CancelButton" type="Button" parent="."]
 layout_mode = 0
@@ -40,6 +40,6 @@ offset_right = 997.0
 offset_bottom = 633.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "打开编辑"
+text = "替换并编辑"
 
 [editable path="Frame"]

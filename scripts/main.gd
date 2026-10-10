@@ -26,8 +26,8 @@ const DIALOG_SCENES = {
 }
 
 const INK = Color("243d35")
-const BROWN = Color("766148")
-const RED = Color("aa4937")
+const MUTED = Color("77736a")
+const RED = Color("a44332")
 const CanvasPage = preload("res://scripts/pages/canvas_page.gd")
 const GalleryPage = preload("res://scripts/pages/gallery_page.gd")
 const GalleryEntries = preload("res://scripts/gallery_entries.gd")
@@ -65,7 +65,7 @@ var gallery_filter := "全部"
 var selected_tool := "笔刷"
 var settings := SettingsStore.defaults()
 var settings_store := SettingsStore.new()
-var settings_status := "设置保存在本机；不进行云端同步。"
+var settings_status := ""
 var is_busy := false
 var suspended_focus: Array[Control] = []
 var previous_focus: Control
@@ -162,7 +162,7 @@ func _topic_unlocked(id: int) -> bool:
 
 func _allow_topic(id: int) -> bool:
 	if _topic_unlocked(id): return true
-	info("画卷尚未解锁", "请先保存上一关的完成作品，再来展开这幅画卷。")
+	info("关卡未解锁", "先保存上一关的完成作品。")
 	return false
 
 func _topic_background(id: int) -> String:
@@ -180,10 +180,10 @@ func levels() -> void:
 		var status: Label = card.get_node("Status")
 		var unlocked := _topic_unlocked(id)
 		status.visible = true
-		status.text = "已完成 · 可再次创作" if id in completed_topics else "已解锁 · 保存作品后继续" if unlocked else "保存上一关作品后解锁"
+		status.text = "已完成" if id in completed_topics else "待完成" if unlocked else "未解锁"
 		var enter: Button = card.get_node("EnterButton")
 		enter.disabled = not unlocked
-		if not unlocked: enter.text = "尚未解锁"
+		enter.text = "重画" if id in completed_topics else "开始" if unlocked else "未解锁"
 		bind_button(card, "EnterButton", _start_topic.bind(id))
 
 func canvas() -> void:
@@ -236,7 +236,7 @@ func apply_color(color: Color) -> void:
 func text_editor(edit: bool) -> void:
 	drawing.finish()
 	if not edit and drawings[topic].objects.size() >= 25:
-		info("画布有点热闹", "最多容纳 24 个文字或贴纸，请先删除一个。")
+		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。")
 		return
 	var object: Dictionary = drawing.selected_object() if edit else {}
 	var view: TextEditorDialog = modal("text_editor", "编辑文字" if edit else "")
@@ -255,7 +255,7 @@ func _apply_text(text: String, font_size: int, color: Color, edit: bool) -> void
 func sticker_picker() -> void:
 	drawing.finish()
 	if drawings[topic].objects.size() >= 25:
-		info("画布有点热闹", "最多容纳 24 个文字或贴纸，请先删除一个。")
+		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。")
 		return
 	modal("sticker_picker")
 	for item in [["AddDuButton", "weapon_du"], ["AddPinkButton", "weapon_pink"], ["AddSilverButton", "weapon_silver"], ["AddBlueButton", "weapon_blue"], ["AddVioletButton", "weapon_violet"]]:
@@ -282,7 +282,7 @@ func submit_artwork() -> void:
 	if submitting: return
 	drawing.finish()
 	if not drawing.has_creation():
-		info("诗圣还在等你落笔", "画一点、写一句、贴一张，\n或给杜甫挪个位置，都算创作！")
+		info("还没有修改", "画几笔、添加文字或贴纸，也可以移动杜甫。")
 		print("SUBMIT_EMPTY")
 		return
 	var state: Dictionary = drawings[topic]
@@ -294,13 +294,11 @@ func submit_artwork() -> void:
 		state.result = ImageTexture.create_from_image(captured)
 		state.submitted = state.revision
 	modal("submission_result")
-	if topic == -1:
-		overlay.get_node("Frame/Body").text = "草稿已自动保存；也可保存为独立的完成作品。"
+	if topic == -1 or topic in completed_topics or topic == content_catalog.topic_ids().back():
+		overlay.get_node("Frame/Body").text = "保存后可在画廊查看。"
 	overlay.get_node("Artwork").texture = state.result
 	overlay.get_node("Remark").text = content_catalog.get_topic(topic).remark
-	bind_button(overlay, "RestartButton", restart_confirm)
 	bind_button(overlay, "ContinueButton", close_overlay)
-	bind_button(overlay, "NextButton", show_page.bind("levels"))
 	if not state.get("work_id", "").is_empty(): overlay.get_node("SaveButton").text = "保存新版本"
 	bind_button(overlay, "SaveButton", save_work.bind(false))
 	bind_button(overlay, "SaveAsButton", save_work.bind(true))
@@ -319,10 +317,10 @@ func storage_candidate() -> Dictionary:
 
 func update_storage_status(ok: bool) -> void:
 	if is_instance_valid(storage_retry): storage_retry.visible = not ok
-	storage_status = "草稿已自动保存 · 仅此浏览器与此站点，清理站点数据会丢失。" if ok else local_store.error
+	storage_status = ("草稿已保存" if current == "canvas" else "") if ok else local_store.error
 	if is_instance_valid(storage_hint):
 		storage_hint.text = storage_status
-		storage_hint.add_theme_color_override("font_color", BROWN if ok else RED)
+		storage_hint.add_theme_color_override("font_color", MUTED if ok else RED)
 	print("STORAGE_OK" if ok else "STORAGE_ERROR:", "" if ok else local_store.error)
 
 func autosave() -> void:
@@ -362,12 +360,12 @@ func retry_storage() -> void:
 			show_page(current)
 			return
 	autosave()
-	if not local_store.error.is_empty(): info("本地保存未完成", local_store.error)
+	if not local_store.error.is_empty(): info("保存失败", local_store.error)
 
 func save_work(as_new: bool) -> void:
 	var state: Dictionary = drawings[topic]
 	if state.result == null or state.submitted != state.revision:
-		info("先看看最新画卷", "请重新提交当前画卷后再保存作品。")
+		info("作品有新修改", "返回画布，点击“完成作品”后再保存。")
 		return
 	var candidate := storage_candidate()
 	var id: String = "" if as_new else state.get("work_id", "")
@@ -390,7 +388,7 @@ func save_work(as_new: bool) -> void:
 		# A later flush retries the draft, not the explicitly saved gallery work.
 		_draft_save_pending = true
 		update_storage_status(false)
-		info("作品尚未保存", local_store.error + "\n原有画廊作品没有被改动。可返回点评页下载 PNG。")
+		info("保存失败", local_store.error + "\n可重新打开“完成作品”，下载图片备份。")
 		return
 	_draft_save_pending = false
 	state.work_id = id
@@ -399,9 +397,9 @@ func save_work(as_new: bool) -> void:
 	var ids := content_catalog.topic_ids()
 	var next_index := ids.find(topic) + 1
 	var has_next := topic >= 0 and next_index < ids.size()
-	var message := title + "\n草稿可继续编辑；修改后保存为新版本。"
+	var message := title
 	if has_next: message += "\n下一关已解锁：" + content_catalog.get_topic(ids[next_index]).title
-	elif topic >= 0: message += "\n全部画卷已完成，可自由重玩。"
+	elif topic >= 0: message += "\n全部关卡已完成。"
 	modal("save_confirmation", "", message)
 	bind_button(overlay, "ContinueButton", close_overlay)
 	bind_button(overlay, "GalleryButton", _show_gallery.bind(0))
@@ -448,7 +446,7 @@ func view_work(work: Dictionary) -> void:
 	preview.visible = is_draft
 	if is_draft:
 		preview.set_state(work.state)
-		overlay.get_node("Frame/Body").text = "自动保存的草稿。继续编辑会打开当前关卡的画布。"
+		overlay.get_node("Frame/Body").text = "草稿"
 		overlay.get_node("EditButton").text = "继续编辑"
 	else:
 		picture.texture = work_texture(work)
@@ -494,8 +492,8 @@ func download_image(image: Image) -> void:
 		print("PNG_DOWNLOAD_REQUESTED")
 	else:
 		var path := "user://" + filename
-		if image.save_png(path) == OK: info("PNG 已导出", ProjectSettings.globalize_path(path))
-		else: info("PNG 导出失败", "无法写入本地文件。")
+		if image.save_png(path) == OK: info("图片已导出", ProjectSettings.globalize_path(path))
+		else: info("导出失败", "无法写入文件，请检查存储空间和写入权限。")
 
 func gallery() -> void:
 	var view: GalleryPage = page
@@ -510,7 +508,7 @@ func gallery() -> void:
 
 func example(index: int) -> void:
 	var definition := content_catalog.get_example(index)
-	image_dialog(definition.title, definition.image_path, definition.category + " · 原始合成示例，仅供欣赏，不是已保存作品或可编辑图层。", "返回画廊")
+	image_dialog(definition.title, definition.image_path, definition.category + " · 示例", "返回画廊")
 
 func image_dialog(title: String, path: String, caption: String, back_label: String, back_action: Callable = Callable()) -> void:
 	modal("image_view", title, caption)
@@ -542,7 +540,7 @@ func save_settings() -> void:
 	settings = SettingsStore.normalize(settings)
 	var saved_ok := settings_store.save_settings(settings)
 	_settings_pending = not saved_ok
-	settings_status = "设置已保存在本机；不进行云端同步。" if saved_ok else "本地写入失败；偏好仅在当前会话生效。"
+	settings_status = "已保存" if saved_ok else "设置保存失败，请检查存储空间后重试。"
 	update_settings_note()
 
 func reset_confirm() -> void:
@@ -559,7 +557,7 @@ func _reset_settings() -> void:
 	view.refresh(settings, settings_status)
 
 func exit_info() -> void:
-	info("诗圣先歇一会儿", "网页不会擅自关闭你的标签页。\n想休息时直接关闭本页，随时可以回来继续看。")
+	info("退出游戏", "直接关闭窗口或浏览器标签页即可。")
 
 func modal(scene_id: String, title: String = "", body: String = "") -> Control:
 	close_overlay()
@@ -586,8 +584,8 @@ func info(title: String, body: String) -> void:
 func sticker_list() -> void:
 	modal("sticker_catalog")
 	bind_button(overlay, "WeaponButton", sticker_picker)
-	bind_button(overlay, "CityButton", image_dialog.bind("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list))
-	bind_button(overlay, "MarketButton", image_dialog.bind("烟火夜市", "res://assets/backgrounds/night-market.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list))
+	bind_button(overlay, "CityButton", image_dialog.bind("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "参考图片", "返回素材", sticker_list))
+	bind_button(overlay, "MarketButton", image_dialog.bind("烟火夜市", "res://assets/backgrounds/night-market.jpg", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "BackButton", close_overlay)
 
 func close_overlay() -> void:

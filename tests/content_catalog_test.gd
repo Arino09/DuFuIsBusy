@@ -44,7 +44,7 @@ func run() -> void:
 		assert(entry.id == card.get_meta("example_id"))
 		assert(entry.title == card.get_node("Title").text)
 		assert(entry.category == card.get_meta("topic"))
-		assert(card.get_node("TopicLabel").text.begins_with(entry.category + " · "))
+		assert(card.get_node("TopicLabel").text == entry.category)
 		assert(entry.image_path == card.get_node("Picture").texture.resource_path)
 		assert(ResourceLoader.exists(entry.image_path))
 

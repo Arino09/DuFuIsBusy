@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "已保存到我的画廊"
+text = "已保存"
 
 [node name="Body" parent="Frame" index="3"]
-text = "自由创作 · 1\n草稿可继续编辑；修改后保存为新版本，不覆盖画廊旧作。"
+text = "自由创作 · 1"
 
 [node name="ContinueButton" type="Button" parent="."]
 layout_mode = 0
@@ -40,7 +40,7 @@ offset_right = 997.0
 offset_bottom = 633.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "我的画廊"
+text = "查看画廊"
 
 [node name="NextButton" type="Button" parent="."]
 layout_mode = 0
