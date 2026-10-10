@@ -54,7 +54,7 @@ try:
    stroke([(700,540),(850,540)])
    assert ':true:1:0' in state(),state()
    shot('canvas-stroke')
-   click(175,466,'UI_PAGE:canvas')
+   click(215,412,'UI_PAGE:canvas')
    # Same 12-pixel eraser traverses exactly the same raster pixels.
    stroke([(700,540),(850,540)])
    assert ':false:2:0' in state(),state()
@@ -62,10 +62,10 @@ try:
    click(1140,359);assert ':true:1:1' in state(),state()
    shot('undo-restored')
    click(1280,359);assert ':false:2:0' in state(),state()
-   click(1140,359);click(172,412,'UI_PAGE:canvas')
-   click(151,554,'UI_PAGE:canvas')
+   click(1140,359);click(130,412,'UI_PAGE:canvas')
+   click(170,577,'UI_DIALOG:调色盘');click(474,295,'COLOR_CHANGED:aa4937')
    # Adjust pen width through the real slider.
-   click(230,638,'DRAW_WIDTH:');assert [e['text'] for e in logs if 'DRAW_WIDTH:' in e['text']][-1]!='DRAW_WIDTH:12'
+   click(230,650,'DRAW_WIDTH:');assert [e['text'] for e in logs if 'DRAW_WIDTH:' in e['text']][-1]!='DRAW_WIDTH:12'
    stroke([(680,600),(760,650),(870,580),(980,650)])
    shot('canvas')
    click(1230,760,'SUBMIT_OK:0:');shot('review')

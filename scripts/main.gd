@@ -13,6 +13,8 @@ var drawings: Dictionary = {}
 var drawing: Control
 var pen_color := INK
 var pen_width := 12
+var object_buttons: Dictionary = {}
+var submitting := false
 var undo_button: Button
 var redo_button: Button
 var drawing_status: Label
@@ -92,6 +94,11 @@ func make_theme() -> Theme:
 		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 			t.set_color(state, type, INK)
 		t.set_color("font_disabled_color", type, MUTED)
+	t.set_stylebox("normal", "LineEdit", box(Color("fffdf7"), BROWN))
+	t.set_stylebox("focus", "LineEdit", box(Color(0, 0, 0, 0), RED, 2))
+	t.set_color("font_color", "LineEdit", INK)
+	t.set_color("caret_color", "LineEdit", INK)
+	t.set_color("font_placeholder_color", "LineEdit", MUTED)
 	t.set_stylebox("panel", "PopupMenu", box(PAPER, BROWN))
 	t.set_stylebox("hover", "PopupMenu", box(Color("e2e7d9"), INK))
 	t.set_color("font_color", "PopupMenu", INK)
@@ -232,81 +239,208 @@ func levels() -> void:
 	label_at("没有标准答案，也没有不及格。放心大胆地想。", Rect2(75, 766, 1020, 38), 22, BROWN, true)
 
 func canvas() -> void:
-	heading("创作画布", "鼠标或单指绘画 · 留下一点笔迹，就能收到诗圣的趣味点评")
+	heading("创作画布", "绘画、文字、贴纸与诗圣自由摆放 · 鼠标或单指操作")
 	panel_at(Rect2(74, 238, 1294, 67), Color("e2e7d9"))
 	label_at("本关命题", Rect2(95, 249, 125, 42), 21, INK, true)
 	label_at(PROMPTS[topic] if topic >= 0 else "自由创作：诗人今天想怎么忙，就怎么忙", Rect2(234, 249, 883, 42), 23)
 	button_at("换个主题", Rect2(1193, 249, 156, 44), func(): show_page("levels"))
 	panel_at(Rect2(74, 327, 198, 471))
 	label_at("创作工具", Rect2(96, 340, 164, 35), 23, INK, true)
-	button_at("笔刷", Rect2(91, 389, 164, 45), func(): selected_tool = "笔刷"; show_page("canvas"), selected_tool == "笔刷")
-	button_at("橡皮", Rect2(91, 444, 164, 45), func(): selected_tool = "橡皮"; show_page("canvas"), selected_tool == "橡皮")
-	label_at("颜色", Rect2(94, 500, 160, 30), 18, BROWN)
-	for i in range(4):
-		var color: Color = [INK, RED, Color("416f9a"), Color("d4a337")][i]
-		var swatch := button_at("●" if color == pen_color else "", Rect2(91 + i * 42, 536, 37, 36), func(): pen_color = color; selected_tool = "笔刷"; show_page("canvas"))
-		var style := box(color, BROWN, 1, 18)
-		style.content_margin_left = 0
-		style.content_margin_right = 0
-		style.content_margin_top = 0
-		style.content_margin_bottom = 0
-		for mode in ["normal", "hover", "pressed", "disabled", "focus"]: swatch.add_theme_stylebox_override(mode, style)
-		swatch.add_theme_font_size_override("font_size", 14)
-		swatch.tooltip_text = ["墨绿", "朱红", "靛蓝", "金黄"][i]
-		swatch.add_theme_color_override("font_color", Color.WHITE)
-		swatch.size = Vector2(37, 36)
-	var width_label := label_at("笔宽 · %d" % pen_width, Rect2(94, 580, 155, 30), 18, BROWN)
+	for i in range(2):
+		var tool: String = ["笔刷", "橡皮"][i]
+		button_at(tool, Rect2(91 + i * 86, 389, 78, 45), func(): set_tool(tool), selected_tool == tool).add_theme_font_size_override("font_size", 18)
+	button_at("选择 / 移动", Rect2(91, 444, 164, 45), func(): set_tool("移动"), selected_tool == "移动").add_theme_font_size_override("font_size", 18)
+	button_at("文字", Rect2(91, 499, 78, 45), func(): text_editor(false)).add_theme_font_size_override("font_size", 18)
+	button_at("贴纸", Rect2(177, 499, 78, 45), sticker_picker).add_theme_font_size_override("font_size", 18)
+	var color_button := button_at("调色盘", Rect2(91, 554, 164, 45), palette_dialog)
+	color_button.add_theme_stylebox_override("normal", box(PAPER, pen_color, 3))
+	color_button.tooltip_text = "当前画笔色号：#" + pen_color.to_html(false)
+	var width_label := label_at("笔宽 · %d" % pen_width, Rect2(94, 604, 155, 28), 18, BROWN)
 	var width_choice := HSlider.new()
 	width_choice.min_value = 4
 	width_choice.max_value = 56
 	width_choice.step = 4
 	width_choice.value = pen_width
-	rect(width_choice, Rect2(91, 615, 164, 43))
+	rect(width_choice, Rect2(91, 637, 164, 27))
 	width_choice.value_changed.connect(func(value): pen_width = int(value); drawing.pen_width = pen_width; width_label.text = "笔宽 · %d" % pen_width; print("DRAW_WIDTH:", pen_width))
-	button_at("素材参考", Rect2(91, 680, 164, 43), sticker_list)
+	button_at("素材参考", Rect2(91, 683, 164, 43), sticker_list)
 	button_at("重新创作", Rect2(91, 736, 164, 43), restart_confirm)
 	panel_at(Rect2(294, 327, 1074, 471))
-	drawing_status = label_at("", Rect2(313, 337, 650, 38), 17, BROWN)
+	object_buttons.clear()
+	var actions := ["编辑", "缩小", "放大", "左转", "右转", "删除", "取消"]
+	for i in range(actions.size()):
+		var action: String = actions[i]
+		object_buttons[action] = button_at(action, Rect2(311 + i * 107, 337, 99, 42), func(): object_action(action))
+		object_buttons[action].add_theme_font_size_override("font_size", 18)
 	undo_button = button_at("撤销", Rect2(1080, 337, 120, 42), func(): drawing.travel(false))
 	redo_button = button_at("重做", Rect2(1216, 337, 132, 42), func(): drawing.travel(true))
+	drawing_status = label_at("", Rect2(313, 733, 810, 29), 16, BROWN)
 	if not drawings.has(topic): drawings[topic] = Drawing.new_state()
 	drawing = Drawing.new()
 	drawing.state = drawings[topic]
 	drawing.ink = pen_color
 	drawing.pen_width = pen_width
 	drawing.erasing = selected_tool == "橡皮"
+	drawing.selecting = selected_tool == "移动"
 	rect(drawing, Rect2(311, 397, 1040, 330))
 	drawing.changed.connect(update_drawing_controls)
+	drawing.selection_changed.connect(update_drawing_controls)
 	update_drawing_controls()
-	label_at("画卷仅在本次打开期间保留；刷新会清空。", Rect2(313, 744, 735, 36), 17, MUTED)
+	label_at("画卷仅在本次打开期间保留；刷新会清空。", Rect2(313, 767, 735, 24), 15, MUTED)
 	button_at("提交作品 →", Rect2(1131, 743, 213, 43), submit_artwork, true)
 
 func update_drawing_controls() -> void:
 	var state: Dictionary = drawings[topic]
 	undo_button.disabled = state.undo.is_empty()
 	redo_button.disabled = state.redo.is_empty()
-	drawing_status.text = ("橡皮：只擦笔迹，保留人物" if selected_tool == "橡皮" else "画笔：给诗圣添点新故事") + " · 历史 %d / 20" % state.undo.size()
-	print("DRAW_STATE:", topic, ":", state.revision, ":", drawing.has_ink(), ":", state.undo.size(), ":", state.redo.size())
+	var object: Dictionary = drawing.selected_object() if drawing.selecting else {}
+	for action in object_buttons:
+		object_buttons[action].disabled = object.is_empty()
+	object_buttons["编辑"].disabled = object.is_empty() or object.kind != "text"
+	object_buttons["删除"].disabled = object.is_empty() or object.kind == "avatar"
+	var tip := "选择 / 移动：点选对象后拖动；空白处取消" if drawing.selecting else "橡皮只擦笔迹" if drawing.erasing else "画笔不会移动对象"
+	if not object.is_empty(): tip = "已选：" + {"avatar":"杜甫", "text":"文字", "star":"星星", "cloud":"祥云", "seal":"忙字印章"}[object.kind] + " · 拖动移动，上方可变换"
+	drawing_status.text = tip + " · 历史 %d / 20" % state.undo.size()
+	print("DRAW_STATE:", topic, ":", state.revision, ":", drawing.has_creation(), ":", state.undo.size(), ":", state.redo.size())
+	print("OBJECT_STATE:", state.objects.size(), ":", state.selected)
+
+func set_tool(tool: String) -> void:
+	drawing.finish()
+	selected_tool = tool
+	show_page("canvas")
+
+func object_action(action: String) -> void:
+	match action:
+		"编辑": text_editor(true)
+		"缩小": drawing.transform_selected(0.85, 0)
+		"放大": drawing.transform_selected(1.15, 0)
+		"左转": drawing.transform_selected(1, -PI / 12)
+		"右转": drawing.transform_selected(1, PI / 12)
+		"删除": drawing.remove_selected()
+		"取消":
+			drawings[topic].selected = -1
+			drawing.queue_redraw()
+			update_drawing_controls()
+
+func palette_dialog() -> void:
+	drawing.finish()
+	modal("调色盘", "选择一种颜色，或输入六位十六进制色号，例如 3A9D8F。", true)
+	var colors := ["243d35", "aa4937", "416f9a", "d4a337", "151515", "ffffff", "7547a0", "d66c98", "45a99b", "7d913d", "8b583c", "ed8b3a"]
+	for i in range(colors.size()):
+		var code: String = colors[i]
+		var swatch := button_at("#" + code.to_upper(), Rect2(246 + (i % 6) * 158, 260 + (i / 6) * 94, 140, 70), func(): apply_color(Color(code)), false, overlay)
+		swatch.add_theme_stylebox_override("normal", box(Color(code)))
+		swatch.add_theme_color_override("font_color", Color.BLACK if Color(code).get_luminance() > 0.45 else Color.WHITE)
+		swatch.add_theme_font_size_override("font_size", 17)
+	label_at("自定义色号", Rect2(247, 501, 210, 45), 22, INK, false, overlay)
+	var hex := LineEdit.new()
+	hex.max_length = 6
+	hex.text = pen_color.to_html(false)
+	rect(hex, Rect2(450, 501, 300, 48), overlay)
+	var error := label_at("", Rect2(247, 573, 800, 40), 19, RED, false, overlay)
+	hex.text_changed.connect(func(_value): error.text = "")
+	button_at("应用颜色", Rect2(794, 501, 220, 48), func():
+		if hex.text.length() != 6 or not Color.html_is_valid(hex.text): error.text = "请输入六位有效色号，如 3A9D8F。"; return
+		apply_color(Color.html(hex.text)), true, overlay)
+
+func apply_color(color: Color) -> void:
+	pen_color = color
+	selected_tool = "笔刷"
+	show_page("canvas")
+	print("COLOR_CHANGED:", color.to_html(false))
+
+func text_editor(edit: bool) -> void:
+	drawing.finish()
+	if not edit and drawings[topic].objects.size() >= 25:
+		info("画布有点热闹", "最多容纳 24 个文字或贴纸，请先删除一个。")
+		return
+	var object: Dictionary = drawing.selected_object() if edit else {}
+	modal("编辑文字" if edit else "添加文字", "")
+	label_at("文字（最多 24 字）", Rect2(435, 353, 550, 38), 19, BROWN, false, overlay)
+	var editor := LineEdit.new()
+	editor.max_length = 24
+	editor.text = object.text if edit else ""
+	editor.placeholder_text = "给诗圣配一句台词"
+	editor.add_theme_font_override("font", Drawing.CREATIVE_FONT)
+	rect(editor, Rect2(435, 397, 567, 49), overlay)
+	label_at("字号", Rect2(435, 470, 90, 44), 19, INK, false, overlay)
+	var font_size := SpinBox.new()
+	font_size.min_value = 16
+	font_size.max_value = 64
+	font_size.step = 2
+	font_size.value = object.font_size if edit else 32
+	rect(font_size, Rect2(525, 470, 137, 44), overlay)
+	label_at("色号", Rect2(702, 470, 86, 44), 19, INK, false, overlay)
+	var color := LineEdit.new()
+	color.max_length = 6
+	color.text = (object.color if edit else pen_color).to_html(false)
+	rect(color, Rect2(788, 470, 214, 44), overlay)
+	var error := label_at("", Rect2(435, 523, 570, 40), 17, RED, false, overlay)
+	editor.text_changed.connect(func(_value): error.text = "")
+	color.text_changed.connect(func(_value): error.text = "")
+	button_at("应用文字", Rect2(793, 575, 207, 57), func():
+		var text := editor.text.strip_edges()
+		if text.is_empty(): error.text = "写点什么再应用吧。"; return
+		if color.text.length() != 6 or not Color.html_is_valid(color.text): error.text = "请输入六位有效色号。"; return
+		for character in text:
+			if not Drawing.CREATIVE_FONT.has_char(character.unicode_at(0)): error.text = "有字形不支持，请换用汉字、英文或常用标点。"; return
+		if edit: drawing.edit_text(text, int(font_size.value), Color.html(color.text))
+		else: drawing.add_object("text", text, int(font_size.value), Color.html(color.text))
+		selected_tool = "移动"
+		show_page("canvas")
+		print("TEXT_APPLIED:", text), true, overlay)
+	editor.grab_focus()
+	# Re-clicking the already focused LineEdit can blur Godot's DOM IME host.
+	# Re-enable the engine IME through its public API after the click is handled.
+	if OS.has_feature("web") and not DisplayServer.is_touchscreen_available():
+		editor.gui_input.connect(func(event):
+			if event is InputEventMouseButton and event.pressed: restore_text_ime.call_deferred(editor))
+
+func restore_text_ime(editor: LineEdit) -> void:
+	if is_instance_valid(editor) and editor.has_focus():
+		DisplayServer.window_set_ime_active(true)
+
+func sticker_picker() -> void:
+	drawing.finish()
+	if drawings[topic].objects.size() >= 25:
+		info("画布有点热闹", "最多容纳 24 个文字或贴纸，请先删除一个。")
+		return
+	modal("原创贴纸", "原创代码图形，可移动、缩放、旋转与删除。", true)
+	for i in range(3):
+		var kind: String = ["star", "cloud", "seal"][i]
+		var sample := Drawing.new()
+		sample.state = Drawing.new_state()
+		sample.state.objects = [{"id": 1, "kind": kind, "position": Vector2(120, 90), "scale": 1.3, "rotation": 0.0}]
+		sample.preview_only = true
+		rect(sample, Rect2(254 + i * 323, 254, 240, 190), overlay)
+		label_at(["星星", "祥云", "忙字印章"][i], Rect2(254 + i * 323, 466, 240, 45), 28, INK, true, overlay)
+		button_at("添加贴纸", Rect2(254 + i * 323, 535, 240, 56), func(): drawing.add_object(kind); selected_tool = "移动"; show_page("canvas"), true, overlay)
 
 func restart_confirm() -> void:
-	modal("重新创作？", "将清空当前命题的笔迹、历史和点评。其他命题不受影响。")
+	modal("重新创作？", "将清空当前命题的文字、贴纸、笔迹、历史和点评，杜甫回到原位。其他命题不受影响。")
 	button_at("取消", Rect2(566, 575, 202, 58), close_overlay, false, overlay)
 	button_at("清空画卷", Rect2(795, 575, 202, 58), func(): drawings[topic] = Drawing.new_state(); show_page("canvas"), true, overlay)
 
 func submit_artwork() -> void:
+	if submitting: return
 	drawing.finish()
-	if not drawing.has_ink():
-		info("诗圣还在等你落笔", "画卷上还没有你的笔迹。
-随手画一点，脑洞就算开张！")
+	if not drawing.has_creation():
+		info("诗圣还在等你落笔", "画一点、写一句、贴一张，
+或给杜甫挪个位置，都算创作！")
 		print("SUBMIT_EMPTY")
 		return
 	var state: Dictionary = drawings[topic]
 	if state.submitted != state.revision:
-		state.result = ImageTexture.create_from_image(drawing.artwork())
+		submitting = true
+		# Block interaction during the one-frame offscreen capture.
+		modal("正在装裱", "请稍候，正在合成当前画卷。")
+		var captured: Image = await drawing.artwork()
+		submitting = false
+		state.result = ImageTexture.create_from_image(captured)
 		state.submitted = state.revision
 	var remarks := ["车到山前必有路，诗圣今天不走路。", "安得机甲千万套，大庇诗人不加班。", "笔下自有江湖在，杜某先干一碗茶。", "采菊东篱下，今天不打卡。"]
 	var remark: String = remarks[topic] if topic >= 0 else "这脑洞，连我的胡子都忍不住翘起来了。"
-	modal("妙哉！本关已通过", "本地趣味点评 · 只看有无笔迹，不分析画意、不评分。", true)
+	modal("妙哉！本关已通过", "本地趣味点评 · 有创作就过关，不分析画意、不评分。", true)
 	var art := TextureRect.new()
 	art.texture = state.result
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -474,7 +608,10 @@ func close_overlay() -> void:
 	overlay = null
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if submitting: return
 	if event.is_action_pressed("ui_cancel"):
 		if is_instance_valid(overlay): close_overlay()
+		elif current == "canvas" and drawings[topic].selected >= 0:
+			object_action("取消")
 		elif current != "home": show_page("home")
 		get_viewport().set_input_as_handled()

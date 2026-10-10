@@ -22,7 +22,7 @@ jobs:
         run: |
           godot --headless --path . --quit-after 10 2>&1 | tee smoke.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' import.log smoke.log; then exit 1; fi
-      - name: Test drawing pixels and history
+      - name: Test drawing and editable object history
         run: |
           godot --headless --path . --script tests/drawing_test.gd 2>&1 | tee drawing-test.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' drawing-test.log; then exit 1; fi
