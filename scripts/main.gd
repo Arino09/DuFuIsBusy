@@ -133,15 +133,16 @@ func rect(node: Control, area: Rect2, parent: Control = page) -> Control:
 	node.size = area.size
 	return node
 
-func label_at(text: String, area: Rect2, font_size: int = 22, color: Color = INK, serif: bool = false, parent: Control = page) -> Label:
+func label_at(text: String, area: Rect2, font_size: int = 22, color: Color = INK, serif: bool = false, parent: Control = page, wrap: bool = false) -> Label:
 	var l := Label.new()
-	l.text = text
+	if wrap: l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_size_override("font_size", font_size)
 	l.add_theme_color_override("font_color", color)
 	if serif: l.add_theme_font_override("font", SERIF)
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rect(l, area, parent)
+	l.text = text
 	return l
 
 func texture_at(path: String, area: Rect2, parent: Control = page) -> TextureRect:
@@ -290,7 +291,7 @@ func canvas() -> void:
 	width_choice.step = 4
 	width_choice.value = pen_width
 	rect(width_choice, Rect2(91, 637, 164, 27))
-	width_choice.value_changed.connect(func(value): pen_width = int(value); drawing.pen_width = pen_width; width_label.text = "笔宽 · %d" % pen_width; print("DRAW_WIDTH:", pen_width))
+	width_choice.value_changed.connect(func(value): pen_width = int(value); drawing.pen_width = pen_width; width_label.text = "笔宽 · %d" % pen_width; print("DRAW_WIDTH:", pen_width); autosave())
 	button_at("素材参考", Rect2(91, 683, 164, 43), sticker_list)
 	button_at("重新创作", Rect2(91, 736, 164, 43), restart_confirm)
 	panel_at(Rect2(294, 327, 1074, 471))
@@ -727,15 +728,17 @@ func modal(title: String, body: String, large: bool = false) -> void:
 	if large:
 		panel_at(Rect2(182, 140, 1076, 648), PAPER, overlay)
 		label_at(title, Rect2(214, 157, 906, 54), 32, INK, true, overlay)
-		var caption := label_at(body, Rect2(216, 708, 500, 62), 18, BROWN, false, overlay)
+		var caption := label_at(body, Rect2(216, 708, 500, 62), 18, BROWN, false, overlay, true)
 		caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		caption.size = Vector2(500, 62)
 		button_at("×", Rect2(1186, 157, 48, 48), close_overlay, false, overlay).grab_focus()
 		print("UI_DIALOG:", title)
 		return
 	panel_at(Rect2(395, 252, 650, 414), PAPER, overlay)
 	label_at(title, Rect2(433, 288, 570, 69), 36, INK, true, overlay)
-	var l := label_at(body, Rect2(435, 378, 570, 159), 22, BROWN, false, overlay)
+	var l := label_at(body, Rect2(435, 378, 570, 159), 22, BROWN, false, overlay, true)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size = Vector2(570, 159)
 	button_at("×", Rect2(972, 271, 48, 48), close_overlay, false, overlay).grab_focus()
 	print("UI_DIALOG:", title)
 

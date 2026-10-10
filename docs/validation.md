@@ -36,3 +36,5 @@
 本阶段证据为 `docs/storage-qa.json`、`docs/screenshots/` 与其中的 `exported-artwork.png`。`tools-qa.json` 等历史记录保留供对照。数据说明见 [storage.md](storage.md)。
 
 最终结果：Godot 两组测试及三组 Web 浏览器测试通过，无未处理脚本错误、控制台错误或失败资源请求。截图仅有软件 WebGL 的 ReadPixels 性能提示。全部测试浏览器已关闭；中文字体覆盖当前 UI 文案。
+
+收尾专项 `tests/browser_storage_feedback.py` 验证笔宽在没有失焦时立即持久化；错误说明的 Label 在设定宽度后才填入长文本，截图确认换行保持在弹窗内。
