@@ -2,10 +2,10 @@
 
 素材由用户提供。父侧从已授权附件读取原始媒体后，以提交 `0ea979ec9d461a5f16626ba846d5bc0cf5c814ae` 向本仓库新增 26 个文件。消费端通过 Git 拉取后，逐张查看了 10 张位图及 16 个 SVG 图标的实际像素；没有重新下载失败的 Library 地址，也没有把父环境路径视为本机文件。
 
-- `assets/ui/paper-background.jpeg`：2730×1536 宣纸水墨底纹。用作背景纹理，所有控件仍是真实 Control。
-- `assets/ui/*.svg`：原型中的 16 个图标。使用与实际含义相符的图标；`brush.svg` 的实际图形为清除桶，用于恢复默认设置，画笔使用 `pencil.svg`。
-- `assets/characters/dufu-avatar.png`：551×551 RGBA 透明头像。用于首页与画布人物保留区。
-- `assets/characters/dufu-halfbody.jpg`：1980×1227 白底半身像。可在画布打开完整原像查看，未伪装为透明分层素材。
+当前版本已删除全部 PPT 来源的 `assets/ui/paper-background.jpeg` 和 16 个 SVG 及其导入描述。纸色、细线、弧线由 `scripts/ink_paper.gd` 原创代码绘制；按钮、色块和文字由 Godot Control/Theme 构建。没有采用 PPT 页面截图或原图标。
+
+- `assets/characters/dufu-avatar.png`：551×551 RGBA 透明头像。用于首页、绘画底图和提交作品合成；橡皮仅影响用户笔迹。
+- `assets/characters/dufu-halfbody.jpg`：1980×1227 白底半身像。保留原始参考资源，未伪装为透明分层素材。
 - `assets/backgrounds/scifi-city.jpg`、`night-market.jpg`：场景参考，可从素材目录查看，尚不能应用到画布。
 - `assets/stickers/weapon-sheet.jpg`：1280×1561 五件武器白底源拼图。仅展示整图，不宣称已拆分成五张透明贴纸。
 - `assets/examples/`：剑影江湖、科幻武器、夜市喝茶、厕所脑洞四张原始合成示例。可真实按武侠、科幻、市井、脑洞筛选并打开大图；不可编辑、不可作为用户已保存作品。

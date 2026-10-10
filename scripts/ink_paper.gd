@@ -1,12 +1,12 @@
 extends Control
-
-const PAPER_TEXTURE = preload("res://assets/ui/paper-background.jpeg")
-
+## Original procedural paper decoration: no presentation artwork.
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _draw() -> void:
-	var original := PAPER_TEXTURE.get_size()
-	var ratio: float = maxf(size.x / original.x, size.y / original.y)
-	var drawn := original * ratio
-	draw_texture_rect(PAPER_TEXTURE, Rect2((size - drawn) * 0.5, drawn), false)
+	draw_rect(Rect2(Vector2.ZERO, size), Color("f3eedf"))
+	for i in range(90):
+		var y := float(i * 13)
+		draw_line(Vector2(0, y), Vector2(size.x, y + 23), Color(0.45, 0.37, 0.22, 0.025), 1)
+	for i in range(7):
+		draw_arc(Vector2(1415, 890), 110.0 + i * 31, PI, TAU, 50, Color(0.17, 0.27, 0.21, 0.035), 9)

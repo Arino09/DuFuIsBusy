@@ -1,0 +1,427 @@
+{
+  "full_regression": {
+    "checks": [
+      "WebGL boot under /DuFuIsBusy/",
+      "blank and erased rejection; raster undo/redo; color/width; actual artwork review; repeat submission; per-topic navigation persistence",
+      "pointer exit/re-entry and window blur exercised",
+      "CDP touchscreen stroke",
+      "scaled drawing/submission at 1024; landscape/portrait; restart cancel/confirm"
+    ],
+    "console": [
+      {
+        "type": "log",
+        "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+      },
+      {
+        "type": "log",
+        "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+      },
+      {
+        "type": "log",
+        "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0xa1c0c07a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0xa1c0c07a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0xa1c0c07a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0xa1c0c07a800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:诗圣还在等你落笔"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_EMPTY"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:1:true:1:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:1:true:1:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:2:false:2:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:诗圣还在等你落笔"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_EMPTY"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:3:true:1:1"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:4:false:2:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:5:true:1:1"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:5:true:1:1"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:5:true:1:1"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_WIDTH:52"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:6:true:2:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:妙哉！本关已通过"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_OK:0:6"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:妙哉！本关已通过"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_OK:0:6"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:6:true:2:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:1:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:6:true:2:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:7:true:3:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:8:true:4:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:9:true:5:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:10:true:6:0"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:11:true:7:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:妙哉！本关已通过"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_OK:0:11"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:重新创作？"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:重新创作？"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      },
+      {
+        "type": "log",
+        "text": "UI_FILTER:全部:4"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:gallery"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:settings"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      }
+    ],
+    "page_errors": [],
+    "failed_requests": [],
+    "responses": [
+      {
+        "path": "/DuFuIsBusy/",
+        "status": 200,
+        "type": "text/html"
+      },
+      {
+        "path": "/DuFuIsBusy/index.png",
+        "status": 200,
+        "type": "image/png"
+      },
+      {
+        "path": "/DuFuIsBusy/index.js",
+        "status": 200,
+        "type": "text/javascript"
+      },
+      {
+        "path": "/DuFuIsBusy/index.wasm",
+        "status": 200,
+        "type": "application/wasm"
+      },
+      {
+        "path": "/DuFuIsBusy/index.pck",
+        "status": 200,
+        "type": "application/octet-stream"
+      }
+    ],
+    "blocked_external_requests": [],
+    "browser_closed": true
+  },
+  "final_layout": {
+    "checks": [
+      "WebGL boot under /DuFuIsBusy/",
+      "Final swatch geometry, width slider, drawing and review; all four topics"
+    ],
+    "console": [
+      {
+        "type": "log",
+        "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+      },
+      {
+        "type": "log",
+        "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+      },
+      {
+        "type": "log",
+        "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:home"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x49c0529e800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x49c0529e800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x49c0529e800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x49c0529e800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_WIDTH:28"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:0:1:true:1:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_DIALOG:妙哉！本关已通过"
+      },
+      {
+        "type": "log",
+        "text": "SUBMIT_OK:0:1"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:1:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:2:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      },
+      {
+        "type": "log",
+        "text": "DRAW_STATE:3:0:false:0:0"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:canvas"
+      },
+      {
+        "type": "log",
+        "text": "UI_PAGE:levels"
+      }
+    ],
+    "page_errors": [],
+    "failed_requests": [],
+    "responses": [
+      {
+        "path": "/DuFuIsBusy/",
+        "status": 200,
+        "type": "text/html"
+      },
+      {
+        "path": "/DuFuIsBusy/index.png",
+        "status": 200,
+        "type": "image/png"
+      },
+      {
+        "path": "/DuFuIsBusy/index.js",
+        "status": 200,
+        "type": "text/javascript"
+      },
+      {
+        "path": "/DuFuIsBusy/index.wasm",
+        "status": 200,
+        "type": "application/wasm"
+      },
+      {
+        "path": "/DuFuIsBusy/index.pck",
+        "status": 200,
+        "type": "application/octet-stream"
+      }
+    ],
+    "blocked_external_requests": [],
+    "browser_closed": true
+  }
+}
