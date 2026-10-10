@@ -1,38 +1,44 @@
 extends RefCounted
 ## Synchronous, atomic same-browser storage. No reliance on Web IDBFS flush timing.
-const KEY = "DuFuIsBusy.art.v1"
+const VERSION = 2
+const KEY = "DuFuIsBusy.art.v2"
+const PATH = "user://art-v2.json"
+const TEMP_PATH = "user://art-v2.tmp"
 const Drawing = preload("res://scripts/drawing_surface.gd")
+const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
 var document: Dictionary = empty_document()
 var previous_raw := ""
 var writable := true
 var error := ""
 
 static func empty_document() -> Dictionary:
-	return {"version": 1, "drafts": {}, "works": [], "next_id": 1, "topic": 0, "page": "home", "tools": {"color": "243d35", "width": 12, "tool": "笔刷"}}
+	return {"version": VERSION, "drafts": {}, "works": [], "completed_topics": [], "next_id": 1, "topic": 0, "page": "home", "tools": {"color": "243d35", "width": 12, "tool": "笔刷"}}
 
 static func encode(state: Dictionary) -> Dictionary:
 	var objects: Array = []
 	for object in state.objects:
 		objects.append({"id": object.id, "kind": object.kind, "position": [object.position.x, object.position.y], "scale": object.scale, "rotation": object.rotation, "text": object.get("text", ""), "font_size": object.get("font_size", 32), "color": object.get("color", Color("243d35")).to_html(false)})
-	return {"pixels": Marshalls.raw_to_base64(state.pixels.save_png_to_buffer()), "objects": objects, "next_id": state.next_id, "revision": state.revision, "submitted": state.submitted, "work_id": state.get("work_id", "")}
+	return {"background_id": state.background_id, "pixels": Marshalls.raw_to_base64(state.pixels.save_png_to_buffer()), "objects": objects, "next_id": state.next_id, "revision": state.revision, "submitted": state.submitted, "work_id": state.get("work_id", "")}
 
 static func number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value))
 
 static func decode(data: Variant) -> Dictionary:
 	if not data is Dictionary or not data.get("pixels") is String or not data.get("objects") is Array: return {}
+	var background: Variant = data.get("background_id")
+	if not background is String or not Backgrounds.is_valid(background): return {}
 	if data.pixels.length() > 4000000 or data.objects.is_empty() or data.objects.size() > 25: return {}
 	var pixels := Image.new()
 	if pixels.load_png_from_buffer(Marshalls.base64_to_raw(data.pixels)) != OK or pixels.get_size() != Vector2i(Drawing.WIDTH, Drawing.HEIGHT): return {}
 	pixels.convert(Image.FORMAT_RGBA8)
-	var state := Drawing.new_state()
+	var state := Drawing.new_state(background)
 	state.pixels = pixels
 	state.objects = []
 	var ids: Array = []
 	for index in range(data.objects.size()):
 		var item: Variant = data.objects[index]
 		if not item is Dictionary: return {}
-		if not item.get("kind") in ["avatar", "text", "star", "cloud", "seal"]: return {}
+		if not item.get("kind") in ["avatar", "text"] and not Drawing.STICKER_TEXTURES.has(item.get("kind")): return {}
 		if (index == 0) != (item.kind == "avatar"): return {}
 		if not number(item.get("id")) or item.id < 0 or item.id != int(item.id) or ids.has(int(item.id)): return {}
 		ids.append(int(item.id))
@@ -41,6 +47,7 @@ static func decode(data: Variant) -> Dictionary:
 		if item.position[0] < 0 or item.position[0] > Drawing.WIDTH or item.position[1] < 0 or item.position[1] > Drawing.HEIGHT: return {}
 		if not number(item.get("scale")) or item.scale <= 0 or item.scale > 2: return {}
 		if not number(item.get("rotation")) or absf(item.rotation) > PI + 0.001: return {}
+		if item.kind == "avatar" and item.rotation != 0: return {}
 		if not item.get("text") is String or item.text.length() > 24: return {}
 		if item.kind == "text" and item.text.strip_edges().is_empty(): return {}
 		if not number(item.get("font_size")) or item.font_size < 16 or item.font_size > 64: return {}
@@ -49,11 +56,11 @@ static func decode(data: Variant) -> Dictionary:
 	for field in ["next_id", "revision", "submitted"]:
 		if not number(data.get(field)) or data[field] != int(data[field]): return {}
 	if data.next_id <= ids.max() or data.revision < 0 or data.submitted < -1 or data.submitted > data.revision: return {}
-	if not data.get("work_id", "") is String: return {}
+	if not data.get("work_id") is String: return {}
 	state.next_id = int(data.next_id)
 	state.revision = int(data.revision)
 	state.submitted = int(data.submitted)
-	state.work_id = data.get("work_id", "")
+	state.work_id = data.work_id
 	return state
 
 func read_document() -> bool:
@@ -67,7 +74,7 @@ func read_document() -> bool:
 			return false
 		raw = response.value
 	else:
-		raw = FileAccess.get_file_as_string("user://art-v1.json") if FileAccess.file_exists("user://art-v1.json") else ""
+		raw = FileAccess.get_file_as_string(PATH) if FileAccess.file_exists(PATH) else ""
 	previous_raw = raw
 	if raw.is_empty(): return true
 	var parser := JSON.new()
@@ -81,8 +88,13 @@ func read_document() -> bool:
 	return true
 
 static func validate_document(data: Variant) -> bool:
-	if not data is Dictionary or data.get("version") != 1: return false
+	if not data is Dictionary or data.get("version") != VERSION: return false
 	if not data.get("drafts") is Dictionary or not data.get("works") is Array: return false
+	if not data.get("completed_topics") is Array: return false
+	var completed: Array = []
+	for id in data.completed_topics:
+		if not number(id) or id != int(id) or not int(id) in [0, 1, 2, 3] or int(id) in completed: return false
+		completed.append(int(id))
 	if not number(data.get("next_id")) or data.next_id < 1 or data.next_id != int(data.next_id): return false
 	if not data.get("page") in ["home", "levels", "canvas", "gallery", "settings"] or not number(data.get("topic")): return false
 	if data.topic != int(data.topic) or not int(data.topic) in [-1,0,1,2,3]: return false
@@ -116,7 +128,7 @@ func write_document(candidate: Dictionary) -> bool:
 			else: error = "浏览器拒绝写入，尚未保存；请导出 PNG 并检查站点存储权限。"
 			return false
 	else:
-		var file := FileAccess.open("user://art-v1.tmp", FileAccess.WRITE)
+		var file := FileAccess.open(TEMP_PATH, FileAccess.WRITE)
 		if file == null:
 			error = "本地文件无法写入，尚未保存。"
 			return false
@@ -124,7 +136,7 @@ func write_document(candidate: Dictionary) -> bool:
 		file.flush()
 		var status := file.get_error()
 		file.close()
-		if status != OK or DirAccess.rename_absolute("user://art-v1.tmp", "user://art-v1.json") != OK:
+		if status != OK or DirAccess.rename_absolute(TEMP_PATH, PATH) != OK:
 			error = "本地写入失败，尚未保存。"
 			return false
 	document = candidate

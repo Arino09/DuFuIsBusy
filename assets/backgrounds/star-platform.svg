@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="330" viewBox="0 0 1040 330">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#c2cede"/><stop offset="1" stop-color="#e3eaf0"/></linearGradient>
+    <linearGradient id="planet" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0e6da"/><stop offset="1" stop-color="#b9bdce"/></linearGradient>
+    <linearGradient id="deck" x2="0" y2="1"><stop stop-color="#d3dce0"/><stop offset="1" stop-color="#edf0ee"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1040v330H0z"/>
+  <path d="M360 0Q594 80 852 0M475 0Q715 88 1040 40M583 0Q763 52 1040 82" fill="none" stroke="#f6f6ed" stroke-width="30" opacity=".14"/>
+  <g fill="#fcfbf1" opacity=".9">
+    <circle cx="45" cy="50" r="1.7"/><circle cx="273" cy="34" r="1.6"/><circle cx="387" cy="105" r="1.3"/>
+    <circle cx="476" cy="46" r="2"/><circle cx="593" cy="111" r="1.7"/><circle cx="649" cy="28" r="1.3"/>
+    <circle cx="740" cy="109" r="1.5"/><circle cx="965" cy="36" r="1.7"/><circle cx="1007" cy="137" r="1.4"/>
+    <circle cx="316" cy="153" r="1"/><circle cx="713" cy="56" r="1"/><circle cx="575" cy="19" r="1"/>
+  </g>
+  <g fill="none" stroke="#f8faf3" stroke-linecap="round" stroke-width="1.4"><path d="M548 65v10m-5-5h10M323 68v6m-3-3h6M941 131v8m-4-4h8"/></g>
+  <circle cx="849" cy="72" r="39" fill="url(#planet)"/>
+  <path d="M819 47q17 43 60 48M812 65q22 38 55 43" fill="none" stroke="#a8b2c7" stroke-width="7" opacity=".28"/>
+  <ellipse cx="849" cy="75" rx="72" ry="13" transform="rotate(-17 849 75)" fill="none" stroke="#eaf1ed" stroke-width="5" opacity=".78"/>
+  <circle cx="904" cy="54" r="3" fill="#f4f6ec"/>
+  <path d="M0 223Q186 196 359 213T702 213Q879 184 1040 220V265H0Z" fill="#b9cad8" opacity=".5"/>
+  <g fill="#a6bac9" opacity=".55">
+    <path d="M788 222v-37h14v-19h17v19h9v37zM837 222v-28h23v-12h12v40zM889 222v-65h13v-7h10v7h14v65zM940 222v-43h14v-11h12v11h10v43z"/>
+    <path d="M902 150v-25h2v25zM956 169v-16h2v16z"/>
+  </g>
+  <path d="M0 241 368 222H922l118 25v83H0Z" fill="url(#deck)"/>
+  <path d="M0 242 368 224H922l118 25M0 260l372-26h542l126 32" fill="none" stroke="#9fb5c2" stroke-width="2"/>
+  <path d="M15 251l354-23h550l104 24" fill="none" stroke="#eefbfa" stroke-width="3"/>
+  <path d="m387 238-85 92m225-92-11 92m153-92 64 92m76-92 153 92M0 289h1040" fill="none" stroke="#b7c7ce" stroke-width="1.4"/>
+  <path d="m796 257 50 25h94l-72-25Zm-34 51h211" fill="none" stroke="#98b4c1" stroke-width="2" opacity=".7"/>
+  <path d="M989 208h12v46h-12z" fill="#93aabd"/><path d="M985 204h20v7h-20z" fill="#c3eeeb"/>
+  <path d="M996 171v33" stroke="#b0c1cc" stroke-width="2"/><circle cx="996" cy="168" r="5" fill="#e2f8f1"/>
+</svg>

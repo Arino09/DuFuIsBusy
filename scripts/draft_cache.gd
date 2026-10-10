@@ -14,6 +14,7 @@ func encode(topic: int, state: Dictionary) -> Dictionary:
 		_entries[topic] = entry
 	# Callers may attach a work ID or keep this snapshot as an immutable work.
 	var encoded: Dictionary = entry.data.duplicate(true)
+	encoded.background_id = state.background_id
 	encoded.submitted = state.submitted
 	encoded.work_id = state.get("work_id", "")
 	return encoded

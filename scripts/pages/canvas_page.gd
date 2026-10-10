@@ -18,7 +18,10 @@ const PAGE_ACTIONS = {
 	"PaletteButton": "palette", "ReferenceButton": "reference",
 	"RestartButton": "restart", "SubmitButton": "submit",
 }
-const OBJECT_NAMES = {"avatar": "杜甫", "text": "文字", "star": "星星", "cloud": "祥云", "seal": "忙字印章"}
+const OBJECT_NAMES = {
+	"avatar": "杜甫", "text": "文字", "weapon_du": "杜甫重剑", "weapon_pink": "粉刃短刀",
+	"weapon_silver": "银纹长剑", "weapon_blue": "冰蓝长刃", "weapon_violet": "紫晶巨剑",
+}
 
 var surface: Drawing
 var topic_id := 0
@@ -89,8 +92,13 @@ func update_controls() -> void:
 		object_buttons[action].disabled = object.is_empty()
 	object_buttons["编辑"].disabled = object.is_empty() or object.kind != "text"
 	object_buttons["删除"].disabled = object.is_empty() or object.kind == "avatar"
+	var avatar_selected: bool = not object.is_empty() and object.kind == "avatar"
+	for action in ["左转", "右转"]:
+		object_buttons[action].disabled = object.is_empty() or avatar_selected
+		object_buttons[action].tooltip_text = "杜甫可移动、缩放，不可旋转" if avatar_selected else ""
 	var tip := "选择 / 移动：点选对象后拖动；空白处取消" if surface.selecting else "橡皮只擦笔迹" if surface.erasing else "画笔不会移动对象"
 	if not object.is_empty(): tip = "已选：" + OBJECT_NAMES[object.kind] + " · 拖动移动，上方可变换"
+	if avatar_selected: tip = "已选：杜甫 · 拖动移动，可缩放"
 	drawing_status.text = tip + " · 历史 %d / 20" % state.undo.size()
 	print("DRAW_STATE:", topic_id, ":", state.revision, ":", surface.has_creation(), ":", state.undo.size(), ":", state.redo.size())
 	print("OBJECT_STATE:", state.objects.size(), ":", state.selected)

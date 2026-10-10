@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="330" viewBox="0 0 1040 330">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#f2ebd8"/><stop offset="1" stop-color="#f8f3e4"/></linearGradient>
+    <linearGradient id="field" x2="0" y2="1"><stop stop-color="#bac9a5"/><stop offset="1" stop-color="#dce0be"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1040v330H0z"/>
+  <circle cx="486" cy="68" r="29" fill="#e8ca91" opacity=".43"/>
+  <path d="M0 160q92-33 166 2 97-76 188-11 83-86 177-8 72-25 124 6 92-77 181-5 94-36 204-4v121H0Z" fill="#d5d9be"/>
+  <path d="M0 204q159-37 293-4 117-43 225-7 166-78 290-23 153-39 232 10v150H0Z" fill="#c6d1ae"/>
+  <path d="M0 245q163-31 313-11 205 26 325-18 238-56 402 15v99H0Z" fill="url(#field)"/>
+  <path d="M716 198q-46 30-164 44-99 12-81 42 14 19 90 46H0v-42q183-13 361-23 164-6 215-34 52-9 117-34Z" fill="#e8dfc2"/>
+  <path d="M0 306q214-10 415-23m-119-33 26-1m242-13 32-5" fill="none" stroke="#cfcca9" stroke-width="2" opacity=".45"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M699 231q160-47 341 9M637 251q201-61 403 15M594 277q225-66 446 19M581 309q210-70 394 21" stroke="#94af84" stroke-width="17"/>
+    <path d="M699 226q160-47 341 9M637 246q201-61 403 15M594 272q225-66 446 19M581 304q210-70 394 21" stroke="#b2c39c" stroke-width="7"/>
+  </g>
+  <path d="M748 157h109v55H748Z" fill="#e4d5b5" stroke="#bca783" stroke-width="1.6"/>
+  <path d="M738 161 772 118h59l38 43-52-8-41 2Z" fill="#aa9b73"/>
+  <path d="m748 153 29-32m-13 32 23-32m-7 31 16-31m2 30 9-30m7 30 2-29m13 31-7-29m22 31-15-32m29 36-20-29" fill="none" stroke="#c9b790" stroke-width="2" opacity=".75"/>
+  <path d="M791 178h21v34h-21z" fill="#9d9275"/><path d="M825 177h18v16h-18z" fill="#afac88"/>
+  <path d="M834 177v16m-9-8h18" stroke="#e2d6b9" stroke-width="1.6"/>
+  <path d="M758 169v43m90-45v45" stroke="#bfae8a" stroke-width="2"/>
+  <path d="M765 216h61m-28 4h35" stroke="#b6b294" stroke-width="2" stroke-linecap="round"/>
+  <path d="M904 209q-2-46 12-91m-8 29-20-21m18 44 25-29" fill="none" stroke="#9b9c77" stroke-width="5" stroke-linecap="round"/>
+  <path d="M872 125q-16-15 1-30 1-20 27-18 17-23 38-1 24-4 25 20 19 20-5 34-12 16-35 8-25 17-34 0Z" fill="#aabd93"/>
+  <path d="M693 213v-30m17 26v-29m17 27v-30m-42 11 52-9m-51 21 51-9" fill="none" stroke="#aaa382" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M978 162q24-15 62-11M968 177q29-16 72-7" fill="none" stroke="#b1c2a0" stroke-width="6"/>
+  <g fill="none" stroke="#b1b88e" stroke-width="2" stroke-linecap="round"><path d="m35 270 1-12m0 7-6-6m7 8 6-7m280 40-2-13m3 7 5-6m-156 31-3-13m3 7 6-7"/></g>
+  <path d="M830 98q-8-9 1-16t-1-17" fill="none" stroke="#dbd8c6" stroke-width="3" stroke-linecap="round"/>
+  <g fill="none" stroke="#b3b39d" stroke-width="1.4" stroke-linecap="round"><path d="m591 66 6 3 6-3m15 13 5 2 5-2"/></g>
+</svg>

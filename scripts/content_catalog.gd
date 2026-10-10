@@ -8,6 +8,7 @@ class TopicDefinition:
 	var title: String
 	var prompt: String
 	var remark: String
+	var background_id: String
 	var node_path: NodePath
 
 class ExampleDefinition:
@@ -38,6 +39,7 @@ func _init(
 		entry.title = levels[path + "/Title"]["text"]
 		entry.prompt = levels[path + "/Prompt"]["text"]
 		entry.remark = properties["metadata/remark"]
+		entry.background_id = properties["metadata/background_id"]
 		assert(entry.id >= 0 and not _topics.has(entry.id), "Topic IDs must be unique and nonnegative")
 		_topics[entry.id] = entry
 		_topic_ids.append(entry.id)
@@ -49,6 +51,7 @@ func _init(
 	free.title = free_button["text"]
 	free.prompt = free_button["metadata/prompt"]
 	free.remark = free_button["metadata/remark"]
+	free.background_id = free_button["metadata/background_id"]
 	free.node_path = ^"FreeDrawButton"
 	_topics[free.id] = free
 

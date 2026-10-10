@@ -4,6 +4,7 @@ const Catalog = preload("res://scripts/content_catalog.gd")
 const LEVELS = preload("res://scenes/pages/levels.tscn")
 const HOME = preload("res://scenes/pages/home.tscn")
 const GALLERY = preload("res://scenes/pages/gallery.tscn")
+const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -15,6 +16,7 @@ func run() -> void:
 	var levels := LEVELS.instantiate()
 	var home := HOME.instantiate()
 	var gallery := GALLERY.instantiate()
+	var background_ids: Array[String] = []
 	for id in catalog.topic_ids():
 		var entry := catalog.get_topic(id)
 		var card := levels.get_node(entry.node_path)
@@ -22,10 +24,20 @@ func run() -> void:
 		assert(entry.title == card.get_node("Title").text and not entry.title.is_empty())
 		assert(entry.prompt == card.get_node("Prompt").text and not entry.prompt.is_empty())
 		assert(entry.remark == card.get_meta("remark") and not entry.remark.is_empty())
+		assert(entry.background_id == card.get_meta("background_id"))
+		assert(Backgrounds.is_valid(entry.background_id))
+		assert(not background_ids.has(entry.background_id), "Each existing theme has its own background")
+		background_ids.append(entry.background_id)
+		var background := Backgrounds.texture_for(entry.background_id)
+		assert(background != null and background.get_size() == Vector2(1040, 330))
 	var free := catalog.get_topic(-1)
 	assert(free.id == -1 and free.title == home.get_node("FreeDrawButton").text)
 	assert(free.prompt == home.get_node("FreeDrawButton").get_meta("prompt"))
 	assert(free.remark == home.get_node("FreeDrawButton").get_meta("remark"))
+	assert(free.background_id == home.get_node("FreeDrawButton").get_meta("background_id"))
+	assert(free.background_id == "paper" and Backgrounds.texture_for(free.background_id) == null)
+	assert(Backgrounds.is_valid("paper") and not Backgrounds.is_valid("unknown"))
+	assert(Backgrounds.texture_for("unknown") == null)
 	for id in catalog.example_ids():
 		var entry := catalog.get_example(id)
 		var card := gallery.get_node(entry.node_path)
@@ -40,6 +52,7 @@ func run() -> void:
 	levels.get_node("Topic1/Title").text = "新主题"
 	levels.get_node("Topic1/Prompt").text = "新提示"
 	levels.get_node("Topic1").set_meta("remark", "新评语")
+	levels.get_node("Topic1").set_meta("background_id", "bamboo_mountains")
 	levels.move_child(levels.get_node("Topic1"), levels.get_child_count() - 1)
 	var edited_levels := PackedScene.new()
 	assert(edited_levels.pack(levels) == OK)
@@ -53,6 +66,7 @@ func run() -> void:
 	assert(edited.get_topic(0).title == "新主题")
 	assert(edited.get_topic(0).prompt == "新提示")
 	assert(edited.get_topic(0).remark == "新评语")
+	assert(edited.get_topic(0).background_id == "bamboo_mountains")
 	assert(edited.get_topic(1).title == catalog.get_topic(1).title)
 	assert(edited.get_example(0).title == "新示例")
 	assert(edited.get_example(0).image_path == catalog.get_example(1).image_path)

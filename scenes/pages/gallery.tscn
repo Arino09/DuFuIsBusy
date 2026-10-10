@@ -87,7 +87,7 @@ offset_bottom = 349.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
 theme_override_font_sizes/font_size = 20
-text = "本地完成作品 · 0 幅"
+text = "草稿 · 0 幅    完成作品 · 0 幅"
 vertical_alignment = 1
 
 [node name="PreviousButton" type="Button" parent="MyWorks"]
@@ -135,7 +135,7 @@ offset_bottom = 208.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.462745098, 0.380392157, 0.282352941, 1)
 theme_override_font_sizes/font_size = 22
-text = "草稿在画布自动保存；提交后可存入这里。"
+text = "创作后草稿自动存入这里，可随时继续编辑。"
 vertical_alignment = 1
 
 [node name="CreateButton" type="Button" parent="MyWorks/EmptyState"]

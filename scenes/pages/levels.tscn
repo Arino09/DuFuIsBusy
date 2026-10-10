@@ -151,10 +151,11 @@ offset_bottom = 900.0
 text = "命题画卷"
 
 [node name="Subtitle" parent="Frame" index="9"]
-text = "选一幅画卷，给杜甫一个忙起来的理由。所有主题都可自由试选。"
+text = "按顺序展开画卷，保存完成作品后解锁下一关。"
 
 [node name="Topic1" type="Control" parent="."]
 metadata/topic_id = 0
+metadata/background_id = "country_road"
 metadata/remark = "车到山前必有路，诗圣今天不走路。"
 offset_left = 74.0
 offset_top = 267.0
@@ -257,6 +258,7 @@ color = Color(0.572549020, 0.403921569, 0.211764706, 1)
 
 [node name="Topic2" type="Control" parent="."]
 metadata/topic_id = 1
+metadata/background_id = "star_platform"
 metadata/remark = "安得机甲千万套，大庇诗人不加班。"
 offset_left = 401.0
 offset_top = 267.0
@@ -359,6 +361,7 @@ color = Color(0.282352941, 0.407843137, 0.474509804, 1)
 
 [node name="Topic3" type="Control" parent="."]
 metadata/topic_id = 2
+metadata/background_id = "bamboo_mountains"
 metadata/remark = "笔下自有江湖在，杜某先干一碗茶。"
 offset_left = 728.0
 offset_top = 267.0
@@ -461,6 +464,7 @@ color = Color(0.580392157, 0.309803922, 0.258823529, 1)
 
 [node name="Topic4" type="Control" parent="."]
 metadata/topic_id = 3
+metadata/background_id = "tea_cottage"
 metadata/remark = "采菊东篱下，今天不打卡。"
 offset_left = 1055.0
 offset_top = 267.0

@@ -77,9 +77,9 @@ try:
    checks.append('Chinese input/edit, font size and color, text move/scale/rotate/delete, undo/redo; text-only creation')
    # Text alone qualifies and the preview must actually render it.
    click(1230,760,'SUBMIT_OK:-1:');shot('text-review');click(830,670)
-   click(215,520,'UI_DIALOG:原创贴纸');shot('sticker-picker');click(375,563,'UI_PAGE:canvas')
+   click(215,520,'UI_DIALOG:武器贴纸');shot('sticker-picker');click(316,657,'UI_PAGE:canvas')
    stroke([(891,562),(700,480)])
-   click(788,359);click(574,359);shot('star-transformed')
+   click(788,359);click(574,359);shot('weapon-transformed')
    cdp=context.new_cdp_session(page)
    before=state()
    cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':700,'y':480}]})
@@ -91,11 +91,13 @@ try:
    cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':788,'y':359}]})
    cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
    page.wait_for_timeout(350);assert state()!=before,('touch button failed',state())
-   click(215,520,'UI_DIALOG:原创贴纸');click(698,563,'UI_PAGE:canvas');stroke([(891,562),(900,455)])
-   click(215,520,'UI_DIALOG:原创贴纸');click(1020,563,'UI_PAGE:canvas');stroke([(891,562),(1180,470)])
+   for picker_x,destination in [(518,(900,455)),(720,(1060,485)),(922,(600,595)),(1124,(1210,565))]:
+    click(215,520,'UI_DIALOG:武器贴纸');click(picker_x,657,'UI_PAGE:canvas');stroke([(891,562),destination])
+   saved_objects=page.evaluate("JSON.parse(localStorage.getItem('DuFuIsBusy.art.v2')).drafts['-1'].objects")
+   assert {o['kind'] for o in saved_objects}=={'avatar','text','weapon_du','weapon_pink','weapon_silver','weapon_blue','weapon_violet'}
    # Move Dufu far to the right, retaining all other elements.
    stroke([(460,555),(1150,635)]);shot('objects-composed')
-   checks.append('All three original stickers, object selection/drag/transforms; touch drag and touch toolbar; Dufu free placement')
+   checks.append('All five weapon stickers, object selection/drag/transforms; touch drag and touch toolbar; Dufu free placement')
    click(170,577,'UI_DIALOG:调色盘');shot('palette')
    fill(600,525,'ZZZZZZ');click(900,525);assert not any('COLOR_CHANGED:' in e['text'] for e in logs)
    fill(600,525,'00AABB');click(900,525,'COLOR_CHANGED:00aabb')

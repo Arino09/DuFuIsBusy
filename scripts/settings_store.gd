@@ -28,16 +28,13 @@ static func _finite_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value))
 
 func load_settings() -> Dictionary:
-	# Keep the former ConfigFile fallback when Web storage is absent/unreadable.
-	var raw: Variant = _read_native()
-	if _is_web():
-		var text: Variant = _read_web()
-		if text is String and not text.is_empty():
-			var parser := JSON.new()
-			if parser.parse(text) == OK and parser.data is Dictionary:
-				# A valid Web document is authoritative; absent/invalid fields default.
-				raw = parser.data
-	return normalize(raw)
+	if not _is_web(): return normalize(_read_native())
+	var text: Variant = _read_web()
+	if text is String and not text.is_empty():
+		var parser := JSON.new()
+		if parser.parse(text) == OK:
+			return normalize(parser.data)
+	return defaults()
 
 func save_settings(values: Dictionary) -> bool:
 	var normalized := normalize(values)

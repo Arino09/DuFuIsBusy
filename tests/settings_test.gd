@@ -7,6 +7,8 @@ class MemorySettings:
 	var web := false
 	var native: Variant = null
 	var web_text: Variant = ""
+	var native_reads := 0
+	var web_reads := 0
 	var native_writes := 0
 	var web_writes := 0
 	var fail_writes := false
@@ -16,9 +18,11 @@ class MemorySettings:
 		return web
 
 	func _read_native() -> Variant:
+		native_reads += 1
 		return native
 
 	func _read_web() -> Variant:
+		web_reads += 1
 		return web_text
 
 	func _write_native(values: Dictionary) -> bool:
@@ -77,6 +81,7 @@ func run() -> void:
 	store.native = {"volume": 150, "quality": 0.5, "sound": false, "motion": 1}
 	var native_expected := SettingsStore.normalize(store.native)
 	assert(store.load_settings() == native_expected)
+	assert(store.native_reads == 2 and store.web_reads == 0, "Native settings read Web storage")
 	assert(store.native_writes == 0 and store.web_writes == 0, "Loading rewrote preferences")
 	assert(store.save_settings(store.native))
 	assert(store.written == native_expected and store.native_writes == 1 and store.web_writes == 0)
@@ -90,13 +95,15 @@ func run() -> void:
 	store.fail_writes = false
 	for text in [null, "", "bad JSON", "[]", "null", "false"]:
 		store.web_text = text
-		assert(store.load_settings() == native_expected, "Unavailable Web settings lost ConfigFile fallback")
+		assert(store.load_settings() == expected, "Unavailable Web settings should use defaults")
+	assert(store.native_reads == 2 and store.web_reads == 6, "Web settings read ConfigFile")
 	store.web_text = '{"volume":21,"quality":0,"sound":false,"music":"false","extra":1}'
 	var web_expected := {"volume": 21.0, "quality": 0, "sound": false, "music": true, "motion": false}
 	assert(store.load_settings() == web_expected)
 	assert(store.native_writes == 2 and store.web_writes == 0, "Loading wrote to a backend")
 	store.web_text = '{}'
 	assert(store.load_settings() == expected, "Present Web document was merged with unrelated native values")
+	assert(store.native_reads == 2 and store.web_reads == 8, "Web settings read ConfigFile")
 	assert(store.save_settings({"volume": -10, "quality": 0.3, "music": false}))
 	assert(store.written == {"volume": 0.0, "quality": 1, "sound": true, "music": false, "motion": false})
 	assert(store.native_writes == 2 and store.web_writes == 1, "Web save also wrote ConfigFile")

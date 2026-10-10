@@ -21,7 +21,7 @@ layout_mode = 0
 text = "打开已存画作？"
 
 [node name="Body" parent="Frame" index="3"]
-text = "将替换该命题当前草稿，画廊原作保持不变。\n要保留当前草稿，请先将它存入画廊。"
+text = "将替换该命题当前草稿，已保存的完成作品保持不变。\n要保留当前草稿，请先提交并保存为完成作品。"
 
 [node name="CancelButton" type="Button" parent="."]
 layout_mode = 0

@@ -21,7 +21,7 @@ layout_mode = 0
 text = "重新创作？"
 
 [node name="Body" parent="Frame" index="3"]
-text = "将重建当前命题草稿，杜甫回到原位。已存入画廊的作品不受影响。"
+text = "将清空当前命题草稿，杜甫回到原位。已保存的完成作品和关卡进度不受影响。"
 
 [node name="CancelButton" type="Button" parent="."]
 layout_mode = 0

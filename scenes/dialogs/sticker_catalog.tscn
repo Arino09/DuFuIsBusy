@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="1_theme"]
 
@@ -6,7 +6,12 @@
 
 [ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
 
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-sheet.jpg" id="4_weapons"]
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-dusword.png" id="4_du"]
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-pink-blade.png" id="5_pink"]
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-silver-sword.png" id="6_silver"]
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-blue-sword.png" id="7_blue"]
+[ext_resource type="Texture2D" path="res://assets/stickers/weapon-violet-greatsword.png" id="8_violet"]
+[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="9_font"]
 
 [sub_resource type="StyleBoxFlat" id="ReferencePanel"]
 content_margin_left = 18.0
@@ -36,10 +41,11 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "贴纸目录 · UI 预览"
+text = "素材目录"
 
 [node name="Body" parent="Frame" index="3"]
-text = "仅查看源素材，尚不能放置、拖拽或编辑贴纸。"
+theme_override_fonts/font = ExtResource("9_font")
+text = "武器贴纸可添加到画布，场景图片可打开参考。"
 
 [node name="ReferencePanel" type="Panel" parent="."]
 layout_mode = 0
@@ -50,14 +56,58 @@ offset_bottom = 690.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("ReferencePanel")
 
-[node name="ReferencePicture" type="TextureRect" parent="."]
+[node name="SampleDu" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 230.0
-offset_top = 239.0
-offset_right = 581.0
-offset_bottom = 674.0
+offset_left = 241.0
+offset_top = 251.0
+offset_right = 339.0
+offset_bottom = 440.0
 mouse_filter = 2
-texture = ExtResource("4_weapons")
+texture = ExtResource("4_du")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SamplePink" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 251.0
+offset_right = 450.0
+offset_bottom = 440.0
+mouse_filter = 2
+texture = ExtResource("5_pink")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SampleSilver" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 463.0
+offset_top = 251.0
+offset_right = 561.0
+offset_bottom = 440.0
+mouse_filter = 2
+texture = ExtResource("6_silver")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SampleBlue" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 274.0
+offset_top = 459.0
+offset_right = 372.0
+offset_bottom = 648.0
+mouse_filter = 2
+texture = ExtResource("7_blue")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SampleViolet" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 418.0
+offset_top = 459.0
+offset_right = 516.0
+offset_bottom = 648.0
+mouse_filter = 2
+texture = ExtResource("8_violet")
 expand_mode = 1
 stretch_mode = 5
 
@@ -83,7 +133,8 @@ offset_bottom = 325.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.4627451, 0.38039216, 0.28235294, 1)
 theme_override_font_sizes/font_size = 19
-text = "五件武器的白底源拼图，尚未拆分为贴纸。"
+theme_override_fonts/font = ExtResource("9_font")
+text = "五款独立透明贴纸，可移动、缩放和旋转。"
 vertical_alignment = 1
 
 [node name="WeaponButton" type="Button" parent="."]
@@ -94,7 +145,7 @@ offset_right = 1203.0
 offset_bottom = 399.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "查看武器源图"
+text = "选择武器贴纸"
 
 [node name="SceneTitle" type="Label" parent="."]
 layout_mode = 0

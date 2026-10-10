@@ -11,7 +11,7 @@ profile=Path(tempfile.mkdtemp(prefix='dufu-browser-profile-'))
 server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(serve)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 logs=[];errors=[];failed=[];blocked=[];checks=[];context=None
-key='DuFuIsBusy.art.v1'
+key='DuFuIsBusy.art.v2'
 p=None
 try:
  p=sync_playwright().start()
@@ -58,7 +58,7 @@ try:
   click(260,530,'UI_PAGE:canvas')
   click(230,650,'DRAW_WIDTH:');assert data()['tools']['width']==52
   stroke((700,540),(860,580))
-  page.evaluate("window.__nativeSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='DuFuIsBusy.art.v1')throw new DOMException('full','QuotaExceededError');return window.__nativeSet.call(this,k,v)};true")
+  page.evaluate("window.__nativeSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='DuFuIsBusy.art.v2')throw new DOMException('full','QuotaExceededError');return window.__nativeSet.call(this,k,v)};true")
   submit();click(325,669,'UI_DIALOG:作品尚未保存');shot('quota-save-failed')
   checks.append('Brush width is persisted immediately without blur; long storage error fits modal after layout fix')
   assert not errors and not failed and not blocked,(errors,failed,blocked)

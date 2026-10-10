@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="330" viewBox="0 0 1040 330">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#f4ecda"/><stop offset="1" stop-color="#faf5e8"/></linearGradient>
+    <linearGradient id="road" x2="0" y2="1"><stop stop-color="#dfc8a5"/><stop offset="1" stop-color="#ecd9b9"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1040v330H0z"/>
+  <circle cx="719" cy="63" r="29" fill="#e4bc86" opacity=".46"/>
+  <path d="M0 164Q65 137 113 153T229 153Q314 92 386 146Q441 106 517 153Q590 113 656 151Q741 87 814 148Q894 116 963 147L1040 132V250H0Z" fill="#d7d8c3"/>
+  <path d="M0 191Q105 155 229 184T453 182Q543 167 625 183Q752 143 868 183Q955 166 1040 181V289H0Z" fill="#c4cab0"/>
+  <path d="M0 233Q160 207 351 226Q495 239 631 213Q797 176 1040 228V330H0Z" fill="#d6d9b9"/>
+  <path d="M750 188C703 221 535 230 572 268C589 286 677 298 722 330H236C330 282 546 258 534 236C528 217 683 207 726 188Z" fill="url(#road)"/>
+  <path d="M736 196C695 221 558 226 557 248M616 292Q663 307 679 320M410 301l-29 8M463 279l26-7" fill="none" stroke="#c4aa81" stroke-width="2" opacity=".48" stroke-linecap="round"/>
+  <g fill="#e9e0c7" stroke="#a79e82" stroke-width="1.4">
+    <path d="M858 167h47v36h-47z"/><path d="M909 174h35v30h-35z"/>
+  </g>
+  <path d="m850 168 31-21 33 21Zm54 6 24-17 25 17Z" fill="#9f9e84"/>
+  <path d="M876 184h10v19h-10zM919 185h7v10h-7z" fill="#a49b7f"/>
+  <path d="M860 207q54-10 90-2" fill="none" stroke="#b2b58e" stroke-width="4" stroke-linecap="round"/>
+  <g fill="none" stroke="#929c78" stroke-linecap="round">
+    <path d="M998 216q-15-65-1-139m-2 48-26-21m27 50 25-21" stroke-width="5"/>
+    <path d="M953 112q8 30 4 46m16-57q7 28 4 43m35-54q16 30 14 49m-21-30q9 24 5 48" stroke-width="2"/>
+  </g>
+  <path d="M942 103q18-33 40-21q19-36 39-11q18-7 25 20v24q-27-13-52-10q-28 14-52-2Z" fill="#acb694"/>
+  <g fill="none" stroke="#aab18a" stroke-width="2" stroke-linecap="round">
+    <path d="m39 277 1-14m0 8-6-7m7 10 6-8m171 37-3-13m3 7 6-8m569 10 2-15m-2 9-7-6m8 8 7-7m153 15-3-15m4 9 6-8"/>
+    <path d="M35 301q43-7 68-3m738 19 23-3m55-51 31-1m-772-24 28-2" opacity=".6"/>
+  </g>
+  <g fill="none" stroke="#b2b2a0" stroke-width="1.5" stroke-linecap="round"><path d="m478 68 7 3 7-3m16 8 5 2 5-2"/></g>
+</svg>

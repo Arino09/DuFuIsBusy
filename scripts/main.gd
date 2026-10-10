@@ -30,6 +30,8 @@ const BROWN = Color("766148")
 const RED = Color("aa4937")
 const CanvasPage = preload("res://scripts/pages/canvas_page.gd")
 const GalleryPage = preload("res://scripts/pages/gallery_page.gd")
+const GalleryEntries = preload("res://scripts/gallery_entries.gd")
+const LevelProgress = preload("res://scripts/level_progress.gd")
 const SettingsPage = preload("res://scripts/pages/settings_page.gd")
 const SettingsStore = preload("res://scripts/settings_store.gd")
 const ContentCatalog = preload("res://scripts/content_catalog.gd")
@@ -49,6 +51,7 @@ var storage_status := ""
 const Drawing = preload("res://scripts/drawing_surface.gd")
 var web_blur_callback: JavaScriptObject
 var drawings: Dictionary = {}
+var completed_topics: Array[int] = []
 var drawing: Drawing
 var pen_color := INK
 var pen_width := 12
@@ -79,6 +82,7 @@ func _ready() -> void:
 		JavaScriptBridge.get_interface("window").addEventListener("pagehide", web_blur_callback)
 		JavaScriptBridge.get_interface("window").addEventListener("beforeunload", web_blur_callback)
 	local_store.read_document()
+	completed_topics = LevelProgress.completed_from_document(local_store.document)
 	for key in local_store.document.drafts:
 		drawings[int(key)] = LocalStore.decode(local_store.document.drafts[key])
 		draft_cache.seed(int(key), drawings[int(key)], local_store.document.drafts[key])
@@ -115,9 +119,10 @@ func show_page(id: String) -> void:
 		child.queue_free()
 	drawing = null
 	current = id if PAGE_SCENES.has(id) else "home"
+	if current == "canvas" and not _topic_unlocked(topic): current = "levels"
 	page = PAGE_SCENES[current].instantiate()
 	if current == "canvas":
-		if not drawings.has(topic): drawings[topic] = Drawing.new_state()
+		if not drawings.has(topic): drawings[topic] = Drawing.new_state(_topic_background(topic))
 		var view: CanvasPage = page
 		view.prepare(drawings[topic], topic, content_catalog.get_topic(topic).prompt)
 		drawing = view.surface
@@ -148,8 +153,20 @@ func home() -> void:
 	bind_button(page, "ExitButton", exit_info)
 
 func _start_topic(id: int) -> void:
+	if not _allow_topic(id): return
 	topic = id
 	show_page("canvas")
+
+func _topic_unlocked(id: int) -> bool:
+	return LevelProgress.is_unlocked(id, completed_topics, content_catalog.topic_ids())
+
+func _allow_topic(id: int) -> bool:
+	if _topic_unlocked(id): return true
+	info("画卷尚未解锁", "请先保存上一关的完成作品，再来展开这幅画卷。")
+	return false
+
+func _topic_background(id: int) -> String:
+	return content_catalog.get_topic(id).background_id
 
 func _show_gallery(tab: int) -> void:
 	gallery_tab = tab
@@ -161,9 +178,12 @@ func levels() -> void:
 		var definition := content_catalog.get_topic(id)
 		var card: Control = page.get_node(definition.node_path)
 		var status: Label = card.get_node("Status")
-		status.visible = drawings.has(id) and drawings[id].submitted >= 0
-		if status.visible:
-			status.text = "已过关" if drawings[id].submitted == drawings[id].revision else "画卷已修改，可再次提交"
+		var unlocked := _topic_unlocked(id)
+		status.visible = true
+		status.text = "已完成 · 可再次创作" if id in completed_topics else "已解锁 · 保存作品后继续" if unlocked else "保存上一关作品后解锁"
+		var enter: Button = card.get_node("EnterButton")
+		enter.disabled = not unlocked
+		if not unlocked: enter.text = "尚未解锁"
 		bind_button(card, "EnterButton", _start_topic.bind(id))
 
 func canvas() -> void:
@@ -238,7 +258,7 @@ func sticker_picker() -> void:
 		info("画布有点热闹", "最多容纳 24 个文字或贴纸，请先删除一个。")
 		return
 	modal("sticker_picker")
-	for item in [["AddStarButton", "star"], ["AddCloudButton", "cloud"], ["AddSealButton", "seal"]]:
+	for item in [["AddDuButton", "weapon_du"], ["AddPinkButton", "weapon_pink"], ["AddSilverButton", "weapon_silver"], ["AddBlueButton", "weapon_blue"], ["AddVioletButton", "weapon_violet"]]:
 		var kind: String = item[1]
 		bind_button(overlay, item[0], _add_sticker.bind(kind))
 
@@ -255,7 +275,7 @@ func restart_confirm() -> void:
 	bind_button(overlay, "ConfirmButton", _restart_drawing)
 
 func _restart_drawing() -> void:
-	drawings[topic] = Drawing.new_state()
+	drawings[topic] = Drawing.new_state(_topic_background(topic))
 	show_page("canvas")
 
 func submit_artwork() -> void:
@@ -274,6 +294,8 @@ func submit_artwork() -> void:
 		state.result = ImageTexture.create_from_image(captured)
 		state.submitted = state.revision
 	modal("submission_result")
+	if topic == -1:
+		overlay.get_node("Frame/Body").text = "草稿已自动保存；也可保存为独立的完成作品。"
 	overlay.get_node("Artwork").texture = state.result
 	overlay.get_node("Remark").text = content_catalog.get_topic(topic).remark
 	bind_button(overlay, "RestartButton", restart_confirm)
@@ -291,6 +313,7 @@ func storage_candidate() -> Dictionary:
 	for key in drawings: candidate.drafts[str(key)] = draft_cache.encode(key, drawings[key])
 	candidate.page = current
 	candidate.topic = topic
+	candidate.completed_topics = completed_topics.duplicate()
 	candidate.tools = {"color":pen_color.to_html(false),"width":pen_width,"tool":selected_tool}
 	return candidate
 
@@ -308,6 +331,7 @@ func autosave() -> void:
 	# Failed writes remain pending for retry, focus loss or exit; no retry loop.
 	_draft_save_pending = not saved_ok
 	update_storage_status(saved_ok)
+	if saved_ok and current == "gallery": _refresh_gallery()
 
 func queue_autosave() -> void:
 	_draft_save_pending = true
@@ -329,6 +353,7 @@ func retry_storage() -> void:
 		var retry := LocalStore.new()
 		if retry.read_document():
 			local_store = retry
+			completed_topics = LevelProgress.completed_from_document(local_store.document)
 			for key in local_store.document.drafts:
 				var restored_topic := int(key)
 				if not drawings.has(restored_topic) or drawings[restored_topic].revision == 0:
@@ -360,6 +385,7 @@ func save_work(as_new: bool) -> void:
 	var work := {"id":id,"topic":topic,"title":title,"data":encoded,"preview":Marshalls.raw_to_base64(state.result.get_image().save_png_to_buffer())}
 	if index == -1: candidate.works.append(work)
 	candidate.drafts[str(topic)] = encoded
+	candidate.completed_topics = LevelProgress.mark_completed(topic, completed_topics, content_catalog.topic_ids())
 	if not local_store.write_document(candidate):
 		# A later flush retries the draft, not the explicitly saved gallery work.
 		_draft_save_pending = true
@@ -368,10 +394,20 @@ func save_work(as_new: bool) -> void:
 		return
 	_draft_save_pending = false
 	state.work_id = id
+	completed_topics = LevelProgress.completed_from_document(local_store.document)
 	update_storage_status(true)
-	modal("save_confirmation", "", title + "\n草稿可继续编辑；修改后保存为新版本，不覆盖画廊旧作。")
+	var ids := content_catalog.topic_ids()
+	var next_index := ids.find(topic) + 1
+	var has_next := topic >= 0 and next_index < ids.size()
+	var message := title + "\n草稿可继续编辑；修改后保存为新版本。"
+	if has_next: message += "\n下一关已解锁：" + content_catalog.get_topic(ids[next_index]).title
+	elif topic >= 0: message += "\n全部画卷已完成，可自由重玩。"
+	modal("save_confirmation", "", message)
 	bind_button(overlay, "ContinueButton", close_overlay)
 	bind_button(overlay, "GalleryButton", _show_gallery.bind(0))
+	overlay.get_node("NextButton").text = "下一关" if has_next else "选关"
+	if has_next: bind_button(overlay, "NextButton", _start_topic.bind(ids[next_index]))
+	else: bind_button(overlay, "NextButton", show_page.bind("levels"))
 	print("WORK_SAVED:", id, ":", local_store.document.works.size())
 
 func work_texture(work: Dictionary) -> ImageTexture:
@@ -381,8 +417,12 @@ func work_texture(work: Dictionary) -> ImageTexture:
 
 func _refresh_gallery() -> void:
 	var view: GalleryPage = page
-	view.refresh(local_store.document.works, gallery_tab, gallery_filter, gallery_page, work_texture)
+	var entries := GalleryEntries.build(local_store.document, _gallery_topic_title)
+	view.refresh(entries, gallery_tab, gallery_filter, gallery_page, work_texture)
 	gallery_page = view.page_index
+
+func _gallery_topic_title(id: int) -> String:
+	return content_catalog.get_topic(id).title
 
 func _set_gallery_tab(value: int) -> void:
 	gallery_tab = value
@@ -401,18 +441,42 @@ func _set_gallery_page(value: int) -> void:
 
 func view_work(work: Dictionary) -> void:
 	modal("work_view", work.title)
+	var is_draft: bool = work.get("draft", false)
 	var picture: TextureRect = overlay.get_node("Artwork")
-	picture.texture = work_texture(work)
+	picture.visible = not is_draft
+	var preview = overlay.get_node("DraftPreview")
+	preview.visible = is_draft
+	if is_draft:
+		preview.set_state(work.state)
+		overlay.get_node("Frame/Body").text = "自动保存的草稿。继续编辑会打开当前关卡的画布。"
+		overlay.get_node("EditButton").text = "继续编辑"
+	else:
+		picture.texture = work_texture(work)
 	bind_button(overlay, "EditButton", open_work_confirm.bind(work))
-	bind_button(overlay, "DownloadButton", _download_texture.bind(picture.texture))
+	overlay.get_node("DownloadButton").visible = not is_draft
+	if not is_draft: bind_button(overlay, "DownloadButton", _download_texture.bind(picture.texture))
 	print("WORK_VIEW:", work.id)
 
 func open_work_confirm(work: Dictionary) -> void:
+	if not _allow_topic(int(work.topic)): return
+	if work.get("draft", false):
+		_open_draft(work)
+		return
 	modal("open_work_confirmation")
 	bind_button(overlay, "CancelButton", close_overlay)
 	bind_button(overlay, "ConfirmButton", _open_work.bind(work))
 
+func _open_draft(work: Dictionary) -> void:
+	if not _allow_topic(int(work.topic)): return
+	topic = int(work.topic)
+	# Continue the live draft, including undo history and any writes still pending.
+	# A persisted gallery snapshot must never replace newer unsaved edits.
+	if not drawings.has(topic): drawings[topic] = LocalStore.decode(work.data)
+	show_page("canvas")
+	print("DRAFT_OPEN:", topic)
+
 func _open_work(work: Dictionary) -> void:
+	if not _allow_topic(int(work.topic)): return
 	topic = int(work.topic)
 	drawings[topic] = LocalStore.decode(work.data)
 	drawings[topic].work_id = work.id
@@ -521,7 +585,7 @@ func info(title: String, body: String) -> void:
 
 func sticker_list() -> void:
 	modal("sticker_catalog")
-	bind_button(overlay, "WeaponButton", image_dialog.bind("幻想武器源图", "res://assets/stickers/weapon-sheet.jpg", "白底拼图仅作目录预览，不是五张独立透明贴纸。", "返回目录", sticker_list))
+	bind_button(overlay, "WeaponButton", sticker_picker)
 	bind_button(overlay, "CityButton", image_dialog.bind("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list))
 	bind_button(overlay, "MarketButton", image_dialog.bind("烟火夜市", "res://assets/backgrounds/night-market.jpg", "原始场景背景预览，当前不能应用到画布。", "返回目录", sticker_list))
 	bind_button(overlay, "BackButton", close_overlay)

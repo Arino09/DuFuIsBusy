@@ -42,4 +42,13 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "我的画廊"
 
+[node name="NextButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 575.0
+offset_right = 550.0
+offset_bottom = 633.0
+mouse_default_cursor_shape = 2
+text = "下一关"
+
 [editable path="Frame"]

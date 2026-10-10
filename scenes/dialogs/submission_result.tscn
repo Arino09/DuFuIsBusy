@@ -18,10 +18,10 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 
 [node name="Title" parent="Frame" index="2"]
-text = "妙哉！本关已通过"
+text = "妙哉！画卷已装裱"
 
 [node name="Body" parent="Frame" index="3"]
-text = "本地点评 · 有创作就过关。\n草稿自动保存；画廊需点击保存。"
+text = "保存完成作品后解锁下一关。\n草稿已自动存入我的作品。"
 
 [node name="Artwork" type="TextureRect" parent="."]
 layout_mode = 0
@@ -72,7 +72,7 @@ offset_right = 1209.0
 offset_bottom = 693.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "选下一幅"
+text = "返回选关"
 
 [node name="SaveButton" type="Button" parent="."]
 layout_mode = 0
@@ -82,7 +82,7 @@ offset_right = 440.0
 offset_bottom = 693.0
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
-text = "保存到画廊"
+text = "保存完成作品"
 
 [node name="SaveAsButton" type="Button" parent="."]
 layout_mode = 0

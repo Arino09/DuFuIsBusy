@@ -50,7 +50,10 @@ func refresh(works: Array, tab: int, filter: String, requested_page: int, textur
 		_refresh_examples(filter)
 
 func _refresh_works(works: Array, texture_provider: Callable) -> void:
-	$MyWorks/CountLabel.text = "本地完成作品 · %d 幅" % works.size()
+	var draft_count := 0
+	for work in works:
+		if work.get("draft", false): draft_count += 1
+	$MyWorks/CountLabel.text = "草稿 · %d 幅    完成作品 · %d 幅" % [draft_count, works.size() - draft_count]
 	$MyWorks/EmptyState.visible = works.is_empty()
 	$MyWorks/Cards.visible = not works.is_empty()
 	_previous_button.visible = not works.is_empty()
@@ -66,7 +69,15 @@ func _refresh_works(works: Array, texture_provider: Callable) -> void:
 		card.get_node("EditButton").disabled = not occupied
 		_slot_works[slot] = works[index] if occupied else {}
 		card.get_node("Title").text = _slot_works[slot].title if occupied else ""
-		card.get_node("Picture").texture = texture_provider.call(_slot_works[slot]) if occupied else null
+		var is_draft: bool = occupied and _slot_works[slot].get("draft", false)
+		var picture: TextureRect = card.get_node("Picture")
+		picture.visible = occupied and not is_draft
+		picture.texture = texture_provider.call(_slot_works[slot]) if occupied and not is_draft else null
+		var preview = card.get_node("DraftPreview")
+		preview.visible = is_draft
+		preview.set_state(_slot_works[slot].state if is_draft else {})
+		card.get_node("ViewButton").text = "查看草稿" if is_draft else "查看作品"
+		card.get_node("EditButton").text = "继续编辑" if is_draft else "打开编辑"
 
 func _refresh_examples(filter: String) -> void:
 	for button in _filter_buttons:

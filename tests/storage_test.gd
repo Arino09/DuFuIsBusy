@@ -5,7 +5,7 @@ func _initialize() -> void:
 	call_deferred("run")
 func run() -> void:
 	var surface = Drawing.new()
-	surface.state = Drawing.new_state()
+	surface.state = Drawing.new_state("country_road")
 	surface.size = Vector2(1040, 330)
 	root.add_child(surface)
 	surface.begin(Vector2(500, 150), -1)
@@ -13,7 +13,9 @@ func run() -> void:
 	surface.finish()
 	surface.add_object("text", "麒麟献瑞，诗圣摸鱼。", 44, Color("3a9d8f"))
 	surface.transform_selected(0.8, PI / 6)
-	surface.add_object("cloud")
+	for kind in Drawing.STICKER_TEXTURES:
+		surface.add_object(kind)
+		surface.transform_selected(0.8, PI / 6)
 	surface.state.objects[0].position = Vector2(840, 170)
 	surface.state.work_id = "work-1"
 	surface.state.submitted = surface.state.revision
@@ -30,6 +32,8 @@ func run() -> void:
 		assert(actual.text == expected.get("text", ""))
 		assert(actual.color == expected.get("color", Color("243d35")))
 	assert(loaded.work_id == "work-1" and loaded.submitted == surface.state.submitted)
+	assert(loaded.background_id == "country_road" and loaded.revision == surface.state.revision)
+	assert(Store.encode(Store.decode(encoded)) == encoded, "Current saves must round-trip without changing artwork or revisions")
 	assert(loaded.undo.is_empty() and loaded.redo.is_empty())
 	assert(Store.decode({}).is_empty())
 	var invalid = encoded.duplicate(true)
@@ -38,6 +42,18 @@ func run() -> void:
 	invalid = encoded.duplicate(true)
 	invalid.objects[1].color = "oops"
 	assert(Store.decode(invalid).is_empty())
+	for kind in ["star", "cloud", "seal"]:
+		invalid = encoded.duplicate(true)
+		invalid.objects[2].kind = kind
+		assert(Store.decode(invalid).is_empty(), "Unsupported stickers must be rejected")
+	for field in ["background_id", "work_id"]:
+		invalid = encoded.duplicate(true)
+		invalid.erase(field)
+		assert(Store.decode(invalid).is_empty(), "Required artwork fields cannot be omitted")
+	for rotation in [0.0001, PI / 6, -PI / 6]:
+		invalid = encoded.duplicate(true)
+		invalid.objects[0].rotation = rotation
+		assert(Store.decode(invalid).is_empty(), "Saved avatars must be upright")
 	var document = Store.empty_document()
 	document.drafts["-1"] = encoded
 	document.next_id = 2
@@ -46,6 +62,17 @@ func run() -> void:
 	var original = document.duplicate(true)
 	document.works[0].data.objects[1].text = "另一个版本"
 	assert(original.works[0].data.objects[1].text == "麒麟献瑞，诗圣摸鱼。")
+	var invalid_background: Dictionary = encoded.duplicate(true)
+	invalid_background.background_id = "missing_scene"
+	assert(Store.decode(invalid_background).is_empty())
+	var invalid_document: Dictionary = original.duplicate(true)
+	invalid_document.erase("completed_topics")
+	assert(not Store.validate_document(invalid_document), "Saved progress is required")
+	for progress in [[0, 0], [-1], [4], [0.5], "0"]:
+		invalid_document.completed_topics = progress
+		assert(not Store.validate_document(invalid_document), "Invalid completed topics were accepted")
+	document.version = 1
+	assert(not Store.validate_document(document), "Old save versions must be rejected")
 	document.version = 99
 	assert(not Store.validate_document(document))
 	print("STORAGE_TESTS_PASSED")

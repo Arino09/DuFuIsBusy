@@ -6,13 +6,22 @@ const WIDTH = 1040
 const HEIGHT = 330
 const CREATIVE_FONT = preload("res://assets/fonts/CreativeSansSC.otf")
 const DEFAULT_POSITION = Vector2(152.5, 162.5)
+const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
+const STICKER_TEXTURES = {
+	"weapon_du": preload("res://assets/stickers/weapon-dusword.png"),
+	"weapon_pink": preload("res://assets/stickers/weapon-pink-blade.png"),
+	"weapon_silver": preload("res://assets/stickers/weapon-silver-sword.png"),
+	"weapon_blue": preload("res://assets/stickers/weapon-blue-sword.png"),
+	"weapon_violet": preload("res://assets/stickers/weapon-violet-greatsword.png"),
+}
+const STICKER_MAX_SIZE = Vector2(150, 180)
 var state: Dictionary = new_state()
 var ink := Color("243d35")
 var pen_width := 12
 var erasing := false
 var selecting := false
 @export var preview_only := false
-@export_enum("none", "star", "cloud", "seal") var preview_kind: String = "none"
+@export_enum("none", "weapon_du", "weapon_pink", "weapon_silver", "weapon_blue", "weapon_violet") var preview_kind: String = "none"
 var active := false
 var pointer := -2
 var previous := Vector2.ZERO
@@ -20,15 +29,18 @@ var before: Dictionary
 var texture: ImageTexture
 var avatar := preload("res://assets/characters/dufu-avatar.png")
 
-static func new_state() -> Dictionary:
+static func new_state(background_id: String = "paper") -> Dictionary:
 	var pixels := Image.create(WIDTH, HEIGHT, false, Image.FORMAT_RGBA8)
 	pixels.fill(Color.TRANSPARENT)
-	return {"pixels": pixels, "objects": [{"id": 0, "kind": "avatar", "position": DEFAULT_POSITION, "scale": 1.0, "rotation": 0.0}], "selected": -1, "next_id": 1, "undo": [], "redo": [], "revision": 0, "submitted": -1, "result": null}
+	return {"background_id": background_id, "pixels": pixels, "objects": [{"id": 0, "kind": "avatar", "position": DEFAULT_POSITION, "scale": 1.0, "rotation": 0.0}], "selected": -1, "next_id": 1, "undo": [], "redo": [], "revision": 0, "submitted": -1, "result": null}
 
 func _ready() -> void:
 	if preview_kind != "none":
 		state = new_state()
-		state.objects = [{"id": 1, "kind": preview_kind, "position": Vector2(120, 90), "scale": 1.3, "rotation": 0.0}]
+		var object := {"id": 1, "kind": preview_kind, "position": size / 2, "scale": 1.0, "rotation": 0.0}
+		var extent := dimensions(object)
+		object.scale = minf(1.3, minf(maxf(1, size.x - 24) / extent.x, maxf(1, size.y - 24) / extent.y))
+		state.objects = [object]
 		preview_only = true
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_IGNORE if preview_only else Control.MOUSE_FILTER_STOP
@@ -47,6 +59,9 @@ func dimensions(object: Dictionary) -> Vector2:
 	if object.kind == "avatar": return Vector2(235, 235)
 	if object.kind == "text":
 		return Vector2(maxf(20, CREATIVE_FONT.get_string_size(object.text, HORIZONTAL_ALIGNMENT_LEFT, -1, object.font_size).x), CREATIVE_FONT.get_height(object.font_size))
+	if STICKER_TEXTURES.has(object.kind):
+		var source_size: Vector2 = STICKER_TEXTURES[object.kind].get_size()
+		return source_size * minf(STICKER_MAX_SIZE.x / source_size.x, STICKER_MAX_SIZE.y / source_size.y)
 	return Vector2(120, 100)
 
 func transform_for(object: Dictionary) -> Transform2D:
@@ -54,6 +69,8 @@ func transform_for(object: Dictionary) -> Transform2D:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("fffdf7"))
+	var background := Backgrounds.texture_for(state.background_id)
+	if background: draw_texture_rect(background, Rect2(Vector2.ZERO, size), false)
 	for object in state.objects:
 		if object.kind == "avatar": draw_object(object)
 	draw_set_transform(Vector2.ZERO)
@@ -68,21 +85,8 @@ func draw_object(object: Dictionary) -> void:
 	if object.kind == "avatar": draw_texture_rect(avatar, Rect2(-extent / 2, extent), false)
 	elif object.kind == "text":
 		draw_string(CREATIVE_FONT, Vector2(-extent.x / 2, -extent.y / 2 + CREATIVE_FONT.get_ascent(object.font_size)), object.text, HORIZONTAL_ALIGNMENT_LEFT, -1, object.font_size, object.color)
-	elif object.kind == "star":
-		var points := PackedVector2Array()
-		for i in range(10):
-			var angle := -PI / 2 + i * PI / 5
-			points.append(Vector2(cos(angle), sin(angle)) * (48 if i % 2 == 0 else 22))
-		draw_colored_polygon(points, Color("e0a939"))
-	elif object.kind == "cloud":
-		draw_circle(Vector2(-30, 8), 24, Color("91bdc2"))
-		draw_circle(Vector2(0, -9), 34, Color("91bdc2"))
-		draw_circle(Vector2(34, 8), 24, Color("91bdc2"))
-		draw_rect(Rect2(-30, 8, 64, 24), Color("91bdc2"))
-	elif object.kind == "seal":
-		draw_rect(Rect2(-42, -42, 84, 84), Color("aa4937"))
-		draw_rect(Rect2(-35, -35, 70, 70), Color("f8f4e9"), false, 2)
-		draw_string(CREATIVE_FONT, Vector2(-27, 19), "忙", HORIZONTAL_ALIGNMENT_LEFT, -1, 54, Color("f8f4e9"))
+	elif STICKER_TEXTURES.has(object.kind):
+		draw_texture_rect(STICKER_TEXTURES[object.kind], Rect2(-extent / 2, extent), false)
 	if not preview_only and selecting and state.selected == object.id:
 		draw_rect(Rect2(-extent / 2 - Vector2(4, 4), extent + Vector2(8, 8)), Color("416f9a"), false, 2.0 / object.scale)
 
@@ -212,6 +216,7 @@ func constrain(object: Dictionary) -> void:
 	object.position = Vector2(clampf(object.position.x, half.x, WIDTH - half.x), clampf(object.position.y, half.y, HEIGHT - half.y))
 
 func add_object(kind: String, text: String = "", font_size: int = 32, color: Color = Color("243d35")) -> void:
+	if kind != "text" and not STICKER_TEXTURES.has(kind): return
 	finish()
 	if state.objects.size() >= 25: return
 	var prior := snapshot()
@@ -234,9 +239,12 @@ func edit_text(text: String, font_size: int, color: Color) -> void:
 	record(prior)
 
 func transform_selected(factor: float, angle: float) -> void:
-	finish()
 	var object := selected_object()
 	if object.is_empty(): return
+	if object.kind == "avatar":
+		angle = 0
+		if is_equal_approx(factor, 1.0): return
+	finish()
 	var prior := snapshot()
 	object.scale *= factor
 	object.rotation = wrapf(object.rotation + angle, -PI, PI)
@@ -257,8 +265,11 @@ func has_ink() -> bool:
 	return not state.pixels.is_invisible()
 
 func has_creation() -> bool:
-	if has_ink() or state.objects.size() > 1: return true
-	var person: Dictionary = state.objects[0]
+	return has_creation_in(state)
+
+static func has_creation_in(candidate: Dictionary) -> bool:
+	if not candidate.pixels.is_invisible() or candidate.objects.size() > 1: return true
+	var person: Dictionary = candidate.objects[0]
 	return person.position.distance_to(DEFAULT_POSITION) > 0.5 or absf(person.scale - 1) > 0.001 or absf(person.rotation) > 0.001
 
 func artwork() -> Image:

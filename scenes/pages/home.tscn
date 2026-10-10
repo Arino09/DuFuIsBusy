@@ -107,6 +107,7 @@ text = "开始闯关   →"
 theme_type_variation = &"PrimaryButton"
 
 [node name="FreeDrawButton" type="Button" parent="."]
+metadata/background_id = "paper"
 metadata/prompt = "自由创作：诗人今天想怎么忙，就怎么忙"
 metadata/remark = "这脑洞，连我的胡子都忍不住翘起来了。"
 offset_left = 100.0
