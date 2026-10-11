@@ -10,7 +10,6 @@ const PAGE_SCENES = {
 	"settings": preload("res://scenes/pages/settings.tscn"),
 }
 const DIALOG_SCENES = {
-	"palette": preload("res://scenes/dialogs/palette.tscn"),
 	"text_editor": preload("res://scenes/dialogs/text_editor.tscn"),
 	"sticker_picker": preload("res://scenes/dialogs/sticker_picker.tscn"),
 	"restart_confirmation": preload("res://scenes/dialogs/restart_confirmation.tscn"),
@@ -35,7 +34,6 @@ const LevelProgress = preload("res://scripts/level_progress.gd")
 const SettingsPage = preload("res://scripts/pages/settings_page.gd")
 const SettingsStore = preload("res://scripts/settings_store.gd")
 const ContentCatalog = preload("res://scripts/content_catalog.gd")
-const PaletteDialog = preload("res://scripts/dialogs/palette_dialog.gd")
 const TextEditorDialog = preload("res://scripts/dialogs/text_editor_dialog.gd")
 const DraftCache = preload("res://scripts/draft_cache.gd")
 var draft_cache := DraftCache.new()
@@ -53,6 +51,7 @@ var web_blur_callback: JavaScriptObject
 var drawings: Dictionary = {}
 var completed_topics: Array[int] = []
 var drawing: Drawing
+var color_history: Array = []
 var pen_color := INK
 var pen_width := 12
 var submitting := false
@@ -87,6 +86,7 @@ func _ready() -> void:
 		drawings[int(key)] = LocalStore.decode(local_store.document.drafts[key])
 		draft_cache.seed(int(key), drawings[int(key)], local_store.document.drafts[key])
 	topic = int(local_store.document.topic)
+	color_history = local_store.document.tools.get("color_history", []).map(func(code: String): return code.to_lower())
 	pen_color = Color.html(local_store.document.tools.color)
 	pen_width = int(local_store.document.tools.width)
 	selected_tool = local_store.document.tools.tool
@@ -190,6 +190,9 @@ func canvas() -> void:
 	var view: CanvasPage = page
 	view.tool_requested.connect(set_tool)
 	view.width_changed.connect(_set_pen_width)
+	view.color_changed.connect(apply_color)
+	drawing.color_used.connect(_remember_color)
+	view.palette.set_history(color_history)
 	view.action_requested.connect(_canvas_action)
 	view.artwork_changed.connect(autosave)
 	view.refresh_tools(selected_tool, pen_color, pen_width)
@@ -200,7 +203,6 @@ func _canvas_action(action: String) -> void:
 		"text": text_editor(false)
 		"edit_text": text_editor(true)
 		"stickers": sticker_picker()
-		"palette": palette_dialog()
 		"reference": sticker_list()
 		"restart": restart_confirm()
 		"submit": submit_artwork()
@@ -221,17 +223,21 @@ func set_tool(tool: String) -> void:
 	# Keep the existing browser automation's active-page notification.
 	print("UI_PAGE:canvas")
 
-func palette_dialog() -> void:
-	drawing.finish()
-	var view: PaletteDialog = modal("palette")
-	view.color_applied.connect(apply_color)
-	view.configure(pen_color)
-
 func apply_color(color: Color) -> void:
+	drawing.finish()
 	pen_color = color
-	close_overlay()
-	set_tool("笔刷")
+	selected_tool = "笔刷"
+	_refresh_canvas_tools()
+	queue_autosave()
 	print("COLOR_CHANGED:", color.to_html(false))
+
+func _remember_color(color: Color) -> void:
+	var code := color.to_html(false)
+	color_history.erase(code)
+	color_history.push_front(code)
+	if color_history.size() > 10: color_history.resize(10)
+	if current == "canvas" and is_instance_valid(page):
+		page.palette.set_history(color_history)
 
 func text_editor(edit: bool) -> void:
 	drawing.finish()
@@ -244,6 +250,7 @@ func text_editor(edit: bool) -> void:
 	view.configure(object, pen_color)
 
 func _apply_text(text: String, font_size: int, color: Color, edit: bool) -> void:
+	_remember_color(color)
 	selected_tool = "移动"
 	_refresh_canvas_tools()
 	if edit: drawing.edit_text(text, font_size, color)
@@ -275,7 +282,7 @@ func restart_confirm() -> void:
 	bind_button(overlay, "ConfirmButton", _restart_drawing)
 
 func _restart_drawing() -> void:
-	drawings[topic] = Drawing.new_state(_topic_background(topic))
+	drawings[topic] = Drawing.new_state(_topic_background(topic), drawing.canvas_size())
 	show_page("canvas")
 
 func submit_artwork() -> void:
@@ -312,7 +319,7 @@ func storage_candidate() -> Dictionary:
 	candidate.page = current
 	candidate.topic = topic
 	candidate.completed_topics = completed_topics.duplicate()
-	candidate.tools = {"color":pen_color.to_html(false),"width":pen_width,"tool":selected_tool}
+	candidate.tools = {"color":pen_color.to_html(false),"width":pen_width,"tool":selected_tool,"color_history":color_history.duplicate()}
 	return candidate
 
 func update_storage_status(ok: bool) -> void:

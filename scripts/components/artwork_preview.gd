@@ -23,10 +23,12 @@ func _apply_state() -> void:
 		return
 	_drawing.state = _state
 	_drawing.texture = ImageTexture.create_from_image(_state.pixels)
+	_fit_drawing()
 	_drawing.queue_redraw()
 
 func _fit_drawing() -> void:
-	var artwork_size := Vector2(Drawing.WIDTH, Drawing.HEIGHT)
+	var artwork_size := Vector2(_drawing.state.pixels.get_size())
+	_drawing.size = artwork_size
 	var fit := minf(size.x / artwork_size.x, size.y / artwork_size.y)
 	_drawing.scale = Vector2.ONE * fit
 	_drawing.position = (size - artwork_size * fit) * 0.5

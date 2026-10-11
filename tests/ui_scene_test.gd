@@ -205,28 +205,65 @@ func run() -> void:
 	assert(app.drawing.has_ink())
 	assert(app.local_store.document.tools.width == 28)
 
-	# Modal focus blocks every background control and returns to the prior button.
-	var source: Button = app.page.get_node("PaletteButton")
-	source.grab_focus()
-	click(app.page, "PaletteButton")
-	assert_dialog(app, "palette")
-	assert(app.overlay.get_node("Swatches").get_child_count() == 12)
-	for control in app.page.find_children("*", "Control", true, false):
-		assert(control.focus_mode == Control.FOCUS_NONE)
-	assert(root.gui_get_focus_owner() == app.overlay.get_node("Frame/CloseButton"))
-	click(app.overlay, "Frame/CloseButton")
-	assert(app.overlay == null and source.focus_mode == Control.FOCUS_ALL)
-	assert(root.gui_get_focus_owner() == source)
-	click(app.page, "PaletteButton")
-	app.overlay.get_node("HexInput").text = "oops"
-	click(app.overlay, "ApplyButton")
-	assert(not app.overlay.get_node("ErrorLabel").text.is_empty())
-	app.overlay.get_node("HexInput").text = "3a9d8f"
-	click(app.overlay, "ApplyButton")
+	# Inline palette changes the brush without opening or replacing the canvas.
+	var palette = app.page.get_node("ColorPalette")
+	assert(palette.is_visible_in_tree() and not app.page.has_node("PaletteButton"))
+	palette.get_node("HexInput").text_submitted.emit("oops")
+	assert(palette.get_node("HexInput").has_theme_color_override("font_color"))
+	palette.get_node("HexInput").text_submitted.emit("3a9d8f")
 	assert(app.overlay == null and app.pen_color == Color("3a9d8f"))
 	assert(app.drawing.ink == app.pen_color)
 	assert_same_canvas(app, canvas_id, surface_id)
-	assert(app.page.get_node("PaletteButton").tooltip_text.contains("3a9d8f"))
+	assert(app.color_history == ["243d35"], "Adjusting a color must not fill usage history")
+	click(palette, "HSV")
+	assert(palette.hsv_mode and palette._labels[0].text == "H")
+	assert(palette._values[0].max_value == 360 and palette._values[1].max_value == 100)
+	palette._values[0].value = 240
+	palette._values[1].value = 100
+	palette._values[2].value = 100
+	assert(app.pen_color.is_equal_approx(Color.BLUE))
+	# Preserve hue and saturation while passing through black.
+	palette._values[2].value = 0
+	palette._values[0].value = 120
+	palette._values[2].value = 100
+	assert(app.pen_color.is_equal_approx(Color.GREEN))
+	click(palette, "RGB")
+	assert(palette._values[0].max_value == 255 and palette._labels[0].text == "R")
+	palette._values[0].value = 255
+	assert(app.pen_color.is_equal_approx(Color.YELLOW))
+	palette.get_node("Wheel").color_changed.emit(Color.RED)
+	assert(app.pen_color == Color.RED and palette._values[1].value == 0)
+	for i in range(12):
+		app.apply_color(Color.from_hsv(i / 12.0, 1, 1))
+		app.drawing.begin(Vector2(400 + i * 20, 220), -1)
+		app.drawing.finish()
+	assert(app.color_history.size() == 10)
+	assert(not "ff0000" in app.color_history, "Oldest used color was not evicted")
+	var recalled: String = app.color_history[5]
+	click(palette, "History5")
+	assert(app.pen_color == Color.html(recalled))
+	app.drawing.begin(Vector2(750, 260), -1)
+	app.drawing.finish()
+	assert(app.color_history.size() == 10 and app.color_history[0] == recalled)
+	assert(app.local_store.document.tools.color_history == app.color_history)
+	var palette_restore = MainScene.instantiate()
+	palette_restore.set_script(IsolatedApp)
+	palette_restore.saved_document = app.local_store.document.duplicate(true)
+	root.add_child(palette_restore)
+	assert(palette_restore.color_history == app.color_history)
+	assert(palette_restore.page.palette.get_node("History0").get_meta("color") == recalled)
+	palette_restore.free()
+	palette.get_node("HexInput").text_submitted.emit("3a9d8f")
+	# Modal focus still blocks the inline controls and returns to its source.
+	var source: Button = app.page.get_node("AddTextButton")
+	source.grab_focus()
+	click(app.page, "AddTextButton")
+	for control in app.page.find_children("*", "Control", true, false):
+		assert(control.focus_mode == Control.FOCUS_NONE)
+	assert(root.gui_get_focus_owner() == app.overlay.get_node("TextInput"))
+	click(app.overlay, "Frame/CloseButton")
+	assert(app.overlay == null and source.focus_mode == Control.FOCUS_ALL)
+	assert(root.gui_get_focus_owner() == source)
 
 	click(app.page, "AddTextButton")
 	assert_dialog(app, "text_editor")
@@ -268,8 +305,11 @@ func run() -> void:
 	var initial_scale: float = app.drawing.selected_object().scale
 	var revision_before: int = app.drawings[app.topic].revision
 	writes_before = app.local_store.writes
-	click(app.page, "GrowButton")
-	assert(is_equal_approx(app.drawing.selected_object().scale, initial_scale * 1.15), "Refresh connected GrowButton more than once")
+	var handles = app.drawing.resize_handles(app.drawing.selected_object())
+	app.drawing.begin(handles[4], -1)
+	app.drawing.move_pen(handles[4] + (handles[4] - handles[0]) * 0.15)
+	app.drawing.finish()
+	assert(is_equal_approx(app.drawing.selected_object().scale, initial_scale * 1.15), "Handle drag must scale the selected layer")
 	assert(app.drawings[app.topic].revision == revision_before + 1)
 	assert(app.local_store.writes == writes_before + 1, "One object action saved more than once")
 	click(app.page, "DeleteObjectButton")

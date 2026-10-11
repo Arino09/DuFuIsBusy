@@ -17,6 +17,8 @@ func run() -> void:
 		surface.add_object(kind)
 		surface.transform_selected(0.8, PI / 6)
 	surface.state.objects[0].position = Vector2(840, 170)
+	surface.state.objects[0].rotation = PI / 6
+	surface.state.objects[0].scale_y = 1.4
 	surface.state.work_id = "work-1"
 	surface.state.submitted = surface.state.revision
 	var encoded = Store.encode(surface.state)
@@ -29,6 +31,7 @@ func run() -> void:
 		assert(actual.id == expected.id and actual.kind == expected.kind)
 		assert(actual.position.is_equal_approx(expected.position))
 		assert(is_equal_approx(actual.scale, expected.scale) and is_equal_approx(actual.rotation, expected.rotation))
+		assert(Drawing.object_scale(actual).is_equal_approx(Drawing.object_scale(expected)))
 		assert(actual.text == expected.get("text", ""))
 		assert(actual.color == expected.get("color", Color("243d35")))
 	assert(loaded.work_id == "work-1" and loaded.submitted == surface.state.submitted)
@@ -36,6 +39,21 @@ func run() -> void:
 	assert(Store.encode(Store.decode(encoded)) == encoded, "Current saves must round-trip without changing artwork or revisions")
 	assert(loaded.undo.is_empty() and loaded.redo.is_empty())
 	assert(Store.decode({}).is_empty())
+	var legacy = encoded.duplicate(true)
+	legacy.objects[0].erase("scale_y")
+	assert(Drawing.object_scale(Store.decode(legacy).objects[0]) == Vector2.ONE)
+	assert(Store.encode(Store.decode(legacy)) == legacy, "Uniform legacy saves must round-trip unchanged")
+	for bad_scale in [0, -1, INF, NAN, "1", null, [1, 1]]:
+		var bad_stretch = encoded.duplicate(true)
+		bad_stretch.objects[0].scale_y = bad_scale
+		assert(Store.decode(bad_stretch).is_empty(), "Invalid vertical scales must be rejected")
+	var enlarged = encoded.duplicate(true)
+	enlarged.objects[0].scale = 3.0
+	enlarged.objects[0].scale_y = 4.0
+	var restored = Store.decode(JSON.parse_string(JSON.stringify(enlarged)))
+	assert(not restored.is_empty())
+	assert(Drawing.object_scale(restored.objects[0]) == Vector2(3, 4))
+	assert(Store.encode(Store.decode(enlarged)) == enlarged, "Scales above two must round-trip unchanged")
 	var invalid = encoded.duplicate(true)
 	invalid.objects[0].kind = "unknown"
 	assert(Store.decode(invalid).is_empty())
@@ -53,7 +71,9 @@ func run() -> void:
 	for rotation in [0.0001, PI / 6, -PI / 6]:
 		invalid = encoded.duplicate(true)
 		invalid.objects[0].rotation = rotation
-		assert(Store.decode(invalid).is_empty(), "Saved avatars must be upright")
+		assert(is_equal_approx(Store.decode(invalid).objects[0].rotation, rotation), "Avatar rotation must survive loading")
+	invalid.objects[0].rotation = TAU
+	assert(Store.decode(invalid).is_empty(), "Out-of-range rotations must still be rejected")
 	var document = Store.empty_document()
 	document.drafts["-1"] = encoded
 	document.next_id = 2
@@ -75,5 +95,14 @@ func run() -> void:
 	assert(not Store.validate_document(document), "Old save versions must be rejected")
 	document.version = 99
 	assert(not Store.validate_document(document))
+	var history_document := Store.empty_document()
+	history_document.tools.erase("color_history")
+	assert(Store.validate_document(history_document), "Legacy saves should still load")
+	for history in [["ff0000", "00ff00"], []]:
+		history_document.tools.color_history = history
+		assert(Store.validate_document(history_document))
+	for history in ["bad", ["oops"], [42], ["ff0000", "FF0000"], ["ff0000", "000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010"]]:
+		history_document.tools.color_history = history
+		assert(not Store.validate_document(history_document))
 	print("STORAGE_TESTS_PASSED")
 	quit()

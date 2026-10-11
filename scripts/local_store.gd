@@ -12,12 +12,13 @@ var writable := true
 var error := ""
 
 static func empty_document() -> Dictionary:
-	return {"version": VERSION, "drafts": {}, "works": [], "completed_topics": [], "next_id": 1, "topic": 0, "page": "home", "tools": {"color": "243d35", "width": 12, "tool": "笔刷"}}
+	return {"version": VERSION, "drafts": {}, "works": [], "completed_topics": [], "next_id": 1, "topic": 0, "page": "home", "tools": {"color": "243d35", "width": 12, "tool": "笔刷", "color_history": []}}
 
 static func encode(state: Dictionary) -> Dictionary:
 	var objects: Array = []
 	for object in state.objects:
 		objects.append({"id": object.id, "kind": object.kind, "position": [object.position.x, object.position.y], "scale": object.scale, "rotation": object.rotation, "text": object.get("text", ""), "font_size": object.get("font_size", 32), "color": object.get("color", Color("243d35")).to_html(false)})
+		if object.has("scale_y"): objects[-1].scale_y = object.scale_y
 	return {"background_id": state.background_id, "pixels": Marshalls.raw_to_base64(state.pixels.save_png_to_buffer()), "objects": objects, "next_id": state.next_id, "revision": state.revision, "submitted": state.submitted, "work_id": state.get("work_id", "")}
 
 static func number(value: Variant) -> bool:
@@ -27,11 +28,13 @@ static func decode(data: Variant) -> Dictionary:
 	if not data is Dictionary or not data.get("pixels") is String or not data.get("objects") is Array: return {}
 	var background: Variant = data.get("background_id")
 	if not background is String or not Backgrounds.is_valid(background): return {}
-	if data.pixels.length() > 4000000 or data.objects.is_empty() or data.objects.size() > 25: return {}
+	if data.pixels.length() > 24000000 or data.objects.is_empty() or data.objects.size() > 25: return {}
 	var pixels := Image.new()
-	if pixels.load_png_from_buffer(Marshalls.base64_to_raw(data.pixels)) != OK or pixels.get_size() != Vector2i(Drawing.WIDTH, Drawing.HEIGHT): return {}
+	if pixels.load_png_from_buffer(Marshalls.base64_to_raw(data.pixels)) != OK: return {}
+	var extent := pixels.get_size()
+	if extent.x < Drawing.MIN_SIZE or extent.y < Drawing.MIN_SIZE or extent.x > Drawing.MAX_SIZE or extent.y > Drawing.MAX_SIZE: return {}
 	pixels.convert(Image.FORMAT_RGBA8)
-	var state := Drawing.new_state(background)
+	var state := Drawing.new_state(background, extent)
 	state.pixels = pixels
 	state.objects = []
 	var ids: Array = []
@@ -44,15 +47,16 @@ static func decode(data: Variant) -> Dictionary:
 		ids.append(int(item.id))
 		if not item.get("position") is Array or item.position.size() != 2: return {}
 		if not number(item.position[0]) or not number(item.position[1]): return {}
-		if item.position[0] < 0 or item.position[0] > Drawing.WIDTH or item.position[1] < 0 or item.position[1] > Drawing.HEIGHT: return {}
-		if not number(item.get("scale")) or item.scale <= 0 or item.scale > 2: return {}
+		if item.position[0] < 0 or item.position[0] > extent.x or item.position[1] < 0 or item.position[1] > extent.y: return {}
+		if not number(item.get("scale")) or item.scale <= 0: return {}
+		if item.has("scale_y") and (not number(item.scale_y) or item.scale_y <= 0): return {}
 		if not number(item.get("rotation")) or absf(item.rotation) > PI + 0.001: return {}
-		if item.kind == "avatar" and item.rotation != 0: return {}
 		if not item.get("text") is String or item.text.length() > 24: return {}
 		if item.kind == "text" and item.text.strip_edges().is_empty(): return {}
 		if not number(item.get("font_size")) or item.font_size < 16 or item.font_size > 64: return {}
 		if not item.get("color") is String or item.color.length() != 6 or not Color.html_is_valid(item.color): return {}
 		state.objects.append({"id":int(item.id), "kind":item.kind, "position":Vector2(item.position[0],item.position[1]), "scale":float(item.scale), "rotation":float(item.rotation), "text":item.text, "font_size":int(item.font_size), "color":Color.html(item.color)})
+		if item.has("scale_y"): state.objects[-1].scale_y = float(item.scale_y)
 	for field in ["next_id", "revision", "submitted"]:
 		if not number(data.get(field)) or data[field] != int(data[field]): return {}
 	if data.next_id <= ids.max() or data.revision < 0 or data.submitted < -1 or data.submitted > data.revision: return {}
@@ -102,6 +106,14 @@ static func validate_document(data: Variant) -> bool:
 	var tools: Dictionary = data.tools
 	if not tools.get("color") is String or tools.color.length() != 6 or not Color.html_is_valid(tools.color): return false
 	if not number(tools.get("width")) or tools.width < 4 or tools.width > 56 or not tools.get("tool") in ["笔刷", "橡皮", "移动"]: return false
+	# Optional for compatibility with saves created before the embedded palette.
+	var history: Variant = tools.get("color_history", [])
+	if not history is Array or history.size() > 10: return false
+	var seen_colors: Array = []
+	for code in history:
+		if not code is String or code.length() != 6 or not Color.html_is_valid(code): return false
+		if code.to_lower() in seen_colors: return false
+		seen_colors.append(code.to_lower())
 	for key in data.drafts:
 		if not key in ["-1", "0", "1", "2", "3"] or decode(data.drafts[key]).is_empty(): return false
 	var ids: Array = []
@@ -111,9 +123,10 @@ static func validate_document(data: Variant) -> bool:
 		if int(work.id.trim_prefix("work-")) < 1 or int(work.id.trim_prefix("work-")) >= data.next_id: return false
 		ids.append(work.id)
 		if not number(work.get("topic")) or not int(work.topic) in [-1,0,1,2,3] or not work.get("title") is String: return false
-		if decode(work.get("data")).is_empty() or not work.get("preview") is String: return false
+		var artwork_state := decode(work.get("data"))
+		if artwork_state.is_empty() or not work.get("preview") is String: return false
 		var picture := Image.new()
-		if work.preview.length() > 4000000 or picture.load_png_from_buffer(Marshalls.base64_to_raw(work.preview)) != OK or picture.get_size() != Vector2i(Drawing.WIDTH, Drawing.HEIGHT): return false
+		if work.preview.length() > 24000000 or picture.load_png_from_buffer(Marshalls.base64_to_raw(work.preview)) != OK or picture.get_size() != artwork_state.pixels.get_size(): return false
 	return true
 
 func write_document(candidate: Dictionary) -> bool:
