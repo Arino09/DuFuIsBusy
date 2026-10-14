@@ -16,6 +16,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install verified Godot 4.7.2 and matching templates
         run: bash tools/install-godot.sh
+      - name: Install Wwise Linux editor dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libtbb12
+          if ldd addons/Wwise/native/lib/linux/editor/profile/libwwise.linux.editor.profile.so | grep 'not found'; then exit 1; fi
       - name: Import project
         run: godot --headless --editor --import --quit 2>&1 | tee import.log
       - name: Run scene smoke check
