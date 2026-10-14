@@ -48,7 +48,7 @@ func test_encodings() -> void:
 	assert(gbk.errors.size() == 1 and gbk.errors[0].contains("UTF-8"), "GBK files ask for a UTF-8 re-save")
 
 func test_shipped_table() -> void:
-	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
 	assert(table.errors.is_empty(), "Shipped audio table has no errors: %s" % [table.errors])
 	assert(table.lookup("test.play") != "", "F9 test key points at a real event")
 	# Every literal key in game code must reach a row, so designers see every hook in the table.
@@ -73,7 +73,7 @@ func test_shipped_table() -> void:
 	var presets := ConfigFile.new()
 	assert(presets.load("res://export_presets.cfg") == OK, "Export presets load")
 	for section in ["preset.0", "preset.1"]:
-		assert(str(presets.get_value(section, "include_filter", "")).contains("audio/*.tsv"), "Exports ship the audio table: " + section)
+		assert(str(presets.get_value(section, "include_filter", "")).contains("addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv"), "Exports ship the audio table: " + section)
 
 const WWISE_PROJECT := "res://addons/Wwise/wwise_project/DuFuIsBusy/"
 const BANK_PATH := "GeneratedSoundBanks/Web/Main.bnk"
@@ -83,7 +83,7 @@ func test_wwise_project() -> void:
 	if not FileAccess.file_exists(WWISE_PROJECT + "Events/Default Work Unit.wwu"):
 		print("AUDIO_TEST_SKIPPED: no Wwise project in this checkout")
 		return
-	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
 	var authored := {}
 	for found in RegEx.create_from_string("<Event Name=\"([^\"]+)\"").search_all(FileAccess.get_file_as_string(WWISE_PROJECT + "Events/Default Work Unit.wwu")):
 		authored[found.get_string(1)] = true
@@ -126,7 +126,7 @@ func fnv1(name: String) -> int:
 
 ## The shipped table keeps the intended sound character: highs reward, lows warn or destroy, buttons click.
 func test_shipped_routing() -> void:
-	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
 	var button := "Play_ui_button"
 	var low := "Play_bass_clarinet_G2_1_mezzo_forte_normal"
 	var high := "Play_viola_Gs5_1_fortissimo_arco_normal"

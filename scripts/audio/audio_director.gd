@@ -5,7 +5,7 @@ extends Node
 const Hooks = preload("res://scripts/audio/audio_hooks.gd")
 const Table = preload("res://scripts/audio/audio_table.gd")
 const Binder = preload("res://scripts/audio/audio_ui_binder.gd")
-const TABLE_PATH := "res://audio/audio_events.tsv"
+const TABLE_PATH := "res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv"
 const BANK := "Main"
 const RTPC_INTERVAL_MS := 33
 const RELOAD_INTERVAL := 1.0
