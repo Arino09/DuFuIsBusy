@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}" SchemaVersion="133">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_bass_clarinet_G2_1_mezzo_forte_normal" ID="{9A4E2056-BDEB-414D-B7B8-07E2D02A14DB}">
+					<ChildrenList>
+						<Action Name="" ID="{1FCB2BB5-1A45-4B0D-A379-36A54E83A1EF}" ShortID="173327535">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{16F991D0-E5D4-447A-894F-138293406E36}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_ui_button" ID="{36C08D80-81B3-4242-A8BB-05E142F97DED}">
+					<ChildrenList>
+						<Action Name="" ID="{01AF370D-14D4-4E78-957B-4976E9ADCD1A}" ShortID="538086572">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ui_button" ID="{E8B11C8E-68F6-4A87-8C92-2FC1C0D98711}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_viola_B6_15_forte_arco_normal" ID="{5CBAA656-2439-4C5B-9CAE-DC21162111C2}">
+					<ChildrenList>
+						<Action Name="" ID="{0C5D9229-91DE-46BA-AE61-36B558366DFD}" ShortID="222988582">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="viola_B6_15_forte_arco-normal" ID="{10273FF8-28CF-4689-B8B9-931304D0608E}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_viola_Gs5_1_fortissimo_arco_normal" ID="{EE4CCA42-A9E3-41C4-B2FD-6F2ADBCAF6BB}">
+					<ChildrenList>
+						<Action Name="" ID="{A7EA72AA-E5EA-4310-85E7-638A04177F02}" ShortID="363130997">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="viola_Gs5_1_fortissimo_arco-normal" ID="{F5E64199-21FD-46A4-A1EF-A31B1E0AF8F2}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_violin_B4_1_piano_arco_sul_tasto" ID="{4DD185E5-6E20-49DB-97C4-CC98706ED61A}">
+					<ChildrenList>
+						<Action Name="" ID="{3C138CCD-78F7-4EA0-AA97-26AB758B5DDC}" ShortID="97295855">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="violin_B4_1_piano_arco-sul-tasto" ID="{6A357630-F36C-4983-B7C2-C1B2A08D92E1}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

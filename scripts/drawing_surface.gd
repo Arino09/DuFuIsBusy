@@ -10,6 +10,7 @@ const MAX_SIZE = 2048
 const CREATIVE_FONT = preload("res://assets/fonts/CreativeSansSC.otf")
 const DEFAULT_POSITION = Vector2(152.5, 162.5)
 const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
+const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
 const STICKER_TEXTURES = {
 	"weapon_du": preload("res://assets/stickers/weapon-dusword.png"),
 	"weapon_pink": preload("res://assets/stickers/weapon-pink-blade.png"),
@@ -37,6 +38,7 @@ var drag_mode := ""
 var drag_handle := -1
 var drag_start := Vector2.ZERO
 var drag_object: Dictionary = {}
+var _move_msec := 0
 var texture: ImageTexture
 var avatar := preload("res://assets/characters/dufu-avatar.png")
 
@@ -187,6 +189,7 @@ func selected_object() -> Dictionary:
 	return {}
 
 func select_at(p: Vector2) -> void:
+	var previous_selection: int = state.selected
 	state.selected = -1
 	# Strokes are a separate paint layer; objects remain selectable in move mode.
 	for i in range(state.objects.size() - 1, -1, -1):
@@ -195,6 +198,8 @@ func select_at(p: Vector2) -> void:
 		if Rect2(-dimensions(object) / 2, dimensions(object)).has_point(local):
 			state.selected = object.id
 			break
+	if state.selected != previous_selection:
+		AudioHooks.cue("canvas.object.deselect" if state.selected < 0 else "canvas.object.select." + selected_object().kind)
 	queue_redraw()
 	selection_changed.emit()
 
@@ -214,6 +219,7 @@ func resize_canvas(value: Vector2i) -> void:
 	state.pixels = pixels
 	for object in state.objects: constrain(object)
 	record(prior)
+	AudioHooks.cue("canvas.resize")
 
 func _gui_input(event: InputEvent) -> void:
 	if preview_only: return
@@ -265,6 +271,8 @@ func begin(p: Vector2, id: int) -> void:
 	active = true
 	pointer = id
 	previous = p
+	_move_msec = Time.get_ticks_msec()
+	AudioHooks.cue("canvas.drag.begin." + _drag_audio_id())
 	if not selecting: stamp(p)
 	refresh()
 
@@ -294,6 +302,9 @@ func move_pen(p: Vector2) -> void:
 		var distance := previous.distance_to(p)
 		var steps := maxi(1, ceili(distance / maxf(1.0, pen_width / 4.0)))
 		for i in range(1, steps + 1): stamp(previous.lerp(p, float(i) / steps))
+	var now := Time.get_ticks_msec()
+	AudioHooks.param("canvas.drag_speed", previous.distance_to(p) * 1000.0 / maxi(1, now - _move_msec))
+	_move_msec = now
 	previous = p
 	refresh()
 
@@ -342,6 +353,11 @@ func refresh() -> void:
 		else: texture.set_image(state.pixels)
 	queue_redraw()
 
+## "paint" / "erase" for strokes, "<move|scale|rotate>.<kind>" for object drags.
+func _drag_audio_id() -> String:
+	if drag_mode == "paint": return "erase" if erasing else "paint"
+	return "%s.%s" % [drag_mode, drag_object.get("kind", "")]
+
 func record(prior: Dictionary) -> void:
 	if prior.objects == state.objects and prior.pixels.get_size() == canvas_size() and prior.pixels.get_data() == state.pixels.get_data(): return
 	state.undo.append(prior)
@@ -353,6 +369,8 @@ func record(prior: Dictionary) -> void:
 
 func finish() -> void:
 	if not active: return
+	AudioHooks.cue("canvas.drag.end." + _drag_audio_id())
+	AudioHooks.param("canvas.drag_speed", 0.0)
 	if drag_mode == "paint" and not erasing and before.pixels.get_data() != state.pixels.get_data():
 		color_used.emit(ink)
 	active = false
@@ -368,6 +386,7 @@ func travel(redo: bool) -> void:
 	var source: Array = state.redo if redo else state.undo
 	var destination: Array = state.undo if redo else state.redo
 	if source.is_empty(): return
+	AudioHooks.cue("canvas.redo" if redo else "canvas.undo")
 	destination.append(snapshot())
 	var saved: Dictionary = source.pop_back()
 	state.pixels = saved.pixels
@@ -401,6 +420,7 @@ func add_object(kind: String, text: String = "", font_size: int = 32, color: Col
 	state.selected = object.id
 	constrain(object)
 	record(prior)
+	AudioHooks.cue("canvas.object.add." + kind)
 	selection_changed.emit()
 
 func edit_text(text: String, font_size: int, color: Color) -> void:
@@ -412,6 +432,7 @@ func edit_text(text: String, font_size: int, color: Color) -> void:
 	object.color = color
 	constrain(object)
 	record(prior)
+	AudioHooks.cue("canvas.object.edit.text")
 
 func transform_selected(factor: float, angle: float) -> void:
 	var object := selected_object()
@@ -431,6 +452,7 @@ func remove_selected() -> void:
 	state.objects.erase(object)
 	state.selected = -1
 	record(prior)
+	AudioHooks.cue("canvas.object.remove." + str(object.kind))
 	selection_changed.emit()
 
 func has_ink() -> bool:

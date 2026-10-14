@@ -1,0 +1,225 @@
+extends SceneTree
+## Audio routing runs against the AudioDirector autoload; without Wwise it only records backend calls.
+const Table = preload("res://scripts/audio/audio_table.gd")
+const Hooks = preload("res://scripts/audio/audio_hooks.gd")
+
+const FIXTURE := "key\tevent\tnote\n# comment\n\nui.press\tPlay_Click\n\nui.press.quiet\t\tblank falls back\nui.press.quiet.Mute\t-\tsilenced\nui.toggle_on\tPlay_Toggle\nui.drag\tPlay_Tick\ndialog.enter\tPlay_Open\ndialog.exit\tPlay_Close\ndialog.enter.busy\t-\nrtpc.setting.volume\tVolume_Master\n\"quoted.key\"\t\"Play_\"\"Q\"\"\"\n"
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func run() -> void:
+	test_table()
+	test_encodings()
+	test_shipped_table()
+	test_wwise_project()
+	test_shipped_routing()
+	await test_routing()
+	print("AUDIO_TESTS_PASSED")
+	quit()
+
+func test_table() -> void:
+	var table := Table.new()
+	table.parse(FIXTURE)
+	assert(table.errors.is_empty(), "Fixture parses cleanly")
+	assert(table.lookup("ui.press.primary.Go") == "Play_Click", "Unknown leaves fall back to the parent key")
+	assert(table.lookup("ui.press.quiet.Close") == "Play_Click", "Blank rows fall back further up")
+	assert(table.lookup("ui.press.quiet.Mute") == "", "A dash silences without falling back")
+	assert(table.lookup("canvas.undo") == null, "Keys outside the table are unmapped")
+	assert(table.lookup("quoted.key") == "Play_\"Q\"", "Excel-style quoted cells are unwrapped")
+	var broken := Table.new()
+	broken.parse("key\tevent\nui.press\tA\nui.press\tB\nbad key\tC\n")
+	assert(broken.errors.size() == 2, "Duplicate and malformed keys are reported")
+	assert(broken.errors[0].contains(":3"), "Errors carry line numbers")
+	assert(broken.lookup("ui.press") == "A", "Good rows still load")
+	var headless := Table.new()
+	headless.parse("name\tvalue\nui.press\tA\n")
+	assert(headless.errors.size() == 1 and headless.entries.is_empty(), "A missing header is reported")
+
+func test_encodings() -> void:
+	var utf16 := PackedByteArray([0xFF, 0xFE])
+	utf16.append_array("key\tevent\nui.press\tPlay_Click\n".to_utf16_buffer())
+	var table := Table.new()
+	table.parse_bytes(utf16, "utf16.tsv")
+	assert(table.errors.is_empty() and table.lookup("ui.press") == "Play_Click", "UTF-16LE (Excel Unicode Text) decodes")
+	var gbk := Table.new()
+	# "你" in GBK; decoding it as UTF-8 would print an engine error.
+	gbk.parse_bytes(PackedByteArray([0x6B, 0x65, 0x79, 0x09, 0xC4, 0xE3]), "gbk.tsv")
+	assert(gbk.errors.size() == 1 and gbk.errors[0].contains("UTF-8"), "GBK files ask for a UTF-8 re-save")
+
+func test_shipped_table() -> void:
+	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	assert(table.errors.is_empty(), "Shipped audio table has no errors: %s" % [table.errors])
+	assert(table.lookup("test.play") != "", "F9 test key points at a real event")
+	# Every literal key in game code must reach a row, so designers see every hook in the table.
+	var used := {}
+	for path in ["res://scripts/main.gd", "res://scripts/drawing_surface.gd", "res://scripts/pages/canvas_page.gd"]:
+		var source := FileAccess.get_file_as_string(path)
+		var calls := RegEx.create_from_string("AudioHooks\\.(cue|fact|param)\\(\"([^\"]+)\"")
+		for found in calls.search_all(source):
+			var key := found.get_string(2)
+			match found.get_string(1):
+				"fact": key += ".enter.x"
+				"param": key = "rtpc." + key
+			used[key] = true
+	for key in ["message.notice", "canvas.drag.begin.paint", "canvas.object.add.weapon_du", "canvas.object.select.avatar"]: used[key] = true
+	for key in used:
+		if key.ends_with(".enter.x"):
+			var name: String = key.trim_suffix(".enter.x")
+			assert(table.entries.keys().any(func(k: String): return k.begins_with(name + ".")), "State has rows: " + name)
+		elif key.ends_with("."):
+			assert(table.entries.keys().any(func(k: String): return k.begins_with(key)), "Dynamic keys have rows: " + key)
+		else: assert(table.lookup(key) != null, "Game key has a row: " + key)
+	var presets := ConfigFile.new()
+	assert(presets.load("res://export_presets.cfg") == OK, "Export presets load")
+	for section in ["preset.0", "preset.1"]:
+		assert(str(presets.get_value(section, "include_filter", "")).contains("audio/*.tsv"), "Exports ship the audio table: " + section)
+
+const WWISE_PROJECT := "res://addons/Wwise/wwise_project/DuFuIsBusy/"
+const BANK_PATH := "GeneratedSoundBanks/Web/Main.bnk"
+
+## Every event the table names must exist in the Wwise project and in the generated bank, or posting it fails silently.
+func test_wwise_project() -> void:
+	if not FileAccess.file_exists(WWISE_PROJECT + "Events/Default Work Unit.wwu"):
+		print("AUDIO_TEST_SKIPPED: no Wwise project in this checkout")
+		return
+	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	var authored := {}
+	for found in RegEx.create_from_string("<Event Name=\"([^\"]+)\"").search_all(FileAccess.get_file_as_string(WWISE_PROJECT + "Events/Default Work Unit.wwu")):
+		authored[found.get_string(1)] = true
+	var banked := bank_event_ids(FileAccess.get_file_as_bytes(WWISE_PROJECT + BANK_PATH))
+	assert(not authored.is_empty() and not banked.is_empty(), "The Wwise project lists events and the Web bank was generated")
+	var used := {}
+	for key in table.entries:
+		var event: String = table.entries[key]
+		if event.is_empty() or event == Table.SILENT or key.begins_with("rtpc."): continue
+		used[event] = key
+	assert(used.size() >= 5, "The table uses every authored event kind")
+	for event in used:
+		assert(authored.has(event), "Event exists in the Wwise project: %s (row %s)" % [event, used[event]])
+		assert(banked.has(fnv1(event)), "Event is in Main.bnk (regenerate the bank?): %s" % event)
+	for key in table.entries:
+		if key.begins_with("rtpc."): assert(table.entries[key] in ["", Table.SILENT], "Game Parameters are not authored yet: " + key)
+
+## Event ids in a bank's HIRC chunk (object type 4).
+func bank_event_ids(bytes: PackedByteArray) -> Dictionary:
+	var ids := {}
+	var at := 0
+	while at + 8 <= bytes.size():
+		var size := bytes.decode_u32(at + 4)
+		if bytes.slice(at, at + 4).get_string_from_ascii() == "HIRC":
+			var cursor := at + 12
+			for _i in bytes.decode_u32(at + 8):
+				var length := bytes.decode_u32(cursor + 1)
+				if bytes[cursor] == 4: ids[bytes.decode_u32(cursor + 5)] = true
+				cursor += 5 + length
+		at += 8 + size
+	return ids
+
+## Wwise names hash with FNV-1 over the lowercased name.
+func fnv1(name: String) -> int:
+	var hash := 2166136261
+	for byte in name.to_lower().to_utf8_buffer():
+		hash = (hash * 16777619) & 0xFFFFFFFF
+		hash ^= byte
+	return hash
+
+## The shipped table keeps the intended sound character: highs reward, lows warn or destroy, buttons click.
+func test_shipped_routing() -> void:
+	var table: RefCounted = Table.from_file("res://audio/audio_events.tsv")
+	var button := "Play_ui_button"
+	var low := "Play_bass_clarinet_G2_1_mezzo_forte_normal"
+	var high := "Play_viola_Gs5_1_fortissimo_arco_normal"
+	var soft := "Play_violin_B4_1_piano_arco_sul_tasto"
+	var expected := {
+		"ui.press.primary.OkayButton": button, "ui.press.default.ZoomInButton": button, "ui.press.selectable.ToolBrush": button,
+		"ui.press.primary.SubmitButton": high, "ui.press.primary.EnterButton": high,
+		"ui.press.quiet.DeleteObjectButton": low, "ui.press.quiet.RestartButton": low,
+		"ui.toggle_on.default.SoundToggle": high, "ui.toggle_off.default.MusicToggle": low,
+		"ui.toggle_on.default.ToolBrush": "", "ui.hover.primary.LevelsButton": "",
+		"ui.drag.default.WidthSlider": soft, "ui.drag.default.VolumeSlider": soft, "ui.select.default.QualityOption": button,
+		"page.enter.home": soft, "page.enter.gallery": soft, "page.exit.canvas": "",
+		"dialog.enter.text_editor": soft, "dialog.exit.sticker_picker": low, "dialog.enter.submission_result": high,
+		"dialog.enter.info": "", "dialog.enter.busy": "",
+		"message.notice": soft, "message.denied": low, "message.warning": low, "message.error": low, "message.success": high,
+		"canvas.drag.begin.paint": soft, "canvas.drag.end.paint": "", "canvas.drag.begin.erase": button, "canvas.drag.end.erase": "",
+		"canvas.drag.begin.move.weapon_du": button, "canvas.drag.end.rotate.text": soft, "canvas.drag.begin.scale.avatar": button,
+		"canvas.object.add.weapon_blue": high, "canvas.object.add.text": high, "canvas.object.remove.weapon_du": low,
+		"canvas.object.select.avatar": button, "canvas.object.deselect": "", "canvas.undo": soft, "canvas.redo": soft, "canvas.clear": low,
+		"tool.enter.eraser": "", "background.enter.tea_cottage": "", "background.exit.paper": "",
+		"level.complete": high, "level.complete.all": "Play_viola_B6_15_forte_arco_normal", "export.done": high,
+		"storage.enter.error": low, "storage.enter.ok": "", "test.play": "Play_viola_B6_15_forte_arco_normal", "app.boot": soft,
+	}
+	for key in expected:
+		assert(table.lookup(key) == expected[key], "%s -> %s (got %s)" % [key, expected[key], table.lookup(key)])
+
+func test_routing() -> void:
+	var director: Node = root.get_node("AudioDirector")
+	assert(Hooks.sink == director, "The autoload receives AudioHooks calls")
+	var table := Table.new()
+	table.parse(FIXTURE)
+	director.load_table(table)
+	await process_frame
+	assert(director.running and director.wwise == null, "Headless runs route without Wwise")
+	director.calls.clear()
+
+	Hooks.cue("ui.press.primary.Go")
+	Hooks.cue("ui.press.quiet.Mute")
+	Hooks.cue("canvas.undo")
+	assert(director.calls == PackedStringArray(["post Play_Click"]), "Cues post the resolved event only")
+
+	director.calls.clear()
+	Hooks.fact("dialog", "busy")
+	Hooks.fact("dialog", "submission_result")
+	await process_frame
+	assert(director.calls == PackedStringArray(["post Play_Open"]), "Same-frame swaps collapse into one enter")
+	director.calls.clear()
+	Hooks.fact("dialog", "")
+	Hooks.fact("dialog", "submission_result")
+	await process_frame
+	assert(director.calls.is_empty(), "A value restored within the frame changes nothing")
+	Hooks.fact("dialog", "")
+	await process_frame
+	assert(director.calls == PackedStringArray(["post Play_Close"]), "Leaving a state fires its exit key")
+
+	director.calls.clear()
+	Hooks.param("setting.volume", 50.0)
+	Hooks.param("setting.volume", 50.0)
+	Hooks.param("setting.unknown", 1.0)
+	assert(director.calls == PackedStringArray(["rtpc Volume_Master=50.0"]), "RTPCs dedupe and skip unmapped keys")
+	Hooks.param("setting.volume", 60.0)
+	Hooks.param("setting.volume", 70.0)
+	await create_timer(0.1).timeout
+	assert(director.calls[-1] == "rtpc Volume_Master=70.0", "The throttle always delivers the last value")
+
+	var button := Button.new()
+	button.name = "Go"
+	button.theme_type_variation = &"PrimaryButton"
+	button.toggle_mode = true
+	button.size = Vector2(100, 40)
+	root.add_child(button)
+	director.calls.clear()
+	button.pressed.emit()
+	assert(director.calls == PackedStringArray(["post Play_Click"]), "Buttons are wired automatically by role")
+	director.calls.clear()
+	director.binder.last_input_ms = -100000
+	button.button_pressed = true
+	assert(director.calls.is_empty(), "Code-driven toggles stay silent")
+	button.button_pressed = false
+	button.grab_focus()
+	director.binder.last_input_ms = Time.get_ticks_msec()
+	button.button_pressed = true
+	assert(director.calls == PackedStringArray(["post Play_Toggle"]), "User toggles sound")
+	var spin := SpinBox.new()
+	root.add_child(spin)
+	director.calls.clear()
+	director.binder.last_input_ms = -100000
+	spin.value = 5
+	assert(director.calls.is_empty(), "Code-driven value changes stay silent")
+	root.remove_child(button)
+	root.add_child(button)
+	director.calls.clear()
+	button.pressed.emit()
+	assert(director.calls.size() == 1, "Re-entering the tree does not connect twice")
+	button.free()
+	spin.free()

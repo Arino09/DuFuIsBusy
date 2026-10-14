@@ -21,7 +21,7 @@ jobs:
       - name: Run scene smoke check
         run: |
           godot --headless --path . --quit-after 10 2>&1 | tee smoke.log
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' import.log smoke.log; then exit 1; fi
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' import.log smoke.log | grep -v 'ProjectInfo.json not found'; then exit 1; fi
       - name: Test drawing and editable object history
         run: |
           timeout 60s godot --headless --path . --script tests/drawing_test.gd 2>&1 | tee drawing-test.log
@@ -59,14 +59,30 @@ jobs:
           timeout 60s godot --headless --path . --script tests/content_catalog_test.gd 2>&1 | tee content-catalog-test.log
           if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' content-catalog-test.log; then exit 1; fi
           grep 'CONTENT_CATALOG_TESTS_PASSED' content-catalog-test.log
+      - name: Test audio routing and the shipped audio table
+        run: |
+          timeout 60s godot --headless --path . --script tests/audio_test.gd 2>&1 | tee audio-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR|AUDIO_TABLE_INVALID):' audio-test.log; then exit 1; fi
+          grep 'AUDIO_TESTS_PASSED' audio-test.log
+      - name: Test what the player hears in real scenes
+        run: |
+          timeout 60s godot --headless --path . --script tests/audio_flow_test.gd 2>&1 | tee audio-flow-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR)' audio-flow-test.log; then exit 1; fi
+          grep 'AUDIO_FLOW_TESTS_PASSED' audio-flow-test.log
       - name: Export single-threaded Web
         run: |
           mkdir -p build/web
           godot --headless --export-release Web build/web/index.html 2>&1 | tee export.log
-          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' export.log; then exit 1; fi
+          # The Wwise editor plugin wants ProjectInfo.json for its browser; runtime only needs the .bnk files.
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' export.log | grep -v 'ProjectInfo.json not found'; then exit 1; fi
           test -s build/web/index.html
           test -s build/web/index.wasm
           test -s build/web/index.pck
+          test -s build/web/index.side.wasm
+          test -s build/web/libwwise.web.template_release.release.nothreads.wasm
+          test -s build/web/WwiseAudioWorklet.processor.js
+          grep -a -q 'GeneratedSoundBanks/Web/Init.bnk' build/web/index.pck
+          grep -a -q 'GeneratedSoundBanks/Web/Main.bnk' build/web/index.pck
           touch build/web/.nojekyll
       - name: Preserve Web build
         uses: actions/upload-artifact@v4

@@ -164,9 +164,9 @@ offset_bottom = 795.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
 theme_override_font_sizes/font_size = 17
-text = "暂无音乐和音效；画质选项暂未生效。\n设置保存在本机。"
+text = "画质选项暂未生效。\n设置保存在本机。"
 vertical_alignment = 1
 autowrap_mode = 3
-metadata/description = "暂无音乐和音效；画质选项暂未生效。"
+metadata/description = "画质选项暂未生效。"
 
 [editable path="Frame"]

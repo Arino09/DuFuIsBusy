@@ -14,3 +14,11 @@ build/
 /docs/杜甫很忙_开发分工任务表.xlsx
 /docs/聚光灯-杜甫很忙策划案.docx
 /docs/需求分工任务表.xlsx
+
+# Wwise: only the Linux (CI editor), Windows (local editor) and Web runtime libraries are versioned
+/addons/Wwise/native/lib/android/
+/addons/Wwise/native/lib/macos/
+/addons/Wwise/native/lib/ios/
+/addons/Wwise/wwise_project/**/*.validationcache
+/addons/Wwise/wwise_project/**/*.wsettings
+/addons/Wwise/wwise_project/**/.cache/

@@ -1,0 +1,216 @@
+﻿key	event	note
+# 杜甫很忙 · 音频事件表。程序只发左列的语义键；音频填中间列，不用改代码。
+# 现有 Wwise Event：Play_ui_button（按钮）、Play_bass_clarinet_G2…（低频）、Play_viola_Gs5…（高频）、Play_violin_B4…（轻柔）、Play_viola_B6…（高音，F9 测试）。表里填的名字必须是 Wwise 里真实存在的 Event；tests/audio_test.gd 会对照工程检查。
+# 中间列：Wwise Event 名（rtpc. 开头的行填 Game Parameter 名）。全部事件都在 SoundBank「Main」里。
+# 留空 = 用上一级键：ui.press.quiet.CloseButton → ui.press.quiet → ui.press。填 - = 不发声，也不再往上找。
+# 带 enter/exit 的是「状态」键：状态变成某值时触发 <名>.enter.<值>，离开时触发 <名>.exit.<值>。State、Switch、循环声的开和停都包进 Event 里做。
+# 编辑器运行时保存本表 1 秒内生效；控制台 AUDIO_UNMAPPED 会列出游戏发了但表里没有的键。
+# ===== 测试 / 应用 =====
+test.play	Play_viola_B6_15_forte_arco_normal	任何时候按 F9 播放；用来确认 Wwise、Bank 和输出设备是否正常。必须指向一个真实存在的 Event
+app.boot	Play_violin_B4_1_piano_arco_sul_tasto	音频引擎就绪：桌面版启动后立即；网页版在玩家第一次点击或按键后（浏览器规定）。适合在这里启动常驻音乐或环境声
+app.focus.enter.out		窗口失去焦点（切到别的程序 / 浏览器标签）。可放压低音乐的 Set State
+app.focus.enter.in		窗口重新获得焦点
+# ===== UI · 按下（所有按钮自动接入）=====
+# 键格式 ui.press.<角色>.<节点名>。角色来自按钮的主题变体；节点上加 meta「audio_role」可以自定义角色
+ui.press	Play_ui_button	任意按钮按下的兜底音
+ui.press.primary		主操作按钮（深色实心）：开始游戏、完成作品、确认、保存作品、使用贴纸、确定…
+ui.press.quiet		次要按钮（浅色描边）：返回首页、×关闭、撤销、重做、编辑、删除、画廊卡片按钮…
+ui.press.selectable		可选中按钮：画布工具、画廊标签页、画廊筛选
+ui.press.compact_retry		存储失败时出现的「重试保存」小按钮
+ui.press.default		没有主题变体的按钮：自由创作、选关、文字、贴纸、取消、缩放、调色板色块和 RGB/HSV 切换等
+ui.press.primary.LevelsButton	Play_viola_Gs5_1_fortissimo_arco_normal	首页「开始游戏」
+ui.press.default.FreeDrawButton		首页「自由创作」
+ui.press.quiet.GalleryButton		首页「画廊」
+ui.press.quiet.SettingsButton		首页「设置」
+ui.press.quiet.ExitButton		首页「退出」（只弹出提示，不会真的退出）
+ui.press.quiet.BackButton		各页面左上角「返回首页」
+ui.press.primary.EnterButton	Play_viola_Gs5_1_fortissimo_arco_normal	选关页每张关卡卡片的「开始画 / 重画」
+ui.press.quiet.CloseButton	Play_violin_B4_1_piano_arco_sul_tasto	所有弹窗右上角的 ×。弹窗的关闭声建议配在 dialog.exit，按 Esc 关闭时也会响
+ui.press.primary.OkayButton		提示弹窗的「关闭」
+ui.press.default.CancelButton		确认类弹窗的「取消」（清空草稿 / 恢复默认 / 替换作品）
+ui.press.primary.ConfirmButton	Play_bass_clarinet_G2_1_mezzo_forte_normal	确认类弹窗的确认（清空草稿 / 恢复默认 / 替换并编辑）
+ui.press.default.ChangeTopicButton		画布「选关」
+ui.press.selectable.ToolBrush		画布工具「笔刷」；换工具的声音也可以放在 tool.enter.brush
+ui.press.selectable.ToolEraser		画布工具「橡皮」
+ui.press.selectable.ToolMove		画布工具「移动」
+ui.press.default.AddTextButton		画布「文字」，打开文字编辑弹窗
+ui.press.default.StickerButton		画布「贴纸」，打开贴纸选择弹窗
+ui.press.quiet.ReferenceButton		画布「素材」，打开素材目录
+ui.press.quiet.RestartButton	Play_bass_clarinet_G2_1_mezzo_forte_normal	画布「清空草稿」，会先弹出确认
+ui.press.quiet.UndoButton		画布「撤销」；真正撤销成功的声音在 canvas.undo
+ui.press.quiet.RedoButton		画布「重做」；真正重做成功的声音在 canvas.redo
+ui.press.quiet.EditObjectButton		画布「编辑」（选中文字时）
+ui.press.quiet.DeleteObjectButton	Play_bass_clarinet_G2_1_mezzo_forte_normal	画布「删除」；删除成功的声音在 canvas.object.remove
+ui.press.quiet.DeselectButton		画布「取消」选中
+ui.press.primary.SubmitButton	Play_viola_Gs5_1_fortissimo_arco_normal	画布「完成作品」（提交）
+ui.press.default.ApplySizeButton		画布「应用尺寸」
+ui.press.default.ZoomInButton		画布放大 +
+ui.press.default.ZoomOutButton		画布缩小 −
+ui.press.default.FitViewButton		画布「适应窗口」
+ui.press.primary.ApplyButton		文字编辑弹窗「确定」
+ui.press.primary.WeaponButton		素材目录「选择贴纸」
+ui.press.default.CityButton		素材目录「科幻都市」参考图
+ui.press.default.MarketButton		素材目录「烟火夜市」参考图
+ui.press.primary.BackButton		素材目录「返回画布」/ 图片查看「返回画廊」
+ui.press.primary.AddDuButton		贴纸「杜甫重剑」使用
+ui.press.primary.AddPinkButton		贴纸「粉刃短刀」使用
+ui.press.primary.AddSilverButton		贴纸「银纹长剑」使用
+ui.press.primary.AddBlueButton		贴纸「冰蓝长刃」使用
+ui.press.primary.AddVioletButton		贴纸「紫晶巨剑」使用
+ui.press.default.ContinueButton		提交结果 / 保存成功弹窗「继续编辑」
+ui.press.primary.SaveButton	Play_viola_Gs5_1_fortissimo_arco_normal	提交结果「保存作品 / 保存新版本」
+ui.press.default.SaveAsButton		提交结果「保存副本」
+ui.press.default.DownloadButton		提交结果 / 作品查看「下载图片」
+ui.press.primary.GalleryButton		保存成功「查看画廊」
+ui.press.default.NextButton		保存成功「下一关」/ 画廊「下一页」
+ui.press.default.PreviousButton		画廊「上一页」
+ui.press.primary.EditButton		作品查看「打开编辑」
+ui.press.quiet.EditButton		画廊作品卡片「继续画」
+ui.press.quiet.ViewButton		画廊作品 / 示例卡片「查看」
+ui.press.primary.CreateButton		画廊空状态「去画画」
+ui.press.selectable.MyWorksTab		画廊标签「我的作品」
+ui.press.selectable.ExamplesTab		画廊标签「示例」
+ui.press.default.ResetButton		设置「恢复默认设置」
+ui.press.compact_retry.StorageRetry		存储失败「重试保存」
+# ===== UI · 悬停 / 开关 / 拖动 / 输入 =====
+ui.hover	-	鼠标移入按钮（仅真实移动鼠标时触发，触屏不会触发）；默认关闭，想要就填事件名
+ui.hover.primary		鼠标移入主操作按钮
+ui.toggle_on	-	可切换按钮被打开。工具、标签、筛选重复点击时会先误发一次关闭再被复原，所以默认关闭，用 ui.press 即可
+ui.toggle_off	-	可切换按钮被关闭
+ui.toggle_on.default.SoundToggle	Play_viola_Gs5_1_fortissimo_arco_normal	设置「音效」开关打开
+ui.toggle_off.default.SoundToggle	Play_bass_clarinet_G2_1_mezzo_forte_normal	设置「音效」开关关闭
+ui.toggle_on.default.MusicToggle	Play_viola_Gs5_1_fortissimo_arco_normal	设置「音乐」开关打开
+ui.toggle_off.default.MusicToggle	Play_bass_clarinet_G2_1_mezzo_forte_normal	设置「音乐」开关关闭
+ui.drag	Play_violin_B4_1_piano_arco_sul_tasto	拖动滑条 / 调 SpinBox 数值（仅玩家操作时；代码改值不响）。每一格都会触发，Wwise 里请设播放上限
+ui.drag.default.WidthSlider		画布笔刷粗细滑条（4–56，每格 4）
+ui.drag.default.VolumeSlider		设置音量滑条
+ui.drag.default.CanvasWidth		画布宽度数值框
+ui.drag.default.CanvasHeight		画布高度数值框
+ui.drag.default.FontSizeInput		文字编辑弹窗字号
+ui.select	Play_ui_button	下拉框选中一项
+ui.select.default.QualityOption		设置「画质」下拉框
+ui.type	-	文本框每输入一次（文字内容、颜色代码）；默认关闭
+ui.submit		在文本框里按回车
+# ===== 页面（状态）=====
+page.enter	Play_violin_B4_1_piano_arco_sul_tasto	进入任意页面的兜底。音乐建议：app.boot 播放常驻音乐，这里用 Set State 切换段落
+page.enter.home		进入首页（启动时恢复上次页面也算）
+page.enter.levels		进入选关页
+page.enter.canvas		进入画布页（关卡或自由创作）
+page.enter.gallery		进入画廊
+page.enter.settings		进入设置
+page.exit		离开任意页面
+page.exit.home		离开首页
+page.exit.levels		离开选关页
+page.exit.canvas		离开画布页
+page.exit.gallery		离开画廊
+page.exit.settings		离开设置
+# ===== 弹窗（状态，同一时刻最多一个；从 A 直接换到 B 时先触发 A 的 exit 再触发 B 的 enter）=====
+dialog.enter	Play_violin_B4_1_piano_arco_sul_tasto	任意弹窗打开的兜底
+dialog.exit	Play_bass_clarinet_G2_1_mezzo_forte_normal	任意弹窗关闭的兜底（点 ×、取消、按 Esc 都算）
+dialog.enter.info	-	提示弹窗。它的声音由 message.* 按语气决定，这里默认静音避免叠两层
+dialog.exit.info		提示弹窗关闭
+dialog.enter.busy	-	提交时的「处理中」，只显示约一帧，默认静音
+dialog.exit.busy	-	「处理中」关闭
+dialog.enter.submission_result	Play_viola_Gs5_1_fortissimo_arco_normal	提交结果：展示成品和杜甫的点评
+dialog.exit.submission_result		提交结果关闭
+dialog.enter.save_confirmation		保存成功，并提示下一关已解锁；通关音在 level.complete
+dialog.exit.save_confirmation		保存成功弹窗关闭
+dialog.enter.text_editor		文字编辑（新建或编辑文字）
+dialog.exit.text_editor		文字编辑关闭（确定或取消都算）
+dialog.enter.sticker_picker		贴纸选择（5 把武器）
+dialog.exit.sticker_picker		贴纸选择关闭
+dialog.enter.sticker_catalog		素材目录（贴纸 / 两张参考图）
+dialog.exit.sticker_catalog		素材目录关闭
+dialog.enter.image_view		参考图或画廊示例大图
+dialog.exit.image_view		大图关闭
+dialog.enter.work_view		画廊作品或草稿详情
+dialog.exit.work_view		作品详情关闭
+dialog.enter.restart_confirmation		「清空草稿」确认
+dialog.exit.restart_confirmation		「清空草稿」确认关闭
+dialog.enter.reset_confirmation		「恢复默认设置」确认
+dialog.exit.reset_confirmation		「恢复默认设置」确认关闭
+dialog.enter.open_work_confirmation		「替换当前草稿并编辑作品」确认
+dialog.exit.open_work_confirmation		替换确认关闭
+# ===== 提示（按语气，打开提示弹窗时触发）=====
+message	Play_violin_B4_1_piano_arco_sul_tasto	提示的兜底
+message.notice		普通提示：点「退出」时的说明
+message.denied	Play_bass_clarinet_G2_1_mezzo_forte_normal	不允许：关卡未解锁、文字贴纸已满 24 个、还没画任何东西就提交
+message.warning	Play_bass_clarinet_G2_1_mezzo_forte_normal	警告：提交后又改了画，需要重新「完成作品」才能保存
+message.error	Play_bass_clarinet_G2_1_mezzo_forte_normal	失败：保存失败、导出图片失败
+message.success	Play_viola_Gs5_1_fortissimo_arco_normal	成功：桌面版图片导出成功
+# ===== 画布 · 拖拽（画笔、橡皮、移动 / 缩放 / 旋转图层）=====
+# begin 和 end 一定成对出现（切页面、失焦也会补发 end），循环声的开和停放这里
+canvas.drag.begin		在画布上按下开始拖拽的兜底
+canvas.drag.begin.paint	Play_violin_B4_1_piano_arco_sul_tasto	笔刷开始画（落笔）。循环声配合 rtpc.canvas.drag_speed
+canvas.drag.begin.erase	Play_ui_button	橡皮开始擦
+canvas.drag.begin.move	Play_ui_button	移动模式下抓起图层的兜底
+canvas.drag.begin.move.avatar		抓起杜甫头像
+canvas.drag.begin.move.text		抓起文字
+canvas.drag.begin.move.weapon_du		抓起贴纸「杜甫重剑」
+canvas.drag.begin.move.weapon_pink		抓起贴纸「粉刃短刀」
+canvas.drag.begin.move.weapon_silver		抓起贴纸「银纹长剑」
+canvas.drag.begin.move.weapon_blue		抓起贴纸「冰蓝长刃」
+canvas.drag.begin.move.weapon_violet		抓起贴纸「紫晶巨剑」
+canvas.drag.begin.scale	Play_ui_button	拖动图层四周的方形手柄缩放（后面还可以接 .<图层种类>，同 move）
+canvas.drag.begin.rotate	Play_ui_button	拖动图层上方的圆形手柄旋转（后面还可以接 .<图层种类>）
+canvas.drag.end		松开的兜底
+canvas.drag.end.paint	-	笔刷抬笔，或笔画出了纸边被截断
+canvas.drag.end.erase	-	橡皮抬起
+canvas.drag.end.move	Play_violin_B4_1_piano_arco_sul_tasto	放下图层（后面还可以接 .<图层种类>）
+canvas.drag.end.scale	Play_violin_B4_1_piano_arco_sul_tasto	结束缩放
+canvas.drag.end.rotate	Play_violin_B4_1_piano_arco_sul_tasto	结束旋转
+# ===== 画布 · 图层与编辑 =====
+canvas.object.add	Play_viola_Gs5_1_fortissimo_arco_normal	添加图层的兜底
+canvas.object.add.text		添加文字（文字编辑弹窗点「确定」）
+canvas.object.add.weapon_du		添加贴纸「杜甫重剑」
+canvas.object.add.weapon_pink		添加贴纸「粉刃短刀」
+canvas.object.add.weapon_silver		添加贴纸「银纹长剑」
+canvas.object.add.weapon_blue		添加贴纸「冰蓝长刃」
+canvas.object.add.weapon_violet		添加贴纸「紫晶巨剑」
+canvas.object.edit.text	Play_violin_B4_1_piano_arco_sul_tasto	修改已有文字
+canvas.object.remove	Play_bass_clarinet_G2_1_mezzo_forte_normal	删除选中图层的兜底（杜甫头像不能删）
+canvas.object.remove.text		删除文字
+canvas.object.remove.weapon_du		删除贴纸「杜甫重剑」（其余贴纸同理：canvas.object.remove.<贴纸 id>）
+canvas.object.select	Play_ui_button	移动模式下点中图层的兜底（选中对象变了才触发）
+canvas.object.select.avatar		选中杜甫头像
+canvas.object.select.text		选中文字
+canvas.object.select.weapon_du		选中贴纸「杜甫重剑」（其余贴纸同理）
+canvas.object.deselect		点空白处取消选中（按「取消」按钮或 Esc 不触发这个，而是按钮声）
+canvas.undo	Play_violin_B4_1_piano_arco_sul_tasto	撤销成功（没有可撤销的步骤时不触发）
+canvas.redo	Play_violin_B4_1_piano_arco_sul_tasto	重做成功
+canvas.clear	Play_bass_clarinet_G2_1_mezzo_forte_normal	在确认弹窗里清空草稿
+canvas.resize		画布尺寸改变成功
+# ===== 画布 · 工具（状态，brush / eraser / move）=====
+tool.enter		当前工具变化的兜底；第一次进入画布时也会触发一次（从无到笔刷）
+tool.enter.brush		切换到笔刷（选颜色时也会自动切回笔刷）
+tool.enter.eraser		切换到橡皮
+tool.enter.move		切换到移动（添加文字或贴纸后会自动切过去）
+tool.exit		离开某个工具
+# ===== 背景环境（状态，只在画布页有值，离开画布时触发 exit）=====
+background.enter		画布背景的兜底；环境声可以在 enter 里播放、exit 里停止
+background.enter.paper		自由创作：素白宣纸
+background.enter.country_road		关卡：乡间小路
+background.enter.star_platform		关卡：星际站台
+background.enter.bamboo_mountains		关卡：竹林山景
+background.enter.tea_cottage		关卡：山间茶舍
+background.exit	-	离开画布或换关卡时停止当前环境声的兜底
+background.exit.paper		离开宣纸背景
+background.exit.country_road		离开乡间小路
+background.exit.star_platform		离开星际站台
+background.exit.bamboo_mountains		离开竹林山景
+background.exit.tea_cottage		离开山间茶舍
+# ===== 进度与存储 =====
+level.complete	Play_viola_Gs5_1_fortissimo_arco_normal	第一次保存某关作品，下一关随之解锁
+level.complete.all	Play_viola_B6_15_forte_arco_normal	最后一关首次保存，全部通关
+export.done	Play_viola_Gs5_1_fortissimo_arco_normal	网页版点击「下载图片」（浏览器开始下载）；桌面版的结果走 message.success / message.error
+storage.enter.error	Play_bass_clarinet_G2_1_mezzo_forte_normal	本地存储从正常变成失败（空间不足、被浏览器禁用等），只在状态切换时响一次
+storage.enter.ok	-	存储恢复正常；启动后第一次保存成功也会触发，所以默认静音
+storage.exit.error		存储失败状态结束
+# ===== RTPC（中间列填 Game Parameter 名；数值自动节流，最后一个值一定送达）=====
+rtpc.setting.volume		设置「音量」滑条，0–100，默认 70。Wwise 里还没有 Game Parameter；建的时候叫 Volume_Master，映射到主总线音量后填在这里
+rtpc.setting.sound		设置「音效」开关：开 = 1，关 = 0。待建 Game Parameter（建议 Volume_SFX）后填在这里
+rtpc.setting.music		设置「音乐」开关：开 = 1，关 = 0。待建 Game Parameter（建议 Volume_Music）后填在这里
+rtpc.setting.quality	-	设置「画质」，与声音无关
+rtpc.setting.motion	-	「减少动画」（暂无界面），与声音无关
+rtpc.canvas.drag_speed		画布拖拽速度（画布像素 / 秒，常见 0–3000）；松开时归零。待建 Game Parameter（建议 Drag_Speed）后填在这里，驱动笔刷 / 橡皮循环声
+rtpc.canvas.zoom		画布缩放倍数 0.1–4.0（1 = 100%）。待建 Game Parameter（建议 Canvas_Zoom）后填在这里

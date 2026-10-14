@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}" SchemaVersion="133">
+	<Containers>
+		<WorkUnit Name="Default Work Unit" ID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="viola_B6_15_forte_arco-normal" ID="{10273FF8-28CF-4689-B8B9-931304D0608E}" ShortID="276129997">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="viola_B6_15_forte_arco-normal" ID="{ABCA2725-7701-4607-B1BB-1DF1AC2F98AE}">
+							<Language>SFX</Language>
+							<AudioFile>viola_B6_15_forte_arco-normal.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="870493076"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="viola_B6_15_forte_arco-normal" ID="{ABCA2725-7701-4607-B1BB-1DF1AC2F98AE}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="violin_B4_1_piano_arco-sul-tasto" ID="{6A357630-F36C-4983-B7C2-C1B2A08D92E1}" ShortID="1068304002">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="violin_B4_1_piano_arco-sul-tasto" ID="{90B7FBFD-CC7F-4EC3-A27B-A627CE181080}">
+							<Language>SFX</Language>
+							<AudioFile>violin_B4_1_piano_arco-sul-tasto.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="813086250"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="violin_B4_1_piano_arco-sul-tasto" ID="{90B7FBFD-CC7F-4EC3-A27B-A627CE181080}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="viola_Gs5_1_fortissimo_arco-normal" ID="{F5E64199-21FD-46A4-A1EF-A31B1E0AF8F2}" ShortID="229270793">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="viola_Gs5_1_fortissimo_arco-normal" ID="{C8D64615-D3D6-4821-B4FA-AA93FF621F25}">
+							<Language>SFX</Language>
+							<AudioFile>viola_Gs5_1_fortissimo_arco-normal.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="481357123"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="viola_Gs5_1_fortissimo_arco-normal" ID="{C8D64615-D3D6-4821-B4FA-AA93FF621F25}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{16F991D0-E5D4-447A-894F-138293406E36}" ShortID="402061314">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{E756C7CD-2523-4B98-BA0B-B85E3F1F6C0A}">
+							<Language>SFX</Language>
+							<AudioFile>bass-clarinet_G2_1_mezzo-forte_normal.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="855817429"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{E756C7CD-2523-4B98-BA0B-B85E3F1F6C0A}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="ui_button" ID="{E8B11C8E-68F6-4A87-8C92-2FC1C0D98711}" ShortID="242035331">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ui_button" ID="{9B4AD1E0-BE7B-4B00-830C-71C1ABCBC952}">
+							<Language>SFX</Language>
+							<AudioFile>ui_button.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="208460278"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ui_button" ID="{9B4AD1E0-BE7B-4B00-830C-71C1ABCBC952}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
+	</Containers>
+</WwiseDocument>

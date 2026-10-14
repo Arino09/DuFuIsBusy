@@ -36,6 +36,7 @@ const SettingsStore = preload("res://scripts/settings_store.gd")
 const ContentCatalog = preload("res://scripts/content_catalog.gd")
 const TextEditorDialog = preload("res://scripts/dialogs/text_editor_dialog.gd")
 const DraftCache = preload("res://scripts/draft_cache.gd")
+const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
 var draft_cache := DraftCache.new()
 var content_catalog := ContentCatalog.new()
 var _draft_save_pending := false
@@ -74,6 +75,7 @@ var previous_focus: Control
 
 func _ready() -> void:
 	settings = settings_store.load_settings()
+	_sync_audio_settings()
 	if OS.has_feature("web"):
 		web_blur_callback = JavaScriptBridge.create_callback(_web_focus_lost)
 		JavaScriptBridge.get_interface("window").addEventListener("blur", web_blur_callback)
@@ -138,6 +140,8 @@ func show_page(id: String) -> void:
 		"gallery": gallery()
 		"settings": settings_page()
 	is_busy = false
+	AudioHooks.fact("page", current)
+	AudioHooks.fact("background", drawings[topic].background_id if current == "canvas" else "")
 	autosave()
 	print("UI_PAGE:", current)
 
@@ -162,7 +166,7 @@ func _topic_unlocked(id: int) -> bool:
 
 func _allow_topic(id: int) -> bool:
 	if _topic_unlocked(id): return true
-	info("关卡未解锁", "先保存上一关的完成作品。")
+	info("关卡未解锁", "先保存上一关的完成作品。", "denied")
 	return false
 
 func _topic_background(id: int) -> String:
@@ -242,7 +246,7 @@ func _remember_color(color: Color) -> void:
 func text_editor(edit: bool) -> void:
 	drawing.finish()
 	if not edit and drawings[topic].objects.size() >= 25:
-		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。")
+		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。", "denied")
 		return
 	var object: Dictionary = drawing.selected_object() if edit else {}
 	var view: TextEditorDialog = modal("text_editor", "编辑文字" if edit else "")
@@ -262,7 +266,7 @@ func _apply_text(text: String, font_size: int, color: Color, edit: bool) -> void
 func sticker_picker() -> void:
 	drawing.finish()
 	if drawings[topic].objects.size() >= 25:
-		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。")
+		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。", "denied")
 		return
 	modal("sticker_picker")
 	for item in [["AddDuButton", "weapon_du"], ["AddPinkButton", "weapon_pink"], ["AddSilverButton", "weapon_silver"], ["AddBlueButton", "weapon_blue"], ["AddVioletButton", "weapon_violet"]]:
@@ -283,13 +287,14 @@ func restart_confirm() -> void:
 
 func _restart_drawing() -> void:
 	drawings[topic] = Drawing.new_state(_topic_background(topic), drawing.canvas_size())
+	AudioHooks.cue("canvas.clear")
 	show_page("canvas")
 
 func submit_artwork() -> void:
 	if submitting: return
 	drawing.finish()
 	if not drawing.has_creation():
-		info("还没有修改", "画几笔、添加文字或贴纸，也可以移动杜甫。")
+		info("还没有修改", "画几笔、添加文字或贴纸，也可以移动杜甫。", "denied")
 		print("SUBMIT_EMPTY")
 		return
 	var state: Dictionary = drawings[topic]
@@ -328,6 +333,7 @@ func update_storage_status(ok: bool) -> void:
 	if is_instance_valid(storage_hint):
 		storage_hint.text = storage_status
 		storage_hint.add_theme_color_override("font_color", MUTED if ok else RED)
+	AudioHooks.fact("storage", "ok" if ok else "error")
 	print("STORAGE_OK" if ok else "STORAGE_ERROR:", "" if ok else local_store.error)
 
 func autosave() -> void:
@@ -367,14 +373,15 @@ func retry_storage() -> void:
 			show_page(current)
 			return
 	autosave()
-	if not local_store.error.is_empty(): info("保存失败", local_store.error)
+	if not local_store.error.is_empty(): info("保存失败", local_store.error, "error")
 
 func save_work(as_new: bool) -> void:
 	var state: Dictionary = drawings[topic]
 	if state.result == null or state.submitted != state.revision:
-		info("作品有新修改", "返回画布，点击“完成作品”后再保存。")
+		info("作品有新修改", "返回画布，点击“完成作品”后再保存。", "warning")
 		return
 	var candidate := storage_candidate()
+	var completed_before := completed_topics.size()
 	var id: String = "" if as_new else state.get("work_id", "")
 	var index := -1
 	for i in range(candidate.works.size()):
@@ -395,7 +402,7 @@ func save_work(as_new: bool) -> void:
 		# A later flush retries the draft, not the explicitly saved gallery work.
 		_draft_save_pending = true
 		update_storage_status(false)
-		info("保存失败", local_store.error + "\n可重新打开“完成作品”，下载图片备份。")
+		info("保存失败", local_store.error + "\n可重新打开“完成作品”，下载图片备份。", "error")
 		return
 	_draft_save_pending = false
 	state.work_id = id
@@ -407,6 +414,7 @@ func save_work(as_new: bool) -> void:
 	var message := title
 	if has_next: message += "\n下一关已解锁：" + content_catalog.get_topic(ids[next_index]).title
 	elif topic >= 0: message += "\n全部关卡已完成。"
+	if completed_topics.size() > completed_before: AudioHooks.cue("level.complete" if has_next else "level.complete.all")
 	modal("save_confirmation", "", message)
 	bind_button(overlay, "ContinueButton", close_overlay)
 	bind_button(overlay, "GalleryButton", _show_gallery.bind(0))
@@ -496,11 +504,12 @@ func download_image(image: Image) -> void:
 	var filename := "dufu-artwork.png"
 	if OS.has_feature("web"):
 		JavaScriptBridge.download_buffer(image.save_png_to_buffer(), filename, "image/png")
+		AudioHooks.cue("export.done")
 		print("PNG_DOWNLOAD_REQUESTED")
 	else:
 		var path := "user://" + filename
-		if image.save_png(path) == OK: info("图片已导出", ProjectSettings.globalize_path(path))
-		else: info("导出失败", "无法写入文件，请检查存储空间和写入权限。")
+		if image.save_png(path) == OK: info("图片已导出", ProjectSettings.globalize_path(path), "success")
+		else: info("导出失败", "无法写入文件，请检查存储空间和写入权限。", "error")
 
 func gallery() -> void:
 	var view: GalleryPage = page
@@ -531,11 +540,18 @@ func settings_page() -> void:
 
 func _set_preference(key: String, value: Variant) -> void:
 	settings[key] = value
+	_sync_audio_settings()
 	if key == "volume":
 		queue_settings_save()
 	else:
 		_settings_pending = false
 		save_settings()
+
+## Every numeric or boolean setting is offered as "rtpc.setting.<key>"; the table decides which ones matter.
+func _sync_audio_settings() -> void:
+	for key in settings:
+		var value: Variant = settings[key]
+		if value is bool or value is int or value is float: AudioHooks.param("setting." + key, float(value))
 
 func update_settings_note() -> void:
 	if current == "settings" and is_instance_valid(page):
@@ -557,6 +573,7 @@ func reset_confirm() -> void:
 
 func _reset_settings() -> void:
 	settings = SettingsStore.defaults()
+	_sync_audio_settings()
 	_settings_pending = false
 	save_settings()
 	close_overlay()
@@ -578,14 +595,16 @@ func modal(scene_id: String, title: String = "", body: String = "") -> Control:
 	if not title.is_empty(): overlay.get_node("Frame/Title").text = title
 	if not body.is_empty(): overlay.get_node("Frame/Body").text = body
 	dialog_host.add_child(overlay)
+	AudioHooks.fact("dialog", scene_id)
 	var close_button: Button = overlay.get_node("Frame/CloseButton")
 	close_button.pressed.connect(close_overlay)
 	if close_button.visible: close_button.grab_focus()
 	print("UI_DIALOG:", overlay.get_node("Frame/Title").text)
 	return overlay
 
-func info(title: String, body: String) -> void:
+func info(title: String, body: String, tone: String = "notice") -> void:
 	modal("info", title, body)
+	AudioHooks.cue("message." + tone)
 	bind_button(overlay, "OkayButton", close_overlay)
 
 func sticker_list() -> void:
@@ -604,6 +623,7 @@ func close_overlay() -> void:
 		dialog_host.remove_child(overlay)
 		overlay.queue_free()
 	overlay = null
+	AudioHooks.fact("dialog", "")
 	if is_instance_valid(previous_focus) and previous_focus.is_inside_tree() and previous_focus.is_visible_in_tree():
 		previous_focus.grab_focus()
 	previous_focus = null

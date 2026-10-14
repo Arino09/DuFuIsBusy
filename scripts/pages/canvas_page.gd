@@ -8,7 +8,9 @@ signal action_requested(action: String)
 signal artwork_changed
 
 const Drawing = preload("res://scripts/drawing_surface.gd")
+const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
 const TOOL_NAMES = {"ToolBrush": "笔刷", "ToolEraser": "橡皮", "ToolMove": "移动"}
+const TOOL_AUDIO_IDS = {"笔刷": "brush", "橡皮": "eraser", "移动": "move"}
 const OBJECT_ACTIONS = {
 	"EditObjectButton": "编辑",
 	"DeleteObjectButton": "删除", "DeselectButton": "取消",
@@ -88,6 +90,7 @@ func refresh_tools(tool: String, color: Color, width: int) -> void:
 	surface.finish()
 	surface.erasing = tool == "橡皮"
 	surface.selecting = tool == "移动"
+	AudioHooks.fact("tool", TOOL_AUDIO_IDS.get(tool, ""))
 	surface.ink = color
 	surface.pen_width = width
 	surface.mouse_default_cursor_shape = Control.CURSOR_MOVE if surface.selecting else Control.CURSOR_CROSS
@@ -173,6 +176,7 @@ func _clamp_view() -> void:
 
 func _update_view_controls() -> void:
 	zoom_label.text = "%d%%" % roundi(view_zoom * 100)
+	AudioHooks.param("canvas.zoom", view_zoom)
 	$ZoomOutButton.disabled = view_zoom <= MIN_ZOOM
 	$ZoomInButton.disabled = view_zoom >= MAX_ZOOM
 	surface.queue_redraw()
