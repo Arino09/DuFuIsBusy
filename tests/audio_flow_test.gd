@@ -5,11 +5,6 @@ const UiTest = preload("res://tests/ui_scene_test.gd")
 const Store = preload("res://scripts/local_store.gd")
 const MainScene = preload("res://scenes/main.tscn")
 
-const BUTTON := "post Play_ui_button"
-const LOW := "post Play_bass_clarinet_G2_1_mezzo_forte_normal"
-const HIGH := "post Play_viola_Gs5_1_fortissimo_arco_normal"
-const SOFT := "post Play_violin_B4_1_piano_arco_sul_tasto"
-
 var director: Node
 
 func _initialize() -> void:
@@ -19,7 +14,7 @@ func heard(action: Callable) -> PackedStringArray:
 	director.calls.clear()
 	action.call()
 	await process_frame
-	return director.calls.duplicate()
+	return PackedStringArray(Array(director.calls).filter(func(call: String): return call.begins_with("post ")))
 
 func expect(label: String, got: PackedStringArray, want: Array) -> void:
 	assert(got == PackedStringArray(want), "%s: heard %s, expected %s" % [label, got, want])
@@ -40,43 +35,43 @@ func run() -> void:
 	root.add_child(app)
 	await process_frame
 
-	# Pages: the press is heard at once, the page change one frame later.
-	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), [HIGH, SOFT])
-	expect("Start a level", await heard(func(): press(app.page, "Topic3/EnterButton")), [HIGH, SOFT])
+	# Page transitions play their dedicated exit and enter events once.
+	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), ["post Play_SFX_Exit_Home", "post Play_SFX_Enter_Level"])
+	expect("Start a level", await heard(func(): press(app.page, "Topic3/EnterButton")), ["post Play_SFX_Exit_Levels", "post Play_SFX_Enter_Canvas"])
 	assert(app.current == "canvas")
 
-	# Tools: the button click only; the tool state rows are silent.
-	expect("Eraser tool", await heard(func(): press(app.page, "ToolEraser")), [BUTTON])
-	expect("Move tool", await heard(func(): press(app.page, "ToolMove")), [BUTTON])
-	expect("Brush tool", await heard(func(): press(app.page, "ToolBrush")), [BUTTON])
+	# No generic UI event is authored; tool changes are silent.
+	expect("Eraser tool", await heard(func(): press(app.page, "ToolEraser")), [])
+	expect("Move tool", await heard(func(): press(app.page, "ToolMove")), [])
+	expect("Brush tool", await heard(func(): press(app.page, "ToolBrush")), [])
 
-	# One brush stroke: grab on begin, nothing on lift.
+	# Each brush stroke starts and stops its loop; RTPCs are checked in audio_test.gd.
 	expect("Brush stroke", await heard(func():
 		app.drawing.begin(Vector2(500, 150), -1)
 		app.drawing.move_pen(Vector2(600, 180))
-		app.drawing.finish()), [SOFT])
-	expect("Undo", await heard(func(): press(app.page, "UndoButton")), [BUTTON, SOFT])
-	expect("Redo", await heard(func(): press(app.page, "RedoButton")), [BUTTON, SOFT])
+		app.drawing.finish()), ["post Play_SFX_Brush_Loop", "post Stop_SFX_Brush_Loop"])
+	expect("Undo", await heard(func(): press(app.page, "UndoButton")), [])
+	expect("Redo", await heard(func(): press(app.page, "RedoButton")), [])
 	app.apply_color(Color("3a9d8f"))
 	expect("Eraser stroke", await heard(func():
 		app.drawing.erasing = true
 		app.drawing.begin(Vector2(520, 160), -1)
 		app.drawing.finish()
-		app.drawing.erasing = false), [BUTTON])
+		app.drawing.erasing = false), [])
 
-	# Dialogs: open and close are heard; stickers add a high note and deleting one a low note.
-	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), [BUTTON, SOFT])
-	expect("Add sticker", await heard(func(): press(app.overlay, "AddDuButton")), [BUTTON, HIGH, LOW])
-	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), [LOW, LOW])
-	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), [BUTTON, SOFT])
-	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), [SOFT, LOW])
-	expect("Open text editor", await heard(func(): press(app.page, "AddTextButton")), [BUTTON, SOFT])
+	# Dialogs and layer edits remain silent until dedicated events are authored.
+	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), [])
+	expect("Add sticker", await heard(func(): press(app.overlay, "AddDuButton")), [])
+	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), [])
+	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), [])
+	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), [])
+	expect("Open text editor", await heard(func(): press(app.page, "AddTextButton")), [])
 	app.overlay.get_node("TextInput").text = "诗圣摸鱼"
-	expect("Add text", await heard(func(): press(app.overlay, "ApplyButton")), [BUTTON, HIGH, LOW])
-	expect("Clear draft prompt", await heard(func(): press(app.page, "RestartButton")), [LOW, SOFT])
-	expect("Cancel clearing", await heard(func(): press(app.overlay, "CancelButton")), [BUTTON, LOW])
-	expect("Clear draft prompt again", await heard(func(): press(app.page, "RestartButton")), [LOW, SOFT])
-	expect("Confirm clearing", await heard(func(): press(app.overlay, "ConfirmButton")), [LOW, LOW, LOW])
+	expect("Add text", await heard(func(): press(app.overlay, "ApplyButton")), [])
+	expect("Clear draft prompt", await heard(func(): press(app.page, "RestartButton")), [])
+	expect("Cancel clearing", await heard(func(): press(app.overlay, "CancelButton")), [])
+	expect("Clear draft prompt again", await heard(func(): press(app.page, "RestartButton")), [])
+	expect("Confirm clearing", await heard(func(): press(app.overlay, "ConfirmButton")), [])
 
 	# Submit, save and unlock the next level.
 	press(app.page, "ToolBrush")
@@ -86,12 +81,12 @@ func run() -> void:
 	var state: Dictionary = app.drawings[app.topic]
 	state.result = ImageTexture.create_from_image(state.pixels)
 	state.submitted = state.revision
-	expect("Submit", await heard(func(): press(app.page, "SubmitButton")), [HIGH, HIGH])
-	expect("Save work", await heard(func(): press(app.overlay, "SaveButton")), [HIGH, HIGH, LOW, SOFT])
+	expect("Submit", await heard(func(): press(app.page, "SubmitButton")), [])
+	expect("Save work", await heard(func(): press(app.overlay, "SaveButton")), [])
 	press(app.overlay, "GalleryButton")
 	await process_frame
 
-	# Settings toggles: on is high, off is low; the slider ticks softly.
+	# Sound toggle and volume slider have no authored UI feedback.
 	app.show_page("settings")
 	await process_frame
 	var sound: BaseButton = app.page.get_node("SoundToggle")
@@ -99,11 +94,18 @@ func run() -> void:
 	director.binder.last_input_ms = Time.get_ticks_msec()
 	sound.grab_focus()
 	var before := sound.button_pressed
-	expect("Sound toggle", await heard(func(): sound.button_pressed = not before), [HIGH if not before else LOW])
+	expect("Sound toggle", await heard(func(): sound.button_pressed = not before), [])
 	sound.button_pressed = before
 	var slider: Slider = app.page.get_node("VolumeSlider")
 	slider.grab_focus()
 	director.binder.last_input_ms = Time.get_ticks_msec()
-	expect("Volume tick", await heard(func(): slider.value = clampf(slider.value + 5, 0, 100)), [SOFT])
+	expect("Volume tick", await heard(func(): slider.value = clampf(slider.value + 5, 0, 100)), [])
+	var music: BaseButton = app.page.get_node("MusicToggle")
+	music.grab_focus()
+	director.binder.last_input_ms = Time.get_ticks_msec()
+	music.set_pressed_no_signal(true)
+	expect("Music off", await heard(func(): music.button_pressed = false), ["post Stop_Music_Theme"])
+	director.binder.last_input_ms = Time.get_ticks_msec()
+	expect("Music on", await heard(func(): music.button_pressed = true), ["post Play_Music_Theme"])
 	print("AUDIO_FLOW_TESTS_PASSED")
 	quit()

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{A007695E-18D2-468C-B9FD-9663ADACC617}" SchemaVersion="133">
 	<Effects>
-		<WorkUnit Name="Default Work Unit" ID="{A007695E-18D2-468C-B9FD-9663ADACC617}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{A007695E-18D2-468C-B9FD-9663ADACC617}" PersistMode="Standalone">
+			<ChildrenList>
+				<Effect Name="Brush_Gain" ID="{5A2D77F1-681C-4633-838D-9FAC19530E27}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+				<Effect Name="Music_Gain" ID="{F2CC781A-6B74-4E3F-B1B8-444E1475EF66}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+				<Effect Name="UI_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+			</ChildrenList>
+		</WorkUnit>
 	</Effects>
 </WwiseDocument>

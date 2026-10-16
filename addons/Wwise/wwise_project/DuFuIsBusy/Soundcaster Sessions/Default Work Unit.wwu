@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{7F8919B8-A4B4-4963-94E2-E2EC96803BC4}" SchemaVersion="133">
 	<SoundcasterSessions>
-		<WorkUnit Name="Default Work Unit" ID="{7F8919B8-A4B4-4963-94E2-E2EC96803BC4}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{7F8919B8-A4B4-4963-94E2-E2EC96803BC4}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundcasterSession Name="DufuIsBusy_Game_Mix_Test" ID="{0742F159-0380-4A68-B06F-BDBB6258C0D3}">
+					<ModuleList>
+						<Module>
+							<ObjectRef Name="Play_Music_Theme" ID="{1F2680BE-BBF1-449E-A133-B0CE20BA5E5B}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="0" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Enter_Gallery" ID="{22867E1B-A1EE-45E8-A119-A1B54966F77B}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="0" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Exit_Canvas" ID="{ED495BBE-7F4C-4FF0-9E8F-2BCF8B8C499D}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="0" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Stop_Music_Theme" ID="{DB92B20A-8459-4BFC-AA86-DA32838DD75B}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="0" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Brush_Loop" ID="{63CE7D1A-7C91-4824-B49D-21A867B9F8A5}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="1" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Enter_Home" ID="{D8E068C1-E86D-4282-BCAC-5B1D9A0DA647}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="1" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Exit_Gallery" ID="{9718C94B-96C0-4152-B2EA-4F66940CD5E4}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="1" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Stop_SFX_Brush_Loop" ID="{62062C34-5427-4859-9F7F-25342CA0FB54}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="1" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Enter_And_Enter_Settings" ID="{A2B1A94E-CBCF-4776-BB2F-11719A2F2431}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="2" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Enter_Level" ID="{4C360A7D-88D3-42C8-B73A-89D5B44AA764}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="2" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Exit_Home" ID="{B9048512-E829-49F5-8668-5211ACB5B7F1}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="2" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Enter_Canvas" ID="{C2D6F963-A6E6-466D-AECD-FC757AA2FEE6}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="3" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Exit_And_Exit_Settings" ID="{784B72C6-245D-4E7F-96C9-43FCFC403BA4}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="3" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Exit_Levels" ID="{94C06EB1-0E0B-4530-AA14-20DF5DE17C00}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="3" Y="2"/>
+						</Module>
+					</ModuleList>
+				</SoundcasterSession>
+			</ChildrenList>
+		</WorkUnit>
 	</SoundcasterSessions>
 </WwiseDocument>

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dk2g2oujyk45o"
+path="res://.godot/imported/SFX_ Enter_Home.wav-f912f988a1e1a40befce23f6445ae004.sample"
+
+[deps]
+
+source_file="res://addons/Wwise/wwise_project/DuFuIsBusy/Originals/SFX/SFX_ Enter_Home.wav"
+dest_files=["res://.godot/imported/SFX_ Enter_Home.wav-f912f988a1e1a40befce23f6445ae004.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

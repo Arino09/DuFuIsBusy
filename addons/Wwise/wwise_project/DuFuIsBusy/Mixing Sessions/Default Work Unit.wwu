@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{1F855E46-A9A3-4DB1-A204-E57D77A89551}" SchemaVersion="133">
 	<MixingSessions>
-		<WorkUnit Name="Default Work Unit" ID="{1F855E46-A9A3-4DB1-A204-E57D77A89551}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{1F855E46-A9A3-4DB1-A204-E57D77A89551}" PersistMode="Standalone">
+			<ChildrenList>
+				<MixingSession Name="DufuIsBusy_Game_Mix" ID="{AD1B4249-E34B-4F7F-B025-CE15E917C8B2}">
+					<ObjectList>
+						<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						<ObjectRef Name="Brush_Bus" ID="{E7590C68-9549-456C-B11E-4755B18CE72D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						<ObjectRef Name="Music_Bus" ID="{871AC816-A35C-4A3F-A0CD-CC5ED0A4542B}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+					</ObjectList>
+				</MixingSession>
+			</ChildrenList>
+		</WorkUnit>
 	</MixingSessions>
 </WwiseDocument>

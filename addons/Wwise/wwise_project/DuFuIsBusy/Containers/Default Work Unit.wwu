@@ -3,116 +3,482 @@
 	<Containers>
 		<WorkUnit Name="Default Work Unit" ID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}" PersistMode="Standalone">
 			<ChildrenList>
-				<Sound Name="viola_B6_15_forte_arco-normal" ID="{10273FF8-28CF-4689-B8B9-931304D0608E}" ShortID="276129997">
+				<MusicPlaylistContainer Name="Music_Theme" ID="{6ABF6C2C-1CF6-4446-AD96-52FF639BA60B}" ShortID="770069975">
+					<PropertyList>
+						<Property Name="Tempo" Type="Real64" Value="76"/>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+							<ObjectRef Name="Music_Bus" ID="{871AC816-A35C-4A3F-A0CD-CC5ED0A4542B}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+						</Reference>
+						<Reference Name="PlaylistRoot">
+							<Custom>
+								<MusicPlaylistItem Name="" ID="{53F64873-CEA8-4203-AC61-3C08E0422FD4}" ShortID="760350515">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+									</PropertyList>
+									<ChildrenList>
+										<MusicPlaylistItem Name="" ID="{011504D7-A83D-4B64-8F13-E1438B5E35DB}" ShortID="549641287">
+											<PropertyList>
+												<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Segment">
+													<ObjectRef Name="Music_Theme" ID="{FF70AACD-4686-47B3-81D7-453A62230DA3}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+												</Reference>
+											</ReferenceList>
+										</MusicPlaylistItem>
+									</ChildrenList>
+								</MusicPlaylistItem>
+							</Custom>
+						</Reference>
+						<Reference Name="TransitionRoot">
+							<Custom>
+								<MusicTransition Name="Root" ID="{AE8046D4-D35C-4B5B-889D-D44BB8054DEE}">
+									<PropertyList>
+										<Property Name="IsFolder" Type="bool" Value="True"/>
+									</PropertyList>
+									<ChildrenList>
+										<MusicTransition Name="Transition" ID="{BF7E8EA7-C9D6-46D0-929D-6D147AFE3B0C}">
+											<TransitionInfo/>
+										</MusicTransition>
+									</ChildrenList>
+									<TransitionInfo/>
+								</MusicTransition>
+							</Custom>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<AudioFileSource Name="viola_B6_15_forte_arco-normal" ID="{ABCA2725-7701-4607-B1BB-1DF1AC2F98AE}">
-							<Language>SFX</Language>
-							<AudioFile>viola_B6_15_forte_arco-normal.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="870493076"/>
-							</MediaIDList>
-						</AudioFileSource>
+						<MusicSegment Name="Music_Theme" ID="{FF70AACD-4686-47B3-81D7-453A62230DA3}" ShortID="815137103">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="128000"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Music_Theme_BPM76" ID="{5A5B464E-991B-4DB4-A3FC-4112153FDEF6}" ShortID="823820661">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+										<Reference Name="TransitionRoot">
+											<Custom>
+												<MusicTransition Name="Root" ID="{58998A1F-15D1-4060-B55F-D75C170A70A2}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</Custom>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Taptap2026_Theme_v1" ID="{01B9567F-B04C-4A37-AD39-6B2F022F2CA3}">
+											<Language>SFX</Language>
+											<AudioFile>Taptap2026_Theme_v1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="342372412"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<MusicTrackSequence Name="" ID="{64BB094D-D7C4-45AA-B221-C48B15811812}">
+												<ObjectLists>
+													<ObjectList Name="Clips">
+														<MusicClip Name="Taptap2026_Theme_v1" ID="{0A248E8F-3699-4BF4-A826-A2283B695761}">
+															<PropertyList>
+																<Property Name="EndTrimOffset" Type="Real64" Value="107368.4375"/>
+																<Property Name="FadeInMode" Type="int16" Value="0"/>
+																<Property Name="FadeOutMode" Type="int16" Value="0"/>
+															</PropertyList>
+															<AudioSourceRef Name="Taptap2026_Theme_v1" ID="{01B9567F-B04C-4A37-AD39-6B2F022F2CA3}"/>
+														</MusicClip>
+													</ObjectList>
+												</ObjectLists>
+											</MusicTrackSequence>
+										</ObjectList>
+									</ObjectLists>
+								</MusicTrack>
+							</ChildrenList>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<MusicCue Name="Entry Cue" ID="{E6D4C488-F1BF-462F-A0C9-639CA790E720}"/>
+									<MusicCue Name="Exit Cue" ID="{7BF807A9-CA4C-4994-B717-32BEFF99F9C3}">
+										<PropertyList>
+											<Property Name="CueType" Type="int16" Value="1"/>
+											<Property Name="TimeMs" Type="Real64" Value="101052.631578947"/>
+										</PropertyList>
+									</MusicCue>
+								</ObjectList>
+							</ObjectLists>
+						</MusicSegment>
 					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="viola_B6_15_forte_arco-normal" ID="{ABCA2725-7701-4607-B1BB-1DF1AC2F98AE}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="violin_B4_1_piano_arco-sul-tasto" ID="{6A357630-F36C-4983-B7C2-C1B2A08D92E1}" ShortID="1068304002">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
-						</Reference>
-					</ReferenceList>
+					<StateInfo>
+						<StateGroupList>
+							<StateGroupInfo>
+								<StateGroupRef Name="Play_Theme_Music" ID="{AE3AD51C-1DE6-40CC-B993-3FDD6C662FF7}"/>
+								<StateGroupInfo Name="" ID="{3D6DC29A-FC91-4652-8737-17B83200B49A}" ShortID="539801424"/>
+							</StateGroupInfo>
+						</StateGroupList>
+						<CustomStateList>
+							<CustomState>
+								<StateRef Name="Theme_Music" ID="{674B6DC6-FC89-41E9-826B-64340BBDED42}"/>
+								<CustomState Name="" ID="{69BF587B-6A5C-4E48-B814-AD76ABBF6CAA}" ShortID="386230871"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="None" ID="{D4F18F1A-3844-4772-A744-137CCD9E0D1C}"/>
+								<CustomState Name="" ID="{176889E1-0AF8-4928-A164-A3C53EBB0E74}" ShortID="869437438"/>
+							</CustomState>
+						</CustomStateList>
+					</StateInfo>
+				</MusicPlaylistContainer>
+				<Folder Name="SFXs" ID="{D8524AEB-9E2B-4A0A-9A3F-712367297FD3}" ShortID="557662023">
 					<ChildrenList>
-						<AudioFileSource Name="violin_B4_1_piano_arco-sul-tasto" ID="{90B7FBFD-CC7F-4EC3-A27B-A627CE181080}">
-							<Language>SFX</Language>
-							<AudioFile>violin_B4_1_piano_arco-sul-tasto.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="813086250"/>
-							</MediaIDList>
-						</AudioFileSource>
+						<Folder Name="UI" ID="{1A0F22AF-73E2-4B96-8851-9A47D3D52266}" ShortID="444022849">
+							<ChildrenList>
+								<Sound Name="SFX_Exit_And_Exit_Settings" ID="{5FA6930F-65AF-4342-99A1-3D948D0B4A49}" ShortID="466230113">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Exit_And_Exit_Settings" ID="{2B3C67E8-D8C3-4482-B77F-ECC6414D1E94}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Exit_And_Exit_Settings.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="697158502"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Exit_And_Exit_Settings" ID="{2B3C67E8-D8C3-4482-B77F-ECC6414D1E94}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Exit_Canvas" ID="{0B050006-25EB-4565-B69A-9B80141D986A}" ShortID="487232874">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Exit_Canvas" ID="{4D26556B-C1E7-447E-8791-806803D76914}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Exit_Canvas.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="223158116"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Exit_Canvas" ID="{4D26556B-C1E7-447E-8791-806803D76914}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Exit_Gallery" ID="{396FB344-EDC8-4291-9553-D4F4C2DA0D35}" ShortID="480828583">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Exit_Gallery" ID="{84B36F81-4ACE-4399-82F1-CDFB19BFC6DE}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Exit_Gallery.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="941971828"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Exit_Gallery" ID="{84B36F81-4ACE-4399-82F1-CDFB19BFC6DE}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Exit_Home" ID="{07906C56-6480-4EF0-82F6-FBDC50681163}" ShortID="22676347">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Exit_Home" ID="{C8F3C296-67DA-4395-B68B-FB88F7C0CBCF}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Exit_Home.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="248971591"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Exit_Home" ID="{C8F3C296-67DA-4395-B68B-FB88F7C0CBCF}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Exit_Levels" ID="{470384DC-33FD-4F99-98DD-E1D5E10BA0FE}" ShortID="657307531">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Exit_Levels" ID="{99A93B9A-65CD-4170-815C-9BB60376F259}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Exit_Levels.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1055499800"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Exit_Levels" ID="{99A93B9A-65CD-4170-815C-9BB60376F259}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Enter_Gallery" ID="{DD5BF7BA-D4B4-48B2-AC3A-21E9CBBF07FD}" ShortID="634756332">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Enter_Gallery" ID="{1BF51524-93B7-4B21-B3AE-08A4568DC391}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Enter_Gallery.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="553966176"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Enter_Gallery" ID="{1BF51524-93B7-4B21-B3AE-08A4568DC391}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Enter_Canvas" ID="{6AA2C7FC-DC0E-49B0-B00E-7CAA3FA8C2C0}" ShortID="987183607">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Enter_Canvas" ID="{2B4D405B-51FC-4168-B1B9-1CDC03FE508C}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Enter_Canvas.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="891944370"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Enter_Canvas" ID="{2B4D405B-51FC-4168-B1B9-1CDC03FE508C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Enter_Level" ID="{63FD3C88-1117-4264-8744-522BFC35B203}" ShortID="1011115311">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Enter_Level" ID="{061C8894-46E1-4EE2-994B-9EFAECE8850C}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Enter_Level.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1067919891"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Enter_Level" ID="{061C8894-46E1-4EE2-994B-9EFAECE8850C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Enter_Home" ID="{95FD1F1F-7C71-41FF-BB07-822D6EEF6FB2}" ShortID="635425861">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Enter_Home" ID="{A178D2D4-2F24-4B97-8D1A-DFA634BC6DC0}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Enter_Home.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="670917342"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Enter_Home" ID="{A178D2D4-2F24-4B97-8D1A-DFA634BC6DC0}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="SFX_Enter_And_Enter_Settings" ID="{08FC8D7C-4604-4D9E-B402-BE4B959301BE}" ShortID="92409277">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Enter_And_Enter_Settings" ID="{B96EFE66-E5CC-4DAA-B6DA-D0DCAACA2550}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_Enter_And_Enter_Settings.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="248584320"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Enter_And_Enter_Settings" ID="{B96EFE66-E5CC-4DAA-B6DA-D0DCAACA2550}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="Brush_Loop" ID="{C1F80524-E389-42E5-B50A-D74FE02BCD8E}" ShortID="702900116">
+							<ChildrenList>
+								<Sound Name="SFX_Brush_Loop" ID="{036FE3D7-4F44-4688-9B31-F02BEE5431A7}" ShortID="878814173">
+									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Brush_Bus" ID="{E7590C68-9549-456C-B11E-4755B18CE72D}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_Brush_Loop" ID="{CD32C396-8B89-4716-A748-2F6D7F0FB257}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>SFX_Brush_Loop.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="729021924"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="RTPC">
+											<RTPC Name="" ID="{5D30E13F-39FD-46A7-990D-33C5DB78B47D}" ShortID="992483305">
+												<PropertyList>
+													<Property Name="PropertyName" Type="string" Value="Volume"/>
+												</PropertyList>
+												<ReferenceList>
+													<Reference Name="ControlInput">
+														<ObjectRef Name="Brush_Speed" ID="{39CD4C62-D0E1-4598-A923-C775F786EF75}" WorkUnitID="{073260AF-887A-454B-AE72-1D6049501879}"/>
+													</Reference>
+													<Reference Name="Curve">
+														<Custom>
+															<Curve Name="" ID="{570D9E22-31B7-4646-84E4-7E8A34145C44}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="1"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-50</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>10</XPos>
+																		<YPos>-18</YPos>
+																		<Flags>0</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>50</XPos>
+																		<YPos>-4</YPos>
+																		<Flags>0</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>100</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</Custom>
+													</Reference>
+												</ReferenceList>
+											</RTPC>
+											<RTPC Name="" ID="{C0F580EA-9194-447D-8600-E76D752FF27B}" ShortID="27159734">
+												<PropertyList>
+													<Property Name="PropertyName" Type="string" Value="Lowpass"/>
+												</PropertyList>
+												<ReferenceList>
+													<Reference Name="ControlInput">
+														<ObjectRef Name="Brush_Speed" ID="{39CD4C62-D0E1-4598-A923-C775F786EF75}" WorkUnitID="{073260AF-887A-454B-AE72-1D6049501879}"/>
+													</Reference>
+													<Reference Name="Curve">
+														<Custom>
+															<Curve Name="" ID="{32EB521B-1C93-4207-A041-789E676DBB8C}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="65537"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>49</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Log2</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>100</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</Custom>
+													</Reference>
+												</ReferenceList>
+											</RTPC>
+										</ObjectList>
+									</ObjectLists>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_Brush_Loop" ID="{CD32C396-8B89-4716-A748-2F6D7F0FB257}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</Folder>
 					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="violin_B4_1_piano_arco-sul-tasto" ID="{90B7FBFD-CC7F-4EC3-A27B-A627CE181080}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="viola_Gs5_1_fortissimo_arco-normal" ID="{F5E64199-21FD-46A4-A1EF-A31B1E0AF8F2}" ShortID="229270793">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="viola_Gs5_1_fortissimo_arco-normal" ID="{C8D64615-D3D6-4821-B4FA-AA93FF621F25}">
-							<Language>SFX</Language>
-							<AudioFile>viola_Gs5_1_fortissimo_arco-normal.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="481357123"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="viola_Gs5_1_fortissimo_arco-normal" ID="{C8D64615-D3D6-4821-B4FA-AA93FF621F25}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{16F991D0-E5D4-447A-894F-138293406E36}" ShortID="402061314">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{E756C7CD-2523-4B98-BA0B-B85E3F1F6C0A}">
-							<Language>SFX</Language>
-							<AudioFile>bass-clarinet_G2_1_mezzo-forte_normal.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="855817429"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{E756C7CD-2523-4B98-BA0B-B85E3F1F6C0A}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="ui_button" ID="{E8B11C8E-68F6-4A87-8C92-2FC1C0D98711}" ShortID="242035331">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64A91D85-61E3-46D0-90C7-2D0E4D285BCE}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{89403B8C-CFEF-43C1-B45E-E1AF7E5CCFC2}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="ui_button" ID="{9B4AD1E0-BE7B-4B00-830C-71C1ABCBC952}">
-							<Language>SFX</Language>
-							<AudioFile>ui_button.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="208460278"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="ui_button" ID="{9B4AD1E0-BE7B-4B00-830C-71C1ABCBC952}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
+				</Folder>
 			</ChildrenList>
 		</WorkUnit>
 	</Containers>

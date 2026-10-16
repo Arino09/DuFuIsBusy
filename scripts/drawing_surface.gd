@@ -23,6 +23,9 @@ const SELECTION_COLOR = Color("527fff")
 const HANDLE_SIZE = 10.0
 const HANDLE_DIRECTIONS = [Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0)]
 const ROTATE_HANDLE = 8
+# Wwise's brush curves use 0–100; measure canvas pixels so zoom does not change the sound.
+const BRUSH_FULL_SPEED := 3000.0
+const BRUSH_RESPONSE := 20.0
 var state: Dictionary = new_state()
 var ink := Color("243d35")
 var pen_width := 12
@@ -38,7 +41,9 @@ var drag_mode := ""
 var drag_handle := -1
 var drag_start := Vector2.ZERO
 var drag_object: Dictionary = {}
-var _move_msec := 0
+var _brush_distance := 0.0
+var _brush_speed := 0.0
+var _drag_audio_key := ""
 var texture: ImageTexture
 var avatar := preload("res://assets/characters/dufu-avatar.png")
 
@@ -72,6 +77,14 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	finish()
+
+func _process(delta: float) -> void:
+	if not active or _drag_audio_key != "paint" or delta <= 0.0: return
+	var target := clampf(_brush_distance / delta / BRUSH_FULL_SPEED * 100.0, 0.0, 100.0)
+	_brush_distance = 0.0
+	_brush_speed = lerpf(_brush_speed, target, 1.0 - exp(-BRUSH_RESPONSE * delta))
+	if _brush_speed < 0.1: _brush_speed = 0.0
+	AudioHooks.param("canvas.drag_speed", _brush_speed)
 
 func dimensions(object: Dictionary) -> Vector2:
 	if object.kind == "avatar": return Vector2(235, 235)
@@ -271,8 +284,11 @@ func begin(p: Vector2, id: int) -> void:
 	active = true
 	pointer = id
 	previous = p
-	_move_msec = Time.get_ticks_msec()
-	AudioHooks.cue("canvas.drag.begin." + _drag_audio_id())
+	_drag_audio_key = _drag_audio_id()
+	_brush_distance = 0.0
+	_brush_speed = 0.0
+	if _drag_audio_key == "paint": AudioHooks.param("canvas.drag_speed", 0.0, true)
+	AudioHooks.cue("canvas.drag.begin." + _drag_audio_key)
 	if not selecting: stamp(p)
 	refresh()
 
@@ -302,9 +318,7 @@ func move_pen(p: Vector2) -> void:
 		var distance := previous.distance_to(p)
 		var steps := maxi(1, ceili(distance / maxf(1.0, pen_width / 4.0)))
 		for i in range(1, steps + 1): stamp(previous.lerp(p, float(i) / steps))
-	var now := Time.get_ticks_msec()
-	AudioHooks.param("canvas.drag_speed", previous.distance_to(p) * 1000.0 / maxi(1, now - _move_msec))
-	_move_msec = now
+	if _drag_audio_key == "paint": _brush_distance += previous.distance_to(p)
 	previous = p
 	refresh()
 
@@ -369,8 +383,11 @@ func record(prior: Dictionary) -> void:
 
 func finish() -> void:
 	if not active: return
-	AudioHooks.cue("canvas.drag.end." + _drag_audio_id())
-	AudioHooks.param("canvas.drag_speed", 0.0)
+	AudioHooks.cue("canvas.drag.end." + _drag_audio_key)
+	if _drag_audio_key == "paint": AudioHooks.param("canvas.drag_speed", 0.0, true)
+	_brush_distance = 0.0
+	_brush_speed = 0.0
+	_drag_audio_key = ""
 	if drag_mode == "paint" and not erasing and before.pixels.get_data() != state.pixels.get_data():
 		color_used.emit(ink)
 	active = false

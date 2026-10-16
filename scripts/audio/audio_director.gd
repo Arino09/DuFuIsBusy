@@ -96,11 +96,11 @@ func _commit_facts() -> void:
 		if not old.is_empty(): cue("%s.exit.%s" % [name, old])
 		if not new.is_empty(): cue("%s.enter.%s" % [name, new])
 
-func param(key: String, value: float) -> void:
+func param(key: String, value: float, immediate: bool = false) -> void:
 	var state: Dictionary = _rtpc.get(key, {"value": NAN, "sent": NAN, "time": -RTPC_INTERVAL_MS})
 	state.value = value
 	_rtpc[key] = state
-	if running and Time.get_ticks_msec() - state.time >= RTPC_INTERVAL_MS: _send_rtpc(key)
+	if running and (immediate or Time.get_ticks_msec() - state.time >= RTPC_INTERVAL_MS): _send_rtpc(key)
 
 func _send_rtpc(key: String) -> void:
 	var state: Dictionary = _rtpc[key]
@@ -110,7 +110,7 @@ func _send_rtpc(key: String) -> void:
 	var rtpc: Variant = table.lookup("rtpc." + key)
 	if rtpc == null or rtpc.is_empty(): return
 	if wwise == null: _record("rtpc %s=%s" % [rtpc, state.value])
-	else: wwise.set_rtpc_value(rtpc, state.value, null)
+	else: wwise.set_rtpc_value(rtpc, state.value, self)
 
 func _process(delta: float) -> void:
 	# Trailing edge of the RTPC throttle: the last value always reaches Wwise.

@@ -1,0 +1,26 @@
+{
+ "PluginInfo": {
+  "Platform": "Mac",
+  "BasePlatform": "Mac",
+  "PluginLibs": [
+   {
+    "LibName": "Wwise Gain",
+    "LibId": "9109507",
+    "Type": "Effect",
+    "DLL": "AkGain",
+    "StaticLib": "AkGainFX"
+   },
+   {
+    "LibName": "System",
+    "LibId": "11403271",
+    "Type": "AudioDevice"
+   },
+   {
+    "LibName": "No Output",
+    "LibId": "11862023",
+    "Type": "AudioDevice"
+   }
+  ],
+  "FileHash": "{133A25D6-7AA0-81CE-5F3C-AD3F190E20C5}"
+ }
+}
