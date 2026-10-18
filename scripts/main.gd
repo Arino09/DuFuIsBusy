@@ -38,6 +38,8 @@ const ContentCatalog = preload("res://scripts/content_catalog.gd")
 const TextEditorDialog = preload("res://scripts/dialogs/text_editor_dialog.gd")
 const DraftCache = preload("res://scripts/draft_cache.gd")
 const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
+const ResponsiveLayout = preload("res://scripts/ui/responsive_layout.gd")
+var responsive_layout: Node
 var draft_cache := DraftCache.new()
 var content_catalog := ContentCatalog.new()
 var _draft_save_pending := false
@@ -75,6 +77,9 @@ var previous_focus: Control
 @onready var preference_save_timer: Timer = $PreferenceSaveTimer
 
 func _ready() -> void:
+	responsive_layout = ResponsiveLayout.new()
+	add_child(responsive_layout)
+	responsive_layout.setup(self)
 	settings = settings_store.load_settings()
 	_sync_audio_settings()
 	if OS.has_feature("web"):
@@ -141,6 +146,7 @@ func show_page(id: String) -> void:
 		"canvas": canvas()
 		"gallery": gallery()
 		"settings": settings_page()
+	responsive_layout.refresh()
 	is_busy = false
 	AudioHooks.fact("page", current)
 	AudioHooks.fact("background", drawings[topic].background_id if current == "canvas" else "")
@@ -433,6 +439,7 @@ func _refresh_gallery() -> void:
 	var view: GalleryPage = page
 	var entries := GalleryEntries.build(local_store.document, _gallery_topic_title)
 	view.refresh(entries, gallery_tab, gallery_filter, gallery_page, work_texture)
+	responsive_layout.refresh()
 	gallery_page = view.page_index
 
 func _gallery_topic_title(id: int) -> String:
@@ -602,6 +609,7 @@ func modal(scene_id: String, title: String = "", body: String = "") -> Control:
 	if not title.is_empty(): overlay.get_node("Frame/Title").text = title
 	if not body.is_empty(): overlay.get_node("Frame/Body").text = body
 	dialog_host.add_child(overlay)
+	responsive_layout.refresh()
 	AudioHooks.fact("dialog", scene_id)
 	var close_button: Button = overlay.get_node("Frame/CloseButton")
 	close_button.pressed.connect(close_overlay)
@@ -628,8 +636,12 @@ func close_overlay() -> void:
 			control.focus_mode = control.get_meta("previous_focus_mode", Control.FOCUS_ALL)
 	suspended_focus.clear()
 	if is_instance_valid(overlay):
-		dialog_host.remove_child(overlay)
+		var holder := overlay.get_parent()
+		holder.remove_child(overlay)
 		overlay.queue_free()
+		if holder != dialog_host:
+			dialog_host.remove_child(holder)
+			holder.queue_free()
 	overlay = null
 	AudioHooks.fact("dialog", "")
 	if is_instance_valid(previous_focus) and previous_focus.is_inside_tree() and previous_focus.is_visible_in_tree():
@@ -640,6 +652,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if submitting: return
 	if event.is_action_pressed("ui_cancel"):
 		if is_instance_valid(overlay): close_overlay()
+		elif current == "canvas" and responsive_layout.close_canvas_tools(): pass
 		elif current == "canvas" and drawings[topic].selected >= 0:
 			var view: CanvasPage = page
 			view.object_action("取消")

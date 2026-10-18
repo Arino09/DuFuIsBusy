@@ -48,6 +48,21 @@ jobs:
           timeout 60s godot --headless --path . --script tests/ui_scene_test.gd 2>&1 | tee ui-scene-test.log
           if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' ui-scene-test.log; then exit 1; fi
           grep 'UI_SCENE_TESTS_PASSED' ui-scene-test.log
+          timeout 60s godot --headless --path . --script tests/resolution_test.gd 2>&1 | tee resolution-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' resolution-test.log; then exit 1; fi
+          grep 'RESOLUTION_TESTS_PASSED' resolution-test.log
+          timeout 60s godot --headless --path . --script tests/mobile_layout_test.gd 2>&1 | tee mobile-layout-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' mobile-layout-test.log; then exit 1; fi
+          grep 'MOBILE_LAYOUT_TESTS_PASSED' mobile-layout-test.log
+          timeout 60s godot --headless --path . --script tests/mobile_touch_test.gd 2>&1 | tee mobile-touch-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' mobile-touch-test.log; then exit 1; fi
+          grep 'MOBILE_TOUCH_TESTS_PASSED' mobile-touch-test.log
+          timeout 60s godot --headless --path . --script tests/mobile_pages_test.gd 2>&1 | tee mobile-pages-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' mobile-pages-test.log; then exit 1; fi
+          grep 'mobile_pages_test: PASS' mobile-pages-test.log
+          timeout 60s godot --headless --path . --script tests/mobile_scroll_test.gd 2>&1 | tee mobile-scroll-test.log
+          if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' mobile-scroll-test.log; then exit 1; fi
+          grep 'MOBILE_SCROLL_TESTS_PASSED' mobile-scroll-test.log
           timeout 60s godot --headless --path . --script tests/palette_test.gd 2>&1 | tee palette-test.log
           if grep -E '^(SCRIPT ERROR|Parse Error|ERROR):' palette-test.log; then exit 1; fi
           grep 'PALETTE_TESTS_PASSED' palette-test.log
