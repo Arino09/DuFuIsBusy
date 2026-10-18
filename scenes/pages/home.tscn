@@ -1,16 +1,38 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
 [ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
 [ext_resource type="Texture2D" path="res://assets/characters/dufu-avatar.png" id="PortraitTexture"]
 
 [node name="Home" type="Control"]
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("Theme")
 
 [node name="Frame" parent="." instance=ExtResource("Frame")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="BrandTitle" parent="Frame" index="1"]
 visible = false
@@ -28,10 +50,18 @@ visible = false
 visible = false
 
 [node name="GameTitle" type="Label" parent="."]
-offset_left = 124.0
-offset_top = 217.0
-offset_right = 784.0
-offset_bottom = 347.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -596.0
+offset_top = -233.0
+offset_right = 64.0
+offset_bottom = -103.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 100
@@ -40,10 +70,18 @@ text = "杜甫很忙"
 vertical_alignment = 1
 
 [node name="Tagline" type="Label" parent="."]
-offset_left = 131.0
-offset_top = 353.0
-offset_right = 631.0
-offset_bottom = 397.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -589.0
+offset_top = -97.0
+offset_right = -89.0
+offset_bottom = -53.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
 theme_override_font_sizes/font_size = 24
@@ -51,19 +89,35 @@ text = "给杜甫添几笔。"
 vertical_alignment = 1
 
 [node name="LevelsButton" type="Button" parent="."]
-offset_left = 132.0
-offset_top = 443.0
-offset_right = 452.0
-offset_bottom = 507.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -588.0
+offset_top = -7.0
+offset_right = -268.0
+offset_bottom = 57.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "开始游戏"
 theme_type_variation = &"PrimaryButton"
 
 [node name="FreeDrawButton" type="Button" parent="."]
-offset_left = 132.0
-offset_top = 523.0
-offset_right = 452.0
-offset_bottom = 581.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -588.0
+offset_top = 73.0
+offset_right = -268.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "自由创作"
 metadata/background_id = "paper"
@@ -71,40 +125,89 @@ metadata/prompt = "想画什么就画什么"
 metadata/remark = "这回轮到你来题诗。"
 
 [node name="GalleryButton" type="Button" parent="."]
-offset_left = 120.0
-offset_top = 610.0
-offset_right = 224.0
-offset_bottom = 658.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = 160.0
+offset_right = -496.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "画廊"
 theme_type_variation = &"QuietButton"
 
 [node name="SettingsButton" type="Button" parent="."]
-offset_left = 230.0
-offset_top = 610.0
-offset_right = 334.0
-offset_bottom = 658.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -490.0
+offset_top = 160.0
+offset_right = -386.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "设置"
 theme_type_variation = &"QuietButton"
 
 [node name="ExitButton" type="Button" parent="."]
-offset_left = 340.0
-offset_top = 610.0
-offset_right = 444.0
-offset_bottom = 658.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.0
+offset_top = 160.0
+offset_right = -276.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "退出"
 theme_type_variation = &"QuietButton"
 
 [node name="Portrait" type="TextureRect" parent="."]
-offset_left = 705.0
-offset_top = 174.0
-offset_right = 1265.0
-offset_bottom = 734.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -276.0
+offset_right = 545.0
+offset_bottom = 284.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 texture = ExtResource("PortraitTexture")
+
+[node name="NoticeButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = 256.0
+offset_right = -436.0
+offset_bottom = 304.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+text = "游玩声明"
+theme_type_variation = &"QuietButton"
 
 [editable path="Frame"]

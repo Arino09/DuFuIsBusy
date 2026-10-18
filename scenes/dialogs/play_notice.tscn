@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+[ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="Frame"]
+
+[node name="PlayNotice" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("Theme")
+
+[node name="Frame" parent="." instance=ExtResource("Frame")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" parent="Frame" index="2"]
+text = "《杜甫很忙》游戏游玩声明"
+
+[node name="Body" parent="Frame" index="3"]
+text = "请在游玩前阅读完整声明。"
+
+[node name="Statement" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -502.0
+offset_top = -220.0
+offset_right = 502.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+theme_override_colors/default_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_font_sizes/normal_font_size = 22
+theme_override_constants/line_separation = 6
+text = "本游戏为TapTap 聚光灯创作比赛参赛作品，仅用于赛事交流展示，未经开发者书面许可，禁止任何形式的商业使用、盈利行为。
+
+为维护健康文明的游玩氛围，您在使用本游戏画笔功能创作、发布内容时，承诺不制作、不发布、不传播以下内容：
+• 涉及地域、民族、种族、性别、性取向、宗教、政治等方面的歧视、对立言论；
+• 诽谤、侮辱、骚扰他人，侵犯他人肖像权、名誉权、隐私权等合法权益的内容；
+• 淫秽色情、低俗暗示、血腥暴力、恐怖惊悚、赌博、毒品、仇恨煽动类内容；
+• 危害国家安全、违反法律法规的内容；
+• 其他违反《TapTap 平台用户协议》、TapTap 社区规范以及本游戏规则的不适宜内容。
+
+1. 玩家通过画笔功能创作的内容，由发布者本人承担全部法律责任。若因违规内容引发纠纷、平台处罚，开发者不承担相关连带责任。
+2. 开发者有权对画笔内违规创作内容进行删除、屏蔽处理，并上报 TapTap 平台。
+3. 游玩本游戏即代表您已阅读并同意本声明全部条款。"
+selection_enabled = true
+
+[node name="OkayButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 244.0
+offset_top = 264.0
+offset_right = 502.0
+offset_bottom = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "我已阅读"
+
+[editable path="Frame"]

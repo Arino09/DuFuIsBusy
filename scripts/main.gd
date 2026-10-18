@@ -10,6 +10,7 @@ const PAGE_SCENES = {
 	"settings": preload("res://scenes/pages/settings.tscn"),
 }
 const DIALOG_SCENES = {
+	"play_notice": preload("res://scenes/dialogs/play_notice.tscn"),
 	"text_editor": preload("res://scenes/dialogs/text_editor.tscn"),
 	"sticker_picker": preload("res://scenes/dialogs/sticker_picker.tscn"),
 	"restart_confirmation": preload("res://scenes/dialogs/restart_confirmation.tscn"),
@@ -93,6 +94,7 @@ func _ready() -> void:
 	pen_width = int(local_store.document.tools.width)
 	selected_tool = local_store.document.tools.tool
 	show_page(local_store.document.page)
+	play_notice()
 
 func _web_focus_lost(_arguments: Array) -> void:
 	if is_instance_valid(drawing): drawing.finish()
@@ -155,6 +157,7 @@ func home() -> void:
 	bind_button(page, "GalleryButton", _show_gallery.bind(1))
 	bind_button(page, "SettingsButton", show_page.bind("settings"))
 	bind_button(page, "ExitButton", exit_info)
+	bind_button(page, "NoticeButton", play_notice)
 
 func _start_topic(id: int) -> void:
 	if not _allow_topic(id): return
@@ -580,6 +583,11 @@ func _reset_settings() -> void:
 
 func exit_info() -> void:
 	info("退出游戏", "直接关闭窗口或浏览器标签页即可。")
+
+func play_notice() -> void:
+	var view := modal("play_notice")
+	bind_button(view, "OkayButton", close_overlay)
+	view.get_node("Statement").grab_focus()
 
 func modal(scene_id: String, title: String = "", body: String = "") -> Control:
 	close_overlay()

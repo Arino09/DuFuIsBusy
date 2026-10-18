@@ -39,6 +39,9 @@ func run() -> void:
 	app.saved_document.completed_topics = [0, 1]
 	root.add_child(app)
 	await process_frame
+	# Dismiss the startup notice before exercising home-page buttons.
+	app.close_overlay()
+	await process_frame
 
 	# Pages: the press is heard at once, the page change one frame later.
 	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), [HIGH, SOFT])
