@@ -20,7 +20,10 @@ const HANDLE_DIRECTIONS = [Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vect
 const ROTATE_HANDLE = 8
 var state: Dictionary = new_state()
 var ink := Color("243d35")
-var pen_width := 12
+var pen_width := 12:
+	set(value):
+		pen_width = value
+		queue_redraw()
 var erasing := false
 var selecting := false
 @export var preview_only := false
@@ -33,8 +36,12 @@ var drag_mode := ""
 var drag_handle := -1
 var drag_start := Vector2.ZERO
 var drag_object: Dictionary = {}
+# CanvasPage owns touch navigation; standalone surfaces keep their drawing input.
+var touch_input_router := Callable()
 var _move_msec := 0
 var texture: ImageTexture
+var _brush_cursor_visible := false
+var _brush_cursor_position := Vector2.ZERO
 var avatar := preload("res://assets/characters/dufu-avatar.png")
 
 static func new_state(background_id: String = "paper", canvas_size: Vector2i = Vector2i(WIDTH, HEIGHT)) -> Dictionary:
@@ -58,12 +65,40 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE if preview_only else Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_MOVE if selecting else Control.CURSOR_CROSS
 	texture = ImageTexture.create_from_image(state.pixels)
-	if preview_only: return
+	if preview_only:
+		set_process(false)
+		return
 	mouse_exited.connect(func():
-		if drag_mode == "paint": finish())
+		_hide_brush_cursor()
+		if drag_mode == "paint" and pointer < 0: finish())
 	resized.connect(finish)
-	get_window().focus_exited.connect(finish)
-	get_viewport().size_changed.connect(finish)
+	get_window().focus_exited.connect(func():
+		_hide_brush_cursor()
+		if pointer >= 0: cancel()
+		else: finish())
+	get_viewport().size_changed.connect(func():
+		if pointer >= 0: cancel()
+		else: finish())
+
+func _process(_delta: float) -> void:
+	if preview_only: return
+	# Query the hovered control so dialogs and clipped paper cannot retain a ring.
+	var show_cursor := (
+		not selecting and pointer < 0 and is_visible_in_tree()
+		and get_window().has_focus() and get_viewport().gui_get_hovered_control() == self
+		and not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
+	)
+	var local_pointer := get_local_mouse_position()
+	show_cursor = show_cursor and position_inside(local_pointer)
+	if show_cursor != _brush_cursor_visible or (show_cursor and local_pointer != _brush_cursor_position):
+		_brush_cursor_visible = show_cursor
+		_brush_cursor_position = local_pointer
+		queue_redraw()
+
+func _hide_brush_cursor() -> void:
+	if not _brush_cursor_visible: return
+	_brush_cursor_visible = false
+	queue_redraw()
 
 func _exit_tree() -> void:
 	finish()
@@ -103,6 +138,12 @@ func _draw() -> void:
 	# Draw the selection above every artwork layer, including ink and stickers.
 	if not preview_only and selecting and not selected_object().is_empty():
 		draw_selection(selected_object())
+	if not preview_only and not selecting and _brush_cursor_visible:
+		# Match stamp() in artwork coordinates; keep the outline legible at any zoom.
+		var unit := 1.0 / get_global_transform_with_canvas().get_scale().x
+		var radius := pen_width * 0.5
+		draw_arc(_brush_cursor_position, radius, 0, TAU, 96, Color.BLACK, 3.0 * unit, true)
+		draw_arc(_brush_cursor_position, radius, 0, TAU, 96, Color.WHITE, 1.0 * unit, true)
 
 func draw_object(object: Dictionary) -> void:
 	var extent := dimensions(object)
@@ -218,6 +259,9 @@ func resize_canvas(value: Vector2i) -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if preview_only: return
+	if (event is InputEventScreenTouch or event is InputEventScreenDrag) and touch_input_router.is_valid():
+		if touch_input_router.call(event, true): accept_event()
+		return
 	if event is InputEventMouse and event.device == -1: return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed and pointer == -2: begin(event.position, -1)
@@ -226,12 +270,18 @@ func _gui_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion:
 		update_cursor(event.position)
 	elif event is InputEventScreenTouch:
-		if event.pressed and pointer == -2: begin(event.position, event.index)
+		if event.canceled:
+			if pointer == event.index: cancel()
+		elif event.pressed and pointer == -2: begin(event.position, event.index)
 		elif not event.pressed and pointer == event.index: finish()
 		accept_event()
 
 func _input(event: InputEvent) -> void:
-	if preview_only or not active: return
+	if preview_only: return
+	if (event is InputEventScreenTouch or event is InputEventScreenDrag) and touch_input_router.is_valid():
+		if touch_input_router.call(event, false): get_viewport().set_input_as_handled()
+		return
+	if not active: return
 	if event is InputEventMouse and event.device == -1: return
 	# Continue a captured drag outside the canvas and consume its release.
 	if event is InputEventMouseMotion and pointer == -1:
@@ -246,7 +296,8 @@ func _input(event: InputEvent) -> void:
 		move_pen(get_global_transform_with_canvas().affine_inverse() * event.position)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventScreenTouch and not event.pressed and pointer == event.index:
-		finish()
+		if event.canceled: cancel()
+		else: finish()
 		get_viewport().set_input_as_handled()
 
 func snapshot() -> Dictionary:
@@ -274,7 +325,9 @@ func begin(p: Vector2, id: int) -> void:
 func move_pen(p: Vector2) -> void:
 	if not active: return
 	if drag_mode == "paint" and not position_inside(p):
-		finish()
+		# A captured touch may come back, or become a two-finger view gesture.
+		# Keep its transaction open until release so navigation can discard it.
+		if pointer < 0: finish()
 		return
 	if drag_mode != "paint":
 		var object := selected_object()
@@ -375,6 +428,21 @@ func finish() -> void:
 	drag_handle = -1
 	record(before)
 	before = {}
+
+func cancel() -> void:
+	# Only restore the current, uncommitted drag; never traverse undo history.
+	if not active: return
+	AudioHooks.cue("canvas.drag.end." + _drag_audio_id())
+	AudioHooks.param("canvas.drag_speed", 0.0)
+	state.pixels = before.pixels
+	state.objects = before.objects
+	active = false
+	pointer = -2
+	drag_mode = ""
+	drag_object = {}
+	drag_handle = -1
+	before = {}
+	refresh()
 
 func travel(redo: bool) -> void:
 	finish()

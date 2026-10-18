@@ -590,6 +590,7 @@ func play_notice() -> void:
 	view.get_node("Statement").grab_focus()
 
 func modal(scene_id: String, title: String = "", body: String = "") -> Control:
+	if current == "canvas" and is_instance_valid(page): page.cancel_touch_navigation()
 	close_overlay()
 	previous_focus = get_viewport().gui_get_focus_owner()
 	for control in page.find_children("*", "Control", true, false):
