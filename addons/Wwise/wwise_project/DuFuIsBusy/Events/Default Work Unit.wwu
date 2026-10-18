@@ -163,6 +163,64 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Play_SFX_Sticker" ID="{1B48C985-4B14-4251-A41C-A6B5FA9E0435}">
+					<ChildrenList>
+						<Action Name="" ID="{024D166D-5747-4C00-A2CC-94F72EE95E21}" ShortID="598782394">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Sticker" ID="{ABC382BA-3DD7-49CB-9951-4C0A11FBA00C}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_UI_Click" ID="{12337A5B-551A-484E-9EF2-8FEDE1C45788}">
+					<ChildrenList>
+						<Action Name="" ID="{8DAF28F9-5F66-4CA4-8A1F-BE2293D4DF96}" ShortID="270108299">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_UI_Click" ID="{977EAF4D-E2D6-422F-B40A-78C234F6750A}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_UI_Slider" ID="{C42A4371-49A7-42EB-8627-709FCA12A4F0}">
+					<ChildrenList>
+						<Action Name="" ID="{ABF522B4-5D31-42F3-8150-58994950EC28}" ShortID="864642872">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_UI_Slider" ID="{E5C25439-32B1-430D-B811-CAB5CEE334ED}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Eraser_Loop" ID="{B3BC3C2C-56D7-471A-B0B6-CF575EF17F5B}">
+					<ChildrenList>
+						<Action Name="" ID="{83A30526-61CD-4FBB-A2F6-CAB3CBA08B74}" ShortID="430446700">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Eraser_Loop" ID="{8073280A-CA2F-4936-90F2-AC832E54B827}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_SFX_Eraser_Loop" ID="{B4CD4D85-920C-43EA-9DEA-2C5BCB07F0BE}">
+					<ChildrenList>
+						<Action Name="" ID="{F30FDD67-682F-45CA-B477-14C85FA6A291}" ShortID="862104576">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Eraser_Loop" ID="{8073280A-CA2F-4936-90F2-AC832E54B827}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

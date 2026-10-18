@@ -18,7 +18,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{03A86472-3D84-222B-45F5-EE1F25AC31A9}",
+    "Hash": "{06EE84CB-BA14-4426-A3D3-666E3DE51788}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -36,7 +36,7 @@
        "Id": "716210187",
        "Name": "UI_Gain",
        "ObjectPath": "\\Effects\\Default Work Unit\\UI_Gain",
-       "GUID": "{74C44146-BC81-4D82-92D9-259450132869}",
+       "GUID": "{C15635F7-3612-4C1D-A4B2-84B84C590A37}",
        "LibName": "Wwise Gain",
        "LibId": "9109507"
       },
@@ -45,6 +45,30 @@
        "Name": "Music_Gain",
        "ObjectPath": "\\Effects\\Default Work Unit\\Music_Gain",
        "GUID": "{F2CC781A-6B74-4E3F-B1B8-444E1475EF66}",
+       "LibName": "Wwise Gain",
+       "LibId": "9109507"
+      },
+      {
+       "Id": "1473984667",
+       "Name": "Master_Gain",
+       "ObjectPath": "\\Effects\\Default Work Unit\\Master_Gain",
+       "GUID": "{FBF84D24-6229-403F-B707-F3FF9234A650}",
+       "LibName": "Wwise Gain",
+       "LibId": "9109507"
+      },
+      {
+       "Id": "2653930352",
+       "Name": "Pages_EQ",
+       "ObjectPath": "\\Effects\\Default Work Unit\\Pages_EQ",
+       "GUID": "{D24DC5BE-8C2C-4217-9817-75D569589698}",
+       "LibName": "Wwise Parametric EQ",
+       "LibId": "6881283"
+      },
+      {
+       "Id": "3311929739",
+       "Name": "Pages_Gain",
+       "ObjectPath": "\\Effects\\Default Work Unit\\Pages_Gain",
+       "GUID": "{74C44146-BC81-4D82-92D9-259450132869}",
        "LibName": "Wwise Gain",
        "LibId": "9109507"
       }
@@ -70,14 +94,17 @@
     },
     "Busses": [
      {
-      "Id": "1298136712",
-      "Name": "Brush_Bus",
-      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\Brush_Bus",
-      "GUID": "{E7590C68-9549-456C-B11E-4755B18CE72D}",
+      "Id": "2033380928",
+      "Name": "Pages_Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\Pages_Bus",
+      "GUID": "{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}",
       "PluginRefs": {
        "ShareSets": [
         {
-         "Id": "537568739"
+         "Id": "2653930352"
+        },
+        {
+         "Id": "3311929739"
         }
        ]
       }
@@ -86,7 +113,14 @@
       "Id": "2246998526",
       "Name": "Main Audio Bus",
       "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus",
-      "GUID": "{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}"
+      "GUID": "{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}",
+      "PluginRefs": {
+       "ShareSets": [
+        {
+         "Id": "1473984667"
+        }
+       ]
+      }
      },
      {
       "Id": "2680856269",
@@ -102,10 +136,23 @@
       }
      },
      {
+      "Id": "3220480790",
+      "Name": "Painting_Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\Painting_Bus",
+      "GUID": "{E7590C68-9549-456C-B11E-4755B18CE72D}",
+      "PluginRefs": {
+       "ShareSets": [
+        {
+         "Id": "537568739"
+        }
+       ]
+      }
+     },
+     {
       "Id": "3247222208",
       "Name": "UI_Bus",
       "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\UI_Bus",
-      "GUID": "{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}",
+      "GUID": "{1C665D19-8466-4AEA-8C3E-90FA146729EB}",
       "PluginRefs": {
        "ShareSets": [
         {
@@ -116,6 +163,12 @@
      }
     ],
     "GameParameters": [
+     {
+      "Id": "26862373",
+      "Name": "Eraser_Speed",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Eraser_Speed",
+      "GUID": "{E6B09430-1513-4332-9727-1556F5AEAFFA}"
+     },
      {
       "Id": "1063687779",
       "Name": "Brush_Speed",
@@ -151,7 +204,7 @@
     "Type": "User",
     "GUID": "{F9D88035-30B7-4999-8514-BBDEC1F6ACA1}",
     "Language": "SFX",
-    "Hash": "{9448C556-BF4E-135B-84D9-641B56624756}",
+    "Hash": "{F5B90C71-9454-ED06-9A44-CC53394307B0}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
     "ShortName": "Main",
     "Path": "Main.bnk",
@@ -181,12 +234,28 @@
       "CachePath": "21/{212DB2C5-FF2E-76A4-B60E-BD0BFA9E229A}.wem"
      },
      {
+      "Id": "258287674",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Eraser_Loop.wav",
+      "CachePath": "63/{633FA592-3C14-BDAA-82B0-6E4A565415E6}.wem"
+     },
+     {
       "Id": "342372412",
       "Language": "SFX",
       "Streaming": "false",
       "Location": "Memory",
       "ShortName": "Taptap2026_Theme_v1.wav",
       "CachePath": "8B/{8B4473F1-94BA-D904-F065-AEA78C926F63}.wem"
+     },
+     {
+      "Id": "424476797",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Sticker.wav",
+      "CachePath": "71/{711977B0-4D18-4151-47FA-E6B56C89E0F7}.wem"
      },
      {
       "Id": "553966176",
@@ -221,6 +290,14 @@
       "CachePath": "7B/{7B5092F6-F236-E372-9AE7-D6A1437CBC8C}.wem"
      },
      {
+      "Id": "860972736",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_UI_Slider.wav",
+      "CachePath": "34/{343C4F5D-3B16-5D39-8345-53258AE89C5E}.wem"
+     },
+     {
       "Id": "891944370",
       "Language": "SFX",
       "Streaming": "false",
@@ -235,6 +312,14 @@
       "Location": "Memory",
       "ShortName": "SFX_Exit_Gallery.wav",
       "CachePath": "BB/{BB0DAE7E-0240-42EB-6DEE-6ABAD232B492}.wem"
+     },
+     {
+      "Id": "1025642134",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_UI_Click.wav",
+      "CachePath": "AB/{AB2A18A8-9721-DB50-63AD-B391DB559A73}.wem"
      },
      {
       "Id": "1055499800",
@@ -349,6 +434,18 @@
       ]
      },
      {
+      "Id": "2669078043",
+      "Name": "Play_SFX_Eraser_Loop",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Eraser_Loop",
+      "GUID": "{B3BC3C2C-56D7-471A-B0B6-CF575EF17F5B}",
+      "DurationType": "Infinite",
+      "MediaRefs": [
+       {
+        "Id": "258287674"
+       }
+      ]
+     },
+     {
       "Id": "2784583545",
       "Name": "Play_SFX_Exit_And_Exit_Settings",
       "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_And_Exit_Settings",
@@ -419,6 +516,48 @@
       ]
      },
      {
+      "Id": "2635120399",
+      "Name": "Play_SFX_Sticker",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Sticker",
+      "GUID": "{1B48C985-4B14-4251-A41C-A6B5FA9E0435}",
+      "DurationType": "OneShot",
+      "DurationMin": "1.25",
+      "DurationMax": "1.25",
+      "MediaRefs": [
+       {
+        "Id": "424476797"
+       }
+      ]
+     },
+     {
+      "Id": "3504421513",
+      "Name": "Play_SFX_UI_Click",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_UI_Click",
+      "GUID": "{12337A5B-551A-484E-9EF2-8FEDE1C45788}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.5",
+      "DurationMax": "0.5",
+      "MediaRefs": [
+       {
+        "Id": "1025642134"
+       }
+      ]
+     },
+     {
+      "Id": "1901608880",
+      "Name": "Play_SFX_UI_Slider",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_UI_Slider",
+      "GUID": "{C42A4371-49A7-42EB-8627-709FCA12A4F0}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.546875",
+      "DurationMax": "0.546875",
+      "MediaRefs": [
+       {
+        "Id": "860972736"
+       }
+      ]
+     },
+     {
       "Id": "2480681107",
       "Name": "Stop_Music_Theme",
       "ObjectPath": "\\Events\\Default Work Unit\\Stop_Music_Theme",
@@ -437,9 +576,25 @@
       "DurationType": "OneShot",
       "DurationMin": "0",
       "DurationMax": "0"
+     },
+     {
+      "Id": "1638285433",
+      "Name": "Stop_SFX_Eraser_Loop",
+      "ObjectPath": "\\Events\\Default Work Unit\\Stop_SFX_Eraser_Loop",
+      "GUID": "{B4CD4D85-920C-43EA-9DEA-2C5BCB07F0BE}",
+      "MaxAttenuation": "0",
+      "DurationType": "OneShot",
+      "DurationMin": "0",
+      "DurationMax": "0"
      }
     ],
     "GameParameters": [
+     {
+      "Id": "26862373",
+      "Name": "Eraser_Speed",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Eraser_Speed",
+      "GUID": "{E6B09430-1513-4332-9727-1556F5AEAFFA}"
+     },
      {
       "Id": "1063687779",
       "Name": "Brush_Speed",
@@ -449,6 +604,6 @@
     ]
    }
   ],
-  "FileHash": "{8E245DF8-6697-3A33-6257-3240D72BD104}"
+  "FileHash": "{53011F4A-FE4E-D86F-145B-8B0E1FDEB860}"
  }
 }

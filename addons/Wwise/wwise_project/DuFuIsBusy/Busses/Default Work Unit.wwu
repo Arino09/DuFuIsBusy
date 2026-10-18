@@ -14,7 +14,7 @@
 							<PropertyList>
 								<Property Name="OutputBusVolume" Type="Real64">
 									<ValueList>
-										<Value>-10</Value>
+										<Value>-12</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -30,11 +30,11 @@
 								</ObjectList>
 							</ObjectLists>
 						</Bus>
-						<Bus Name="Brush_Bus" ID="{E7590C68-9549-456C-B11E-4755B18CE72D}">
+						<Bus Name="Painting_Bus" ID="{E7590C68-9549-456C-B11E-4755B18CE72D}">
 							<PropertyList>
 								<Property Name="OutputBusVolume" Type="Real64">
 									<ValueList>
-										<Value>-20</Value>
+										<Value>-15</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -50,11 +50,11 @@
 								</ObjectList>
 							</ObjectLists>
 						</Bus>
-						<Bus Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}">
+						<Bus Name="Pages_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}">
 							<PropertyList>
 								<Property Name="OutputBusVolume" Type="Real64">
 									<ValueList>
-										<Value>-6</Value>
+										<Value>-4</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -63,7 +63,34 @@
 									<EffectSlot Name="" ID="{9D0E35B3-62C3-4420-87DC-49E29FD5C714}" ShortID="169110155">
 										<ReferenceList>
 											<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
-												<ObjectRef Name="UI_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+												<ObjectRef Name="Pages_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+											</Reference>
+										</ReferenceList>
+									</EffectSlot>
+									<EffectSlot Name="" ID="{93263A66-ACC5-481C-A050-08AF38CFDA34}" ShortID="197249300">
+										<ReferenceList>
+											<Reference Name="Effect" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+												<ObjectRef Name="Pages_EQ" ID="{D24DC5BE-8C2C-4217-9817-75D569589698}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+											</Reference>
+										</ReferenceList>
+									</EffectSlot>
+								</ObjectList>
+							</ObjectLists>
+						</Bus>
+						<Bus Name="UI_Bus" ID="{1C665D19-8466-4AEA-8C3E-90FA146729EB}">
+							<PropertyList>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-2</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ObjectLists>
+								<ObjectList Name="Effects">
+									<EffectSlot Name="" ID="{BEDBB41E-40E1-47BD-B407-93041DC8E943}" ShortID="918675934">
+										<ReferenceList>
+											<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
+												<ObjectRef Name="UI_Gain" ID="{C15635F7-3612-4C1D-A4B2-84B84C590A37}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
 											</Reference>
 										</ReferenceList>
 									</EffectSlot>
@@ -71,6 +98,17 @@
 							</ObjectLists>
 						</Bus>
 					</ChildrenList>
+					<ObjectLists>
+						<ObjectList Name="Effects">
+							<EffectSlot Name="" ID="{C61C10BB-FF5D-4ED9-8AA5-DA11BD784752}" ShortID="818077776">
+								<ReferenceList>
+									<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
+										<ObjectRef Name="Master_Gain" ID="{FBF84D24-6229-403F-B707-F3FF9234A650}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+									</Reference>
+								</ReferenceList>
+							</EffectSlot>
+						</ObjectList>
+					</ObjectLists>
 				</Bus>
 			</ChildrenList>
 		</WorkUnit>

@@ -5,7 +5,20 @@
 			<ChildrenList>
 				<Effect Name="Brush_Gain" ID="{5A2D77F1-681C-4633-838D-9FAC19530E27}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
 				<Effect Name="Music_Gain" ID="{F2CC781A-6B74-4E3F-B1B8-444E1475EF66}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
-				<Effect Name="UI_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+				<Effect Name="Pages_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+				<Effect Name="Pages_EQ" ID="{D24DC5BE-8C2C-4217-9817-75D569589698}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+					<PropertyList>
+						<Property Name="FilterTypeBand1" Type="int32" Value="5"/>
+						<Property Name="FrequencyBand1" Type="Real32" Value="1377.394"/>
+						<Property Name="FrequencyBand2" Type="Real32" Value="230.4887"/>
+						<Property Name="FrequencyBand3" Type="Real32" Value="9183.364"/>
+						<Property Name="GainBand1" Type="Real32" Value="-5.176471"/>
+						<Property Name="GainBand2" Type="Real32" Value="-2.823529"/>
+						<Property Name="GainBand3" Type="Real32" Value="-2.352941"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="UI_Gain" ID="{C15635F7-3612-4C1D-A4B2-84B84C590A37}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
+				<Effect Name="Master_Gain" ID="{FBF84D24-6229-403F-B707-F3FF9234A650}" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3"/>
 			</ChildrenList>
 		</WorkUnit>
 	</Effects>

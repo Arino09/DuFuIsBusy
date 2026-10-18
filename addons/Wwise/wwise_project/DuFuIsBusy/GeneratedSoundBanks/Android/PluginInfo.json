@@ -4,6 +4,13 @@
   "BasePlatform": "Android",
   "PluginLibs": [
    {
+    "LibName": "Wwise Parametric EQ",
+    "LibId": "6881283",
+    "Type": "Effect",
+    "DLL": "AkParametricEQ",
+    "StaticLib": "AkParametricEQFX"
+   },
+   {
     "LibName": "Wwise Gain",
     "LibId": "9109507",
     "Type": "Effect",
@@ -21,6 +28,6 @@
     "Type": "AudioDevice"
    }
   ],
-  "FileHash": "{D9516E08-576D-B900-60CE-AD0BA4B55B02}"
+  "FileHash": "{4DF0F216-0478-3CCF-1D20-626B03059F5B}"
  }
 }
