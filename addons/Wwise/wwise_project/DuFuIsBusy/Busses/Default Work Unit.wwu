@@ -9,6 +9,68 @@
 							<ObjectRef Name="System" ID="{ABAAA7BC-C270-46CC-8C67-BDC3FD4F6116}" WorkUnitID="{C6172193-5BC1-4454-A4DF-B9353F182C3A}"/>
 						</Reference>
 					</ReferenceList>
+					<ChildrenList>
+						<Bus Name="Music_Bus" ID="{871AC816-A35C-4A3F-A0CD-CC5ED0A4542B}">
+							<PropertyList>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-10</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ObjectLists>
+								<ObjectList Name="Effects">
+									<EffectSlot Name="" ID="{1A79ECD2-4CB9-451F-A364-A557C3CD27C1}" ShortID="465075037">
+										<ReferenceList>
+											<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
+												<ObjectRef Name="Music_Gain" ID="{F2CC781A-6B74-4E3F-B1B8-444E1475EF66}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+											</Reference>
+										</ReferenceList>
+									</EffectSlot>
+								</ObjectList>
+							</ObjectLists>
+						</Bus>
+						<Bus Name="Brush_Bus" ID="{E7590C68-9549-456C-B11E-4755B18CE72D}">
+							<PropertyList>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-20</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ObjectLists>
+								<ObjectList Name="Effects">
+									<EffectSlot Name="" ID="{CF96736E-7B65-4B8D-BABB-475C0CEF001F}" ShortID="942053875">
+										<ReferenceList>
+											<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
+												<ObjectRef Name="Brush_Gain" ID="{5A2D77F1-681C-4633-838D-9FAC19530E27}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+											</Reference>
+										</ReferenceList>
+									</EffectSlot>
+								</ObjectList>
+							</ObjectLists>
+						</Bus>
+						<Bus Name="UI_Bus" ID="{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}">
+							<PropertyList>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-6</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ObjectLists>
+								<ObjectList Name="Effects">
+									<EffectSlot Name="" ID="{9D0E35B3-62C3-4420-87DC-49E29FD5C714}" ShortID="169110155">
+										<ReferenceList>
+											<Reference Name="Effect" PluginName="Wwise Gain" CompanyID="0" PluginID="139" PluginType="3">
+												<ObjectRef Name="UI_Gain" ID="{74C44146-BC81-4D82-92D9-259450132869}" WorkUnitID="{A007695E-18D2-468C-B9FD-9663ADACC617}"/>
+											</Reference>
+										</ReferenceList>
+									</EffectSlot>
+								</ObjectList>
+							</ObjectLists>
+						</Bus>
+					</ChildrenList>
 				</Bus>
 			</ChildrenList>
 		</WorkUnit>

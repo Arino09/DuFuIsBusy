@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{72F727A9-A802-49A0-B776-1DC448C85988}" SchemaVersion="133">
 	<States>
-		<WorkUnit Name="Default Work Unit" ID="{72F727A9-A802-49A0-B776-1DC448C85988}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{72F727A9-A802-49A0-B776-1DC448C85988}" PersistMode="Standalone">
+			<ChildrenList>
+				<StateGroup Name="Play_Theme_Music" ID="{AE3AD51C-1DE6-40CC-B993-3FDD6C662FF7}">
+					<ChildrenList>
+						<State Name="None" ID="{D4F18F1A-3844-4772-A744-137CCD9E0D1C}"/>
+						<State Name="Theme_Music" ID="{674B6DC6-FC89-41E9-826B-64340BBDED42}"/>
+					</ChildrenList>
+				</StateGroup>
+			</ChildrenList>
+		</WorkUnit>
 	</States>
 </WwiseDocument>

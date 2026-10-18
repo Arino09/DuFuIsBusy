@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{073260AF-887A-454B-AE72-1D6049501879}" SchemaVersion="133">
 	<GameParameters>
-		<WorkUnit Name="Default Work Unit" ID="{073260AF-887A-454B-AE72-1D6049501879}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{073260AF-887A-454B-AE72-1D6049501879}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="Brush_Speed" ID="{39CD4C62-D0E1-4598-A923-C775F786EF75}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
 	</GameParameters>
 </WwiseDocument>

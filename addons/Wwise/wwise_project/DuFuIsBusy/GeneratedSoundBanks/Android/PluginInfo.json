@@ -1,0 +1,26 @@
+{
+ "PluginInfo": {
+  "Platform": "Android",
+  "BasePlatform": "Android",
+  "PluginLibs": [
+   {
+    "LibName": "Wwise Gain",
+    "LibId": "9109507",
+    "Type": "Effect",
+    "DLL": "AkGain",
+    "StaticLib": "AkGainFX"
+   },
+   {
+    "LibName": "System",
+    "LibId": "11403271",
+    "Type": "AudioDevice"
+   },
+   {
+    "LibName": "No Output",
+    "LibId": "11862023",
+    "Type": "AudioDevice"
+   }
+  ],
+  "FileHash": "{D9516E08-576D-B900-60CE-AD0BA4B55B02}"
+ }
+}

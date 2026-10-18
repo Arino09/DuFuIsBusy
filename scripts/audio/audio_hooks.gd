@@ -13,5 +13,5 @@ static func fact(name: String, value: Variant) -> void:
 	if is_instance_valid(sink): sink.fact(name, "" if value == null else str(value))
 
 ## A continuous value sent to the RTPC listed under "rtpc.<key>".
-static func param(key: String, value: float) -> void:
-	if is_instance_valid(sink): sink.param(key, value)
+static func param(key: String, value: float, immediate: bool = false) -> void:
+	if is_instance_valid(sink): sink.param(key, value, immediate)

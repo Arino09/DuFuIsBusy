@@ -14,6 +14,7 @@ func run() -> void:
 	test_shipped_table()
 	test_wwise_project()
 	test_shipped_routing()
+	await test_brush_audio()
 	await test_routing()
 	print("AUDIO_TESTS_PASSED")
 	quit()
@@ -108,7 +109,9 @@ func test_wwise_project() -> void:
 		assert(authored.has(event), "Event exists in the Wwise project: %s (row %s)" % [event, used[event]])
 		assert(banked.has(fnv1(event)), "Event is in Main.bnk (regenerate the bank?): %s" % event)
 	for key in table.entries:
-		if key.begins_with("rtpc."): assert(table.entries[key] in ["", Table.SILENT], "Game Parameters are not authored yet: " + key)
+		if key.begins_with("rtpc."):
+			var expected := "Brush_Speed" if key == "rtpc.canvas.drag_speed" else ""
+			assert(table.entries[key] in [expected, Table.SILENT], "Only authored Game Parameters are mapped: " + key)
 
 ## Event ids in a bank's HIRC chunk (object type 4).
 func bank_event_ids(bytes: PackedByteArray) -> Dictionary:
@@ -133,34 +136,84 @@ func fnv1(name: String) -> int:
 		hash ^= byte
 	return hash
 
-## The shipped table keeps the intended sound character: highs reward, lows warn or destroy, buttons click.
+## Check the actual authored events rather than the retired instrument placeholders.
 func test_shipped_routing() -> void:
 	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
-	var button := "Play_ui_button"
-	var low := "Play_bass_clarinet_G2_1_mezzo_forte_normal"
-	var high := "Play_viola_Gs5_1_fortissimo_arco_normal"
-	var soft := "Play_violin_B4_1_piano_arco_sul_tasto"
 	var expected := {
-		"ui.press.primary.OkayButton": button, "ui.press.default.ZoomInButton": button, "ui.press.selectable.ToolBrush": button,
-		"ui.press.primary.SubmitButton": high, "ui.press.primary.EnterButton": high,
-		"ui.press.quiet.DeleteObjectButton": low, "ui.press.quiet.RestartButton": low,
-		"ui.toggle_on.default.SoundToggle": high, "ui.toggle_off.default.MusicToggle": low,
-		"ui.toggle_on.default.ToolBrush": "", "ui.hover.primary.LevelsButton": "",
-		"ui.drag.default.WidthSlider": soft, "ui.drag.default.VolumeSlider": soft, "ui.select.default.QualityOption": button,
-		"page.enter.home": soft, "page.enter.gallery": soft, "page.exit.canvas": "",
-		"dialog.enter.text_editor": soft, "dialog.exit.sticker_picker": low, "dialog.enter.submission_result": high,
-		"dialog.enter.info": "", "dialog.enter.busy": "",
-		"message.notice": soft, "message.denied": low, "message.warning": low, "message.error": low, "message.success": high,
-		"canvas.drag.begin.paint": soft, "canvas.drag.end.paint": "", "canvas.drag.begin.erase": button, "canvas.drag.end.erase": "",
-		"canvas.drag.begin.move.dufu_greatsword": button, "canvas.drag.end.rotate.text": soft, "canvas.drag.begin.scale.avatar": button,
-		"canvas.object.add.dufu_cyber_long_blade": high, "canvas.object.add.text": high, "canvas.object.remove.dufu_greatsword": low,
-		"canvas.object.select.avatar": button, "canvas.object.deselect": "", "canvas.undo": soft, "canvas.redo": soft, "canvas.clear": low,
-		"tool.enter.eraser": "", "background.enter.tea_cottage": "", "background.exit.paper": "",
-		"level.complete": high, "level.complete.all": "Play_viola_B6_15_forte_arco_normal", "export.done": high,
-		"storage.enter.error": low, "storage.enter.ok": "", "test.play": "Play_viola_B6_15_forte_arco_normal", "app.boot": soft,
+		"app.boot": "Play_Music_Theme", "test.play": "Play_SFX_Enter_Home",
+		"ui.toggle_on.default.MusicToggle": "Play_Music_Theme", "ui.toggle_off.default.MusicToggle": "Stop_Music_Theme",
+		"canvas.drag.begin.paint": "Play_SFX_Brush_Loop", "canvas.drag.end.paint": "Stop_SFX_Brush_Loop",
+		"rtpc.canvas.drag_speed": "Brush_Speed", "canvas.drag.begin.erase": "",
+		"ui.press.primary.EnterButton": "", "canvas.drag.begin.move.avatar": "",
+		"canvas.drag.begin.move.dufu_greatsword": "", "canvas.object.add.dufu_cyber_long_blade": "",
+		"canvas.object.remove.dufu_greatsword": "", "dialog.enter.play_notice": "",
 	}
+	for page in ["home", "levels", "canvas", "gallery", "settings"]:
+		var suffix: String = {"home": "Home", "levels": "Level", "canvas": "Canvas", "gallery": "Gallery", "settings": "And_Enter_Settings"}[page]
+		expected["page.enter." + page] = "Play_SFX_Enter_" + suffix
+		var exit_suffix: String = {"home": "Home", "levels": "Levels", "canvas": "Canvas", "gallery": "Gallery", "settings": "And_Exit_Settings"}[page]
+		expected["page.exit." + page] = "Play_SFX_Exit_" + exit_suffix
 	for key in expected:
-		assert(table.lookup(key) == expected[key], "%s -> %s (got %s)" % [key, expected[key], table.lookup(key)])
+		assert(table.lookup(key) == expected[key], "Incorrect mapping: " + key)
+
+func test_brush_audio() -> void:
+	var director: Node = root.get_node("AudioDirector")
+	await process_frame
+	var surface = load("res://scripts/drawing_surface.gd").new()
+	root.add_child(surface)
+	surface.set_process(false)
+	director.calls.clear()
+	surface.begin(Vector2(500, 150), -1)
+	assert(director.calls == PackedStringArray(["rtpc Brush_Speed=0.0", "post Play_SFX_Brush_Loop"]), "Reset RTPC before starting exactly one loop")
+	surface.move_pen(Vector2(600, 150))
+	surface.move_pen(Vector2(700, 150))
+	surface._process(0.1)
+	var speed: float = director._rtpc["canvas.drag_speed"].value
+	assert(speed > 10 and speed < 100, "Normal drawing has a useful 0–100 speed")
+	for i in 10: surface._process(0.1)
+	assert(director._rtpc["canvas.drag_speed"].value == 0.0, "Holding still decays to zero without a mouse event")
+	surface.move_pen(Vector2(1000, 150))
+	surface._process(0.001)
+	assert(director._rtpc["canvas.drag_speed"].value <= 100, "Fast movement stays inside the Wwise range")
+	director._send_rtpc("canvas.drag_speed")
+	surface.finish()
+	assert(director.calls[-2] == "post Stop_SFX_Brush_Loop" and director.calls[-1] == "rtpc Brush_Speed=0.0", "Lift stops and flushes zero even inside the throttle window")
+	var count: int = director.calls.size()
+	surface.finish()
+	assert(director.calls.size() == count, "Repeated finish cannot stop twice")
+	# A second finger cancels the provisional stroke, including its captured audio.
+	director.calls.clear()
+	surface.begin(Vector2(500, 150), 0)
+	surface.move_pen(Vector2(600, 150))
+	surface._process(0.1)
+	director._send_rtpc("canvas.drag_speed")
+	surface.erasing = true
+	surface.cancel()
+	assert(not surface.active and director.calls[-2] == "post Stop_SFX_Brush_Loop" and director.calls[-1] == "rtpc Brush_Speed=0.0", "Cancel stops the captured loop and immediately resets its speed")
+	count = director.calls.size()
+	surface.cancel()
+	assert(director.calls.size() == count, "Repeated cancellation cannot stop twice")
+	surface.erasing = false
+	surface.begin(Vector2(500, 150), 0)
+	surface.move_pen(Vector2(-1, 150))
+	assert(not surface.active and director.calls[-1] == "post Stop_SFX_Brush_Loop", "Leaving paper stops a touch stroke")
+	surface.begin(Vector2(500, 150), -1)
+	surface.get_window().focus_exited.emit()
+	assert(not surface.active and director.calls[-1] == "post Stop_SFX_Brush_Loop", "Focus loss stops the loop")
+	surface.begin(Vector2(500, 150), -1)
+	surface.erasing = true
+	surface.finish()
+	assert(director.calls[-1] == "post Stop_SFX_Brush_Loop", "End uses the captured stroke kind")
+	director.calls.clear()
+	surface.begin(Vector2(500, 150), -1)
+	surface.move_pen(Vector2(600, 150))
+	surface._process(0.1)
+	surface.finish()
+	assert(director.calls.is_empty(), "Erasing does not start or modulate the brush")
+	surface.erasing = false
+	surface.begin(Vector2(500, 150), -1)
+	surface.free()
+	assert(director.calls[-1] == "post Stop_SFX_Brush_Loop", "Removing the canvas stops the loop")
 
 func test_routing() -> void:
 	var director: Node = root.get_node("AudioDirector")

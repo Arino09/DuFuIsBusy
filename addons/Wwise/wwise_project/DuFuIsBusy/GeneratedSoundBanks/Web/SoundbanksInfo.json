@@ -1,0 +1,454 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Web",
+  "BasePlatform": "Web",
+  "SchemaVersion": "16",
+  "SoundBankVersion": "172",
+  "RootPaths": {
+   "ProjectRoot": "../..",
+   "SourceFilesRoot": "../../.cache",
+   "SoundBanksRoot": ".",
+   "ExternalSourcesInputFile": "",
+   "ExternalSourcesOutputRoot": "."
+  },
+  "DialogueEvents": [],
+  "SoundBanks": [
+   {
+    "Id": "1355168291",
+    "Type": "User",
+    "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
+    "Language": "SFX",
+    "Hash": "{F9B1D148-29A6-B1D6-3993-B64425CD6337}",
+    "ObjectPath": "Init",
+    "ShortName": "Init",
+    "Path": "Init.bnk",
+    "Plugins": {
+     "ShareSets": [
+      {
+       "Id": "537568739",
+       "Name": "Brush_Gain",
+       "ObjectPath": "\\Effects\\Default Work Unit\\Brush_Gain",
+       "GUID": "{5A2D77F1-681C-4633-838D-9FAC19530E27}",
+       "LibName": "Wwise Gain",
+       "LibId": "9109507"
+      },
+      {
+       "Id": "716210187",
+       "Name": "UI_Gain",
+       "ObjectPath": "\\Effects\\Default Work Unit\\UI_Gain",
+       "GUID": "{74C44146-BC81-4D82-92D9-259450132869}",
+       "LibName": "Wwise Gain",
+       "LibId": "9109507"
+      },
+      {
+       "Id": "1005188768",
+       "Name": "Music_Gain",
+       "ObjectPath": "\\Effects\\Default Work Unit\\Music_Gain",
+       "GUID": "{F2CC781A-6B74-4E3F-B1B8-444E1475EF66}",
+       "LibName": "Wwise Gain",
+       "LibId": "9109507"
+      }
+     ],
+     "AudioDevices": [
+      {
+       "Id": "2317455096",
+       "Name": "No_Output",
+       "ObjectPath": "\\Devices\\Default Work Unit\\No_Output",
+       "GUID": "{F0ADC115-5F20-4E55-A56C-A43A5051D694}",
+       "LibName": "No Output",
+       "LibId": "11862023"
+      },
+      {
+       "Id": "3859886410",
+       "Name": "System",
+       "ObjectPath": "\\Devices\\Default Work Unit\\System",
+       "GUID": "{ABAAA7BC-C270-46CC-8C67-BDC3FD4F6116}",
+       "LibName": "System",
+       "LibId": "11403271"
+      }
+     ]
+    },
+    "Busses": [
+     {
+      "Id": "1298136712",
+      "Name": "Brush_Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\Brush_Bus",
+      "GUID": "{E7590C68-9549-456C-B11E-4755B18CE72D}",
+      "PluginRefs": {
+       "ShareSets": [
+        {
+         "Id": "537568739"
+        }
+       ]
+      }
+     },
+     {
+      "Id": "2246998526",
+      "Name": "Main Audio Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus",
+      "GUID": "{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}"
+     },
+     {
+      "Id": "2680856269",
+      "Name": "Music_Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\Music_Bus",
+      "GUID": "{871AC816-A35C-4A3F-A0CD-CC5ED0A4542B}",
+      "PluginRefs": {
+       "ShareSets": [
+        {
+         "Id": "1005188768"
+        }
+       ]
+      }
+     },
+     {
+      "Id": "3247222208",
+      "Name": "UI_Bus",
+      "ObjectPath": "\\Busses\\Default Work Unit\\Main Audio Bus\\UI_Bus",
+      "GUID": "{DD6B897E-7F37-4BBE-B0AB-DD3BACE5D09D}",
+      "PluginRefs": {
+       "ShareSets": [
+        {
+         "Id": "716210187"
+        }
+       ]
+      }
+     }
+    ],
+    "GameParameters": [
+     {
+      "Id": "1063687779",
+      "Name": "Brush_Speed",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Brush_Speed",
+      "GUID": "{39CD4C62-D0E1-4598-A923-C775F786EF75}"
+     }
+    ],
+    "StateGroups": [
+     {
+      "Id": "1211884417",
+      "Name": "Play_Theme_Music",
+      "ObjectPath": "\\States\\Default Work Unit\\Play_Theme_Music",
+      "GUID": "{AE3AD51C-1DE6-40CC-B993-3FDD6C662FF7}",
+      "States": [
+       {
+        "Id": "748895195",
+        "Name": "None",
+        "ObjectPath": "\\States\\Default Work Unit\\Play_Theme_Music\\None",
+        "GUID": "{D4F18F1A-3844-4772-A744-137CCD9E0D1C}"
+       },
+       {
+        "Id": "902550164",
+        "Name": "Theme_Music",
+        "ObjectPath": "\\States\\Default Work Unit\\Play_Theme_Music\\Theme_Music",
+        "GUID": "{674B6DC6-FC89-41E9-826B-64340BBDED42}"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "Id": "3161908922",
+    "Type": "User",
+    "GUID": "{F9D88035-30B7-4999-8514-BBDEC1F6ACA1}",
+    "Language": "SFX",
+    "Hash": "{9448C556-BF4E-135B-84D9-641B56624756}",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
+    "ShortName": "Main",
+    "Path": "Main.bnk",
+    "Media": [
+     {
+      "Id": "223158116",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Exit_Canvas.wav",
+      "CachePath": "11/{11846927-04C3-24C6-4F56-FB0178FA63B5}.wem"
+     },
+     {
+      "Id": "248584320",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Enter_And_Enter_Settings.wav",
+      "CachePath": "60/{60F75985-BE09-05D1-E8D5-6D8CAC8D6811}.wem"
+     },
+     {
+      "Id": "248971591",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Exit_Home.wav",
+      "CachePath": "21/{212DB2C5-FF2E-76A4-B60E-BD0BFA9E229A}.wem"
+     },
+     {
+      "Id": "342372412",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Taptap2026_Theme_v1.wav",
+      "CachePath": "8B/{8B4473F1-94BA-D904-F065-AEA78C926F63}.wem"
+     },
+     {
+      "Id": "553966176",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Enter_Gallery.wav",
+      "CachePath": "CE/{CEF80A29-91EA-1B28-BE8A-350C7646AE83}.wem"
+     },
+     {
+      "Id": "670917342",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Enter_Home.wav",
+      "CachePath": "55/{55FFE312-8275-EFE5-83ED-4A4D568E2E5D}.wem"
+     },
+     {
+      "Id": "697158502",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Exit_And_Exit_Settings.wav",
+      "CachePath": "AC/{AC4DAC1E-AFAC-AFCC-DB7B-62D9F601A5A3}.wem"
+     },
+     {
+      "Id": "729021924",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Brush_Loop.wav",
+      "CachePath": "7B/{7B5092F6-F236-E372-9AE7-D6A1437CBC8C}.wem"
+     },
+     {
+      "Id": "891944370",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Enter_Canvas.wav",
+      "CachePath": "67/{6733A25D-0F9C-247A-8F2D-7D9DA07C57FB}.wem"
+     },
+     {
+      "Id": "941971828",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Exit_Gallery.wav",
+      "CachePath": "BB/{BB0DAE7E-0240-42EB-6DEE-6ABAD232B492}.wem"
+     },
+     {
+      "Id": "1055499800",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Exit_Levels.wav",
+      "CachePath": "1E/{1E283B3C-4C2A-6414-E957-40DB002C7298}.wem"
+     },
+     {
+      "Id": "1067919891",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "SFX_Enter_Level.wav",
+      "CachePath": "E3/{E3EDBB04-CF5E-263B-A287-5327C1B69ACC}.wem"
+     }
+    ],
+    "Events": [
+     {
+      "Id": "4046097845",
+      "Name": "Play_Music_Theme",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Music_Theme",
+      "GUID": "{1F2680BE-BBF1-449E-A133-B0CE20BA5E5B}",
+      "DurationType": "Infinite",
+      "MediaRefs": [
+       {
+        "Id": "342372412"
+       }
+      ]
+     },
+     {
+      "Id": "698448367",
+      "Name": "Play_SFX_Brush_Loop",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Brush_Loop",
+      "GUID": "{63CE7D1A-7C91-4824-B49D-21A867B9F8A5}",
+      "DurationType": "Infinite",
+      "MediaRefs": [
+       {
+        "Id": "729021924"
+       }
+      ]
+     },
+     {
+      "Id": "129204267",
+      "Name": "Play_SFX_Enter_And_Enter_Settings",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Enter_And_Enter_Settings",
+      "GUID": "{A2B1A94E-CBCF-4776-BB2F-11719A2F2431}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "248584320"
+       }
+      ]
+     },
+     {
+      "Id": "2448662015",
+      "Name": "Play_SFX_Enter_Canvas",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Enter_Canvas",
+      "GUID": "{C2D6F963-A6E6-466D-AECD-FC757AA2FEE6}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "891944370"
+       }
+      ]
+     },
+     {
+      "Id": "1375389083",
+      "Name": "Play_SFX_Enter_Gallery",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Enter_Gallery",
+      "GUID": "{22867E1B-A1EE-45E8-A119-A1B54966F77B}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "553966176"
+       }
+      ]
+     },
+     {
+      "Id": "3584714870",
+      "Name": "Play_SFX_Enter_Home",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Enter_Home",
+      "GUID": "{D8E068C1-E86D-4282-BCAC-5B1D9A0DA647}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "670917342"
+       }
+      ]
+     },
+     {
+      "Id": "4253571795",
+      "Name": "Play_SFX_Enter_Level",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Enter_Level",
+      "GUID": "{4C360A7D-88D3-42C8-B73A-89D5B44AA764}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "1067919891"
+       }
+      ]
+     },
+     {
+      "Id": "2784583545",
+      "Name": "Play_SFX_Exit_And_Exit_Settings",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_And_Exit_Settings",
+      "GUID": "{784B72C6-245D-4E7F-96C9-43FCFC403BA4}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "697158502"
+       }
+      ]
+     },
+     {
+      "Id": "426147097",
+      "Name": "Play_SFX_Exit_Canvas",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_Canvas",
+      "GUID": "{ED495BBE-7F4C-4FF0-9E8F-2BCF8B8C499D}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "223158116"
+       }
+      ]
+     },
+     {
+      "Id": "2143884161",
+      "Name": "Play_SFX_Exit_Gallery",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_Gallery",
+      "GUID": "{9718C94B-96C0-4152-B2EA-4F66940CD5E4}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "941971828"
+       }
+      ]
+     },
+     {
+      "Id": "2360956204",
+      "Name": "Play_SFX_Exit_Home",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_Home",
+      "GUID": "{B9048512-E829-49F5-8668-5211ACB5B7F1}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "248971591"
+       }
+      ]
+     },
+     {
+      "Id": "3083647900",
+      "Name": "Play_SFX_Exit_Levels",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_SFX_Exit_Levels",
+      "GUID": "{94C06EB1-0E0B-4530-AA14-20DF5DE17C00}",
+      "DurationType": "OneShot",
+      "DurationMin": "6",
+      "DurationMax": "6",
+      "MediaRefs": [
+       {
+        "Id": "1055499800"
+       }
+      ]
+     },
+     {
+      "Id": "2480681107",
+      "Name": "Stop_Music_Theme",
+      "ObjectPath": "\\Events\\Default Work Unit\\Stop_Music_Theme",
+      "GUID": "{DB92B20A-8459-4BFC-AA86-DA32838DD75B}",
+      "MaxAttenuation": "0",
+      "DurationType": "OneShot",
+      "DurationMin": "0",
+      "DurationMax": "0"
+     },
+     {
+      "Id": "234550745",
+      "Name": "Stop_SFX_Brush_Loop",
+      "ObjectPath": "\\Events\\Default Work Unit\\Stop_SFX_Brush_Loop",
+      "GUID": "{62062C34-5427-4859-9F7F-25342CA0FB54}",
+      "MaxAttenuation": "0",
+      "DurationType": "OneShot",
+      "DurationMin": "0",
+      "DurationMax": "0"
+     }
+    ],
+    "GameParameters": [
+     {
+      "Id": "1063687779",
+      "Name": "Brush_Speed",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Brush_Speed",
+      "GUID": "{39CD4C62-D0E1-4598-A923-C775F786EF75}"
+     }
+    ]
+   }
+  ],
+  "FileHash": "{CE0D01D6-7BBC-DDE8-9A76-106865A0483B}"
+ }
+}

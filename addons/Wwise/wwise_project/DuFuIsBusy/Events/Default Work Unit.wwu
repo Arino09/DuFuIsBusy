@@ -3,56 +3,161 @@
 	<Events>
 		<WorkUnit Name="Default Work Unit" ID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}" PersistMode="Standalone">
 			<ChildrenList>
-				<Event Name="Play_bass_clarinet_G2_1_mezzo_forte_normal" ID="{9A4E2056-BDEB-414D-B7B8-07E2D02A14DB}">
+				<Event Name="Play_SFX_Exit_And_Exit_Settings" ID="{784B72C6-245D-4E7F-96C9-43FCFC403BA4}">
 					<ChildrenList>
-						<Action Name="" ID="{1FCB2BB5-1A45-4B0D-A379-36A54E83A1EF}" ShortID="173327535">
+						<Action Name="" ID="{0C82F430-04CB-4741-A7CF-D64B764608CF}" ShortID="63227679">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="bass-clarinet_G2_1_mezzo-forte_normal" ID="{16F991D0-E5D4-447A-894F-138293406E36}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+									<ObjectRef Name="SFX_Exit_And_Exit_Settings" ID="{5FA6930F-65AF-4342-99A1-3D948D0B4A49}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Play_ui_button" ID="{36C08D80-81B3-4242-A8BB-05E142F97DED}">
+				<Event Name="Play_SFX_Exit_Canvas" ID="{ED495BBE-7F4C-4FF0-9E8F-2BCF8B8C499D}">
 					<ChildrenList>
-						<Action Name="" ID="{01AF370D-14D4-4E78-957B-4976E9ADCD1A}" ShortID="538086572">
+						<Action Name="" ID="{3109750B-18D6-477A-BE07-4925EF7F3AE6}" ShortID="79150499">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="ui_button" ID="{E8B11C8E-68F6-4A87-8C92-2FC1C0D98711}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+									<ObjectRef Name="SFX_Exit_Canvas" ID="{0B050006-25EB-4565-B69A-9B80141D986A}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Play_viola_B6_15_forte_arco_normal" ID="{5CBAA656-2439-4C5B-9CAE-DC21162111C2}">
+				<Event Name="Play_SFX_Exit_Gallery" ID="{9718C94B-96C0-4152-B2EA-4F66940CD5E4}">
 					<ChildrenList>
-						<Action Name="" ID="{0C5D9229-91DE-46BA-AE61-36B558366DFD}" ShortID="222988582">
+						<Action Name="" ID="{7D872516-35E9-4BF4-A97F-D8D52FE77B62}" ShortID="662761306">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="viola_B6_15_forte_arco-normal" ID="{10273FF8-28CF-4689-B8B9-931304D0608E}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+									<ObjectRef Name="SFX_Exit_Gallery" ID="{396FB344-EDC8-4291-9553-D4F4C2DA0D35}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Play_viola_Gs5_1_fortissimo_arco_normal" ID="{EE4CCA42-A9E3-41C4-B2FD-6F2ADBCAF6BB}">
+				<Event Name="Play_SFX_Exit_Home" ID="{B9048512-E829-49F5-8668-5211ACB5B7F1}">
 					<ChildrenList>
-						<Action Name="" ID="{A7EA72AA-E5EA-4310-85E7-638A04177F02}" ShortID="363130997">
+						<Action Name="" ID="{239C7C71-4B97-41E1-9AEA-A6CB05B2BC05}" ShortID="370113061">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="viola_Gs5_1_fortissimo_arco-normal" ID="{F5E64199-21FD-46A4-A1EF-A31B1E0AF8F2}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+									<ObjectRef Name="SFX_Exit_Home" ID="{07906C56-6480-4EF0-82F6-FBDC50681163}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Play_violin_B4_1_piano_arco_sul_tasto" ID="{4DD185E5-6E20-49DB-97C4-CC98706ED61A}">
+				<Event Name="Play_SFX_Exit_Levels" ID="{94C06EB1-0E0B-4530-AA14-20DF5DE17C00}">
 					<ChildrenList>
-						<Action Name="" ID="{3C138CCD-78F7-4EA0-AA97-26AB758B5DDC}" ShortID="97295855">
+						<Action Name="" ID="{523ACC41-4A01-4268-976C-628BEDE5A158}" ShortID="424877518">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="violin_B4_1_piano_arco-sul-tasto" ID="{6A357630-F36C-4983-B7C2-C1B2A08D92E1}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+									<ObjectRef Name="SFX_Exit_Levels" ID="{470384DC-33FD-4F99-98DD-E1D5E10BA0FE}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Enter_And_Enter_Settings" ID="{A2B1A94E-CBCF-4776-BB2F-11719A2F2431}">
+					<ChildrenList>
+						<Action Name="" ID="{D337C51B-47F0-4CD8-926C-47DA305E9CEF}" ShortID="201617579">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Enter_And_Enter_Settings" ID="{08FC8D7C-4604-4D9E-B402-BE4B959301BE}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Enter_Canvas" ID="{C2D6F963-A6E6-466D-AECD-FC757AA2FEE6}">
+					<ChildrenList>
+						<Action Name="" ID="{4380EED7-796F-496C-8C00-FB4A70FF328E}" ShortID="293437991">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Enter_Canvas" ID="{6AA2C7FC-DC0E-49B0-B00E-7CAA3FA8C2C0}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Enter_Gallery" ID="{22867E1B-A1EE-45E8-A119-A1B54966F77B}">
+					<ChildrenList>
+						<Action Name="" ID="{11C2289D-BEC5-46AF-8A48-12AFAB5D6DAA}" ShortID="515977120">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Enter_Gallery" ID="{DD5BF7BA-D4B4-48B2-AC3A-21E9CBBF07FD}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Enter_Home" ID="{D8E068C1-E86D-4282-BCAC-5B1D9A0DA647}">
+					<ChildrenList>
+						<Action Name="" ID="{BB0B7D41-D34E-491A-870E-DA9C3B8BBD90}" ShortID="457925621">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Enter_Home" ID="{95FD1F1F-7C71-41FF-BB07-822D6EEF6FB2}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Enter_Level" ID="{4C360A7D-88D3-42C8-B73A-89D5B44AA764}">
+					<ChildrenList>
+						<Action Name="" ID="{E0976733-DB28-478D-BF95-2411B2B27E9B}" ShortID="530399886">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Enter_Level" ID="{63FD3C88-1117-4264-8744-522BFC35B203}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_SFX_Brush_Loop" ID="{63CE7D1A-7C91-4824-B49D-21A867B9F8A5}">
+					<ChildrenList>
+						<Action Name="" ID="{50FEBA3A-2C1F-4AE2-BA06-F0DA8F0B41C3}" ShortID="502216067">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Brush_Loop" ID="{036FE3D7-4F44-4688-9B31-F02BEE5431A7}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_SFX_Brush_Loop" ID="{62062C34-5427-4859-9F7F-25342CA0FB54}">
+					<ChildrenList>
+						<Action Name="" ID="{1B51BB32-B263-4B38-874F-13ED0D7BA918}" ShortID="282108969">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SFX_Brush_Loop" ID="{036FE3D7-4F44-4688-9B31-F02BEE5431A7}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Music_Theme" ID="{1F2680BE-BBF1-449E-A133-B0CE20BA5E5B}">
+					<ChildrenList>
+						<Action Name="" ID="{01DAB1DF-FDAE-4775-A9E9-11872A118518}" ShortID="271577047">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Music_Theme" ID="{6ABF6C2C-1CF6-4446-AD96-52FF639BA60B}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Music_Theme" ID="{DB92B20A-8459-4BFC-AA86-DA32838DD75B}">
+					<ChildrenList>
+						<Action Name="" ID="{5C05E94E-21F0-4ADC-95AF-D37446F38FA4}" ShortID="796365324">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Music_Theme" ID="{6ABF6C2C-1CF6-4446-AD96-52FF639BA60B}" WorkUnitID="{0B316D00-0F29-44E4-AA88-52B52C19F6F5}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
