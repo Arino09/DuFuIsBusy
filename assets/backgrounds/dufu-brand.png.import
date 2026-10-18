@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c64i0ir55d363"
-path="res://.godot/imported/weapon-silver-sword.png-e58cc4b62c3a9566c7f0fde8a83b9212.ctex"
+uid="uid://d2dgqe0qr0l4o"
+path="res://.godot/imported/dufu-brand.png-4181e9143523ef717cdadf1f1fe42c10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/stickers/weapon-silver-sword.png"
-dest_files=["res://.godot/imported/weapon-silver-sword.png-e58cc4b62c3a9566c7f0fde8a83b9212.ctex"]
+source_file="res://assets/backgrounds/dufu-brand.png"
+dest_files=["res://.godot/imported/dufu-brand.png-4181e9143523ef717cdadf1f1fe42c10.ctex"]
 
 [params]
 

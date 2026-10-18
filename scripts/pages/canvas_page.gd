@@ -20,10 +20,7 @@ const PAGE_ACTIONS = {
 	"ReferenceButton": "reference",
 	"RestartButton": "restart", "SubmitButton": "submit",
 }
-const OBJECT_NAMES = {
-	"avatar": "杜甫", "text": "文字", "weapon_du": "杜甫重剑", "weapon_pink": "粉刃短刀",
-	"weapon_silver": "银纹长剑", "weapon_blue": "冰蓝长刃", "weapon_violet": "紫晶巨剑",
-}
+const OBJECT_NAMES = Drawing.Stickers.NAMES
 
 var surface: Drawing
 var topic_id := 0

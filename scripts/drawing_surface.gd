@@ -11,13 +11,8 @@ const CREATIVE_FONT = preload("res://assets/fonts/chill_long_cang.tres")
 const DEFAULT_POSITION = Vector2(152.5, 162.5)
 const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
 const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
-const STICKER_TEXTURES = {
-	"weapon_du": preload("res://assets/stickers/weapon-dusword.png"),
-	"weapon_pink": preload("res://assets/stickers/weapon-pink-blade.png"),
-	"weapon_silver": preload("res://assets/stickers/weapon-silver-sword.png"),
-	"weapon_blue": preload("res://assets/stickers/weapon-blue-sword.png"),
-	"weapon_violet": preload("res://assets/stickers/weapon-violet-greatsword.png"),
-}
+const Stickers = preload("res://scripts/sticker_catalog.gd")
+const STICKER_TEXTURES = Stickers.TEXTURES
 const STICKER_MAX_SIZE = Vector2(150, 180)
 const SELECTION_COLOR = Color("527fff")
 const HANDLE_SIZE = 10.0
@@ -29,7 +24,7 @@ var pen_width := 12
 var erasing := false
 var selecting := false
 @export var preview_only := false
-@export_enum("none", "weapon_du", "weapon_pink", "weapon_silver", "weapon_blue", "weapon_violet") var preview_kind: String = "none"
+@export var preview_kind: String = "none"
 var active := false
 var pointer := -2
 var previous := Vector2.ZERO

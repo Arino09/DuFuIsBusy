@@ -62,7 +62,7 @@ func test_shipped_table() -> void:
 				"fact": key += ".enter.x"
 				"param": key = "rtpc." + key
 			used[key] = true
-	for key in ["message.notice", "canvas.drag.begin.paint", "canvas.object.add.weapon_du", "canvas.object.select.avatar"]: used[key] = true
+	for key in ["message.notice", "canvas.drag.begin.paint", "canvas.object.add.dufu_greatsword", "canvas.object.select.avatar"]: used[key] = true
 	for key in used:
 		if key.ends_with(".enter.x"):
 			var name: String = key.trim_suffix(".enter.x")
@@ -143,8 +143,8 @@ func test_shipped_routing() -> void:
 		"dialog.enter.info": "", "dialog.enter.busy": "",
 		"message.notice": soft, "message.denied": low, "message.warning": low, "message.error": low, "message.success": high,
 		"canvas.drag.begin.paint": soft, "canvas.drag.end.paint": "", "canvas.drag.begin.erase": button, "canvas.drag.end.erase": "",
-		"canvas.drag.begin.move.weapon_du": button, "canvas.drag.end.rotate.text": soft, "canvas.drag.begin.scale.avatar": button,
-		"canvas.object.add.weapon_blue": high, "canvas.object.add.text": high, "canvas.object.remove.weapon_du": low,
+		"canvas.drag.begin.move.dufu_greatsword": button, "canvas.drag.end.rotate.text": soft, "canvas.drag.begin.scale.avatar": button,
+		"canvas.object.add.dufu_cyber_long_blade": high, "canvas.object.add.text": high, "canvas.object.remove.dufu_greatsword": low,
 		"canvas.object.select.avatar": button, "canvas.object.deselect": "", "canvas.undo": soft, "canvas.redo": soft, "canvas.clear": low,
 		"tool.enter.eraser": "", "background.enter.tea_cottage": "", "background.exit.paper": "",
 		"level.complete": high, "level.complete.all": "Play_viola_B6_15_forte_arco_normal", "export.done": high,

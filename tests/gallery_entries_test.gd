@@ -43,7 +43,7 @@ func run() -> void:
 	moved.objects[0].position += Vector2(20, 0)
 	document.drafts["-1"] = Store.encode(moved)
 	var sticker := Drawing.new_state()
-	sticker.objects.append({"id": 1, "kind": "weapon_du", "position": Vector2(500, 160), "scale": 1.0, "rotation": 0.0})
+	sticker.objects.append({"id": 1, "kind": "dufu_greatsword", "position": Vector2(500, 160), "scale": 1.0, "rotation": 0.0})
 	sticker.next_id = 2
 	document.drafts["3"] = Store.encode(sticker)
 	var resized := Drawing.new_state()

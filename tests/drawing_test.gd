@@ -104,7 +104,7 @@ func run() -> void:
 		assert(objects.state.objects.size() == 1)
 	objects.add_object("star")
 	assert(objects.state.objects.size() == 1, "Retired stickers can no longer be added")
-	objects.add_object("weapon_du")
+	objects.add_object("dufu_greatsword")
 	objects.transform_selected(2, PI / 4)
 	var transformed = objects.selected_object().duplicate(true)
 	objects.remove_selected()

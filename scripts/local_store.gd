@@ -6,6 +6,14 @@ const PATH = "user://art-v2.json"
 const TEMP_PATH = "user://art-v2.tmp"
 const Drawing = preload("res://scripts/drawing_surface.gd")
 const Backgrounds = preload("res://scripts/artwork_backgrounds.gd")
+# Saved IDs migrate to the replacement art; no retired textures are shipped.
+const STICKER_REPLACEMENTS = {
+	"weapon_du": "dufu_greatsword",
+	"weapon_pink": "dufu_cyber_mantis_blade",
+	"weapon_silver": "dufu_longsword",
+	"weapon_blue": "dufu_cyber_long_blade",
+	"weapon_violet": "dufu_cyber_greatsword",
+}
 var document: Dictionary = empty_document()
 var previous_raw := ""
 var writable := true
@@ -41,7 +49,9 @@ static func decode(data: Variant) -> Dictionary:
 	for index in range(data.objects.size()):
 		var item: Variant = data.objects[index]
 		if not item is Dictionary: return {}
-		if not item.get("kind") in ["avatar", "text"] and not Drawing.STICKER_TEXTURES.has(item.get("kind")): return {}
+		if not item.get("kind") is String: return {}
+		var kind: String = STICKER_REPLACEMENTS.get(item.kind, item.kind)
+		if not kind in ["avatar", "text"] and not Drawing.STICKER_TEXTURES.has(kind): return {}
 		if (index == 0) != (item.kind == "avatar"): return {}
 		if not number(item.get("id")) or item.id < 0 or item.id != int(item.id) or ids.has(int(item.id)): return {}
 		ids.append(int(item.id))
@@ -55,7 +65,7 @@ static func decode(data: Variant) -> Dictionary:
 		if item.kind == "text" and item.text.strip_edges().is_empty(): return {}
 		if not number(item.get("font_size")) or item.font_size < 16 or item.font_size > 64: return {}
 		if not item.get("color") is String or item.color.length() != 6 or not Color.html_is_valid(item.color): return {}
-		state.objects.append({"id":int(item.id), "kind":item.kind, "position":Vector2(item.position[0],item.position[1]), "scale":float(item.scale), "rotation":float(item.rotation), "text":item.text, "font_size":int(item.font_size), "color":Color.html(item.color)})
+		state.objects.append({"id":int(item.id), "kind":kind, "position":Vector2(item.position[0],item.position[1]), "scale":float(item.scale), "rotation":float(item.rotation), "text":item.text, "font_size":int(item.font_size), "color":Color.html(item.color)})
 		if item.has("scale_y"): state.objects[-1].scale_y = float(item.scale_y)
 	for field in ["next_id", "revision", "submitted"]:
 		if not number(data.get(field)) or data[field] != int(data[field]): return {}

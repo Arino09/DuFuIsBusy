@@ -269,9 +269,7 @@ func sticker_picker() -> void:
 		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。", "denied")
 		return
 	modal("sticker_picker")
-	for item in [["AddDuButton", "weapon_du"], ["AddPinkButton", "weapon_pink"], ["AddSilverButton", "weapon_silver"], ["AddBlueButton", "weapon_blue"], ["AddVioletButton", "weapon_violet"]]:
-		var kind: String = item[1]
-		bind_button(overlay, item[0], _add_sticker.bind(kind))
+	overlay.sticker_selected.connect(_add_sticker)
 
 func _add_sticker(kind: String) -> void:
 	selected_tool = "移动"
@@ -610,6 +608,7 @@ func info(title: String, body: String, tone: String = "notice") -> void:
 func sticker_list() -> void:
 	modal("sticker_catalog")
 	bind_button(overlay, "WeaponButton", sticker_picker)
+	bind_button(overlay, "BrandButton", image_dialog.bind("黑白杜甫品牌背景", "res://assets/backgrounds/dufu-brand.png", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "CityButton", image_dialog.bind("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "MarketButton", image_dialog.bind("烟火夜市", "res://assets/backgrounds/night-market.jpg", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "BackButton", close_overlay)

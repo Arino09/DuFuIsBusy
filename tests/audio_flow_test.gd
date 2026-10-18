@@ -66,7 +66,7 @@ func run() -> void:
 
 	# Dialogs: open and close are heard; stickers add a high note and deleting one a low note.
 	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), [BUTTON, SOFT])
-	expect("Add sticker", await heard(func(): press(app.overlay, "AddDuButton")), [BUTTON, HIGH, LOW])
+	expect("Add sticker", await heard(func(): press(app.overlay, "Scroll/Grid/food_authority/Content/UseButton")), [BUTTON, HIGH, LOW])
 	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), [LOW, LOW])
 	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), [BUTTON, SOFT])
 	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), [SOFT, LOW])
