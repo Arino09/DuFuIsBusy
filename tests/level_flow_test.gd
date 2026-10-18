@@ -55,7 +55,7 @@ func run() -> void:
 	app.show_page("home")
 	click(app.page, "FreeDrawButton")
 	assert(app.current == "canvas" and app.topic == -1)
-	app.drawing.add_object("weapon_du")
+	app.drawing.add_object("dufu_greatsword")
 	cache_submission(app)
 	click(app.page, "SubmitButton")
 	click(app.overlay, "SaveButton")
@@ -71,7 +71,7 @@ func run() -> void:
 	assert_dialog(app, "info")
 	assert_progress(app, [])
 	app.close_overlay()
-	app.drawing.add_object("weapon_blue")
+	app.drawing.add_object("dufu_cyber_long_blade")
 	cache_submission(app)
 	click(app.page, "SubmitButton")
 	assert_dialog(app, "submission_result")
@@ -111,7 +111,7 @@ func run() -> void:
 
 	# Normal editing, clearing a completed canvas and resetting preferences cannot
 	# erase an already persisted completion record or its immutable saved artwork.
-	app.drawing.add_object("weapon_pink")
+	app.drawing.add_object("dufu_cyber_mantis_blade")
 	click(app.page, "UndoButton")
 	assert_progress(app, [0])
 	click(app.page, "RedoButton")
@@ -150,7 +150,7 @@ func run() -> void:
 	for id in [1, 2, 3]:
 		app._start_topic(id)
 		assert(app.current == "canvas" and app.topic == id)
-		app.drawing.add_object("weapon_silver")
+		app.drawing.add_object("dufu_longsword")
 		cache_submission(app)
 		click(app.page, "SubmitButton")
 		var before_save: Array[int] = []

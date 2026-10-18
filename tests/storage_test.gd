@@ -16,6 +16,12 @@ func run() -> void:
 	for kind in Drawing.STICKER_TEXTURES:
 		surface.add_object(kind)
 		surface.transform_selected(0.8, PI / 6)
+		var sticker_save := Store.decode(Store.encode(surface.state))
+		assert(not sticker_save.is_empty())
+		assert(sticker_save.objects.back().kind == kind)
+		assert(is_equal_approx(sticker_save.objects.back().rotation, PI / 6))
+		# Keep the fixture below the 24-object limit while covering every sticker.
+		if not kind in ["dufu_greatsword", "dufu_cyber_mantis_blade", "dufu_longsword", "dufu_cyber_long_blade", "dufu_cyber_greatsword"]: surface.remove_selected()
 	surface.state.objects[0].position = Vector2(840, 170)
 	surface.state.objects[0].rotation = PI / 6
 	surface.state.objects[0].scale_y = 1.4
@@ -39,6 +45,20 @@ func run() -> void:
 	assert(Store.encode(Store.decode(encoded)) == encoded, "Current saves must round-trip without changing artwork or revisions")
 	assert(loaded.undo.is_empty() and loaded.redo.is_empty())
 	assert(Store.decode({}).is_empty())
+	# Removing duplicate assets must not invalidate drafts or saved artwork.
+	for old_kind in Store.STICKER_REPLACEMENTS:
+		assert(not Drawing.STICKER_TEXTURES.has(old_kind))
+		var old_artwork: Dictionary = encoded.duplicate(true)
+		old_artwork.objects[2].kind = old_kind
+		var migrated := Store.decode(old_artwork)
+		assert(not migrated.is_empty())
+		assert(migrated.objects[2].kind == Store.STICKER_REPLACEMENTS[old_kind])
+		assert(migrated.objects[2].position == loaded.objects[2].position)
+		assert(Drawing.object_scale(migrated.objects[2]) == Drawing.object_scale(loaded.objects[2]))
+		assert(is_equal_approx(migrated.objects[2].rotation, loaded.objects[2].rotation))
+		assert(old_artwork.objects[2].kind == old_kind, "Decoding must not mutate the original document")
+		var migrated_save := Store.encode(migrated)
+		assert(Store.encode(Store.decode(migrated_save)) == migrated_save)
 	var legacy = encoded.duplicate(true)
 	legacy.objects[0].erase("scale_y")
 	assert(Drawing.object_scale(Store.decode(legacy).objects[0]) == Vector2.ONE)

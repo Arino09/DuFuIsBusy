@@ -147,6 +147,9 @@ func verify_authored_scenes() -> bool:
 	return true
 
 func run() -> void:
+	# Headless windows default to 64x64; authoring checks use the design aspect.
+	# Other aspect ratios are exercised by resolution_test.gd.
+	root.size = Vector2i(1440, 900)
 	if not verify_authored_scenes():
 		quit(1)
 		return
@@ -291,17 +294,21 @@ func run() -> void:
 	click(app.overlay, "ApplyButton")
 	assert(app.drawing.selected_object().text == "忙里偷闲")
 	assert_same_canvas(app, canvas_id, surface_id)
-	# Every weapon has an imported thumbnail and adds the matching editable object.
-	for item in [["Du", "weapon_du", "weapon-dusword"], ["Pink", "weapon_pink", "weapon-pink-blade"], ["Silver", "weapon_silver", "weapon-silver-sword"], ["Blue", "weapon_blue", "weapon-blue-sword"], ["Violet", "weapon_violet", "weapon-violet-greatsword"]]:
-		click(app.page, "StickerButton")
-		assert_dialog(app, "sticker_picker")
-		var preview: TextureRect = app.overlay.get_node("Sample" + item[0])
-		assert(preview.texture.resource_path == "res://assets/stickers/%s.png" % item[2])
-		click(app.overlay, "Add%sButton" % item[0])
-		assert(app.drawing.selected_object().kind == item[1])
-		assert(app.page.get_node("DrawingStatus").text.contains(app.page.OBJECT_NAMES[item[1]]))
-		assert_same_canvas(app, canvas_id, surface_id)
-		if item[1] != "weapon_violet": click(app.page, "DeleteObjectButton")
+	# Every category exposes the exact imported texture and editable saved ID.
+	var last_sticker: String = Surface.Stickers.CATEGORIES.values().back().ids.back()
+	for category in Surface.Stickers.CATEGORIES:
+		for kind in Surface.Stickers.CATEGORIES[category].ids:
+			click(app.page, "StickerButton")
+			assert_dialog(app, "sticker_picker")
+			click(app.overlay, "Categories/" + category)
+			var card_path: String = "Scroll/Grid/" + kind + "/Content/"
+			var preview: TextureRect = app.overlay.get_node(card_path + "Preview")
+			assert(preview.texture == Surface.STICKER_TEXTURES[kind])
+			click(app.overlay, card_path + "UseButton")
+			assert(app.drawing.selected_object().kind == kind)
+			assert(app.page.get_node("DrawingStatus").text.contains(app.page.OBJECT_NAMES[kind]))
+			assert_same_canvas(app, canvas_id, surface_id)
+			if kind != last_sticker: click(app.page, "DeleteObjectButton")
 	var initial_scale: float = app.drawing.selected_object().scale
 	var revision_before: int = app.drawings[app.topic].revision
 	writes_before = app.local_store.writes
@@ -357,7 +364,7 @@ func run() -> void:
 	click(app.overlay, "ConfirmButton")
 	assert(app.current == "canvas" and app.selected_tool == "移动")
 	assert(app.drawings[app.topic].work_id == original_work.id)
-	app.drawing.add_object("weapon_du")
+	app.drawing.add_object("dufu_greatsword")
 	state = app.drawings[app.topic]
 	state.result = ImageTexture.create_from_image(state.pixels)
 	state.submitted = state.revision
@@ -506,7 +513,7 @@ func run() -> void:
 	saved_before = app.local_store.document.duplicate(true)
 	writes_before = app.local_store.writes
 	app.local_store.fail_writes = true
-	app.drawing.add_object("weapon_du")
+	app.drawing.add_object("dufu_greatsword")
 	assert(app.storage_retry.visible)
 	assert(app.local_store.document == saved_before)
 	assert(app.local_store.writes == writes_before)
@@ -515,7 +522,7 @@ func run() -> void:
 	assert(not app.storage_retry.visible)
 	assert(app.local_store.writes == writes_before + 1, "Focus loss did not retry a failed draft write")
 	assert(app.local_store.document.drafts["-1"] == Store.encode(app.drawings[-1]))
-	assert(app.local_store.document.drafts["-1"].objects.back().kind == "weapon_du")
+	assert(app.local_store.document.drafts["-1"].objects.back().kind == "dufu_greatsword")
 	assert(app.local_store.document.works == saved_before.works)
 	click(app.page, "RestartButton")
 	assert_dialog(app, "restart_confirmation")

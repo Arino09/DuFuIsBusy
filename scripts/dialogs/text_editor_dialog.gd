@@ -4,7 +4,7 @@ extends Control
 signal text_applied(text: String, font_size: int, color: Color)
 
 const InputValidation = preload("res://scripts/input_validation.gd")
-const CREATIVE_FONT = preload("res://assets/fonts/CreativeSansSC.otf")
+const CREATIVE_FONT = preload("res://assets/fonts/chill_long_cang.tres")
 
 @onready var _editor: LineEdit = $TextInput
 @onready var _font_size: SpinBox = $FontSizeInput

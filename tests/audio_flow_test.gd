@@ -34,6 +34,9 @@ func run() -> void:
 	app.saved_document.completed_topics = [0, 1]
 	root.add_child(app)
 	await process_frame
+	# Dismiss the startup notice before exercising home-page buttons.
+	app.close_overlay()
+	await process_frame
 
 	# Page transitions play their dedicated exit and enter events once.
 	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), ["post Play_SFX_Exit_Home", "post Play_SFX_Enter_Level"])
@@ -61,7 +64,7 @@ func run() -> void:
 
 	# Dialogs and layer edits remain silent until dedicated events are authored.
 	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), [])
-	expect("Add sticker", await heard(func(): press(app.overlay, "AddDuButton")), [])
+	expect("Add sticker", await heard(func(): press(app.overlay, "Scroll/Grid/food_authority/Content/UseButton")), [])
 	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), [])
 	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), [])
 	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), [])

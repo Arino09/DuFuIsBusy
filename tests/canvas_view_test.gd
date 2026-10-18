@@ -92,7 +92,7 @@ func run() -> void:
 	assert(page.canvas_width.value == 1080 and page.canvas_height.value == 1080)
 	surface.travel(true)
 	assert(surface.canvas_size() == Vector2i(1600, 900))
-	surface.add_object("weapon_du")
+	surface.add_object("dufu_greatsword")
 	assert(surface.selected_object().position == Vector2(800, 450))
 	surface.resize_canvas(Vector2i(512, 512))
 	assert(surface.selected_object().position.x < 512)

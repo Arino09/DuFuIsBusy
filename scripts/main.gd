@@ -10,6 +10,7 @@ const PAGE_SCENES = {
 	"settings": preload("res://scenes/pages/settings.tscn"),
 }
 const DIALOG_SCENES = {
+	"play_notice": preload("res://scenes/dialogs/play_notice.tscn"),
 	"text_editor": preload("res://scenes/dialogs/text_editor.tscn"),
 	"sticker_picker": preload("res://scenes/dialogs/sticker_picker.tscn"),
 	"restart_confirmation": preload("res://scenes/dialogs/restart_confirmation.tscn"),
@@ -37,6 +38,8 @@ const ContentCatalog = preload("res://scripts/content_catalog.gd")
 const TextEditorDialog = preload("res://scripts/dialogs/text_editor_dialog.gd")
 const DraftCache = preload("res://scripts/draft_cache.gd")
 const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
+const ResponsiveLayout = preload("res://scripts/ui/responsive_layout.gd")
+var responsive_layout: Node
 var draft_cache := DraftCache.new()
 var content_catalog := ContentCatalog.new()
 var _draft_save_pending := false
@@ -74,6 +77,9 @@ var previous_focus: Control
 @onready var preference_save_timer: Timer = $PreferenceSaveTimer
 
 func _ready() -> void:
+	responsive_layout = ResponsiveLayout.new()
+	add_child(responsive_layout)
+	responsive_layout.setup(self)
 	settings = settings_store.load_settings()
 	_sync_audio_settings()
 	if OS.has_feature("web"):
@@ -93,6 +99,7 @@ func _ready() -> void:
 	pen_width = int(local_store.document.tools.width)
 	selected_tool = local_store.document.tools.tool
 	show_page(local_store.document.page)
+	play_notice()
 
 func _web_focus_lost(_arguments: Array) -> void:
 	if is_instance_valid(drawing): drawing.finish()
@@ -139,6 +146,7 @@ func show_page(id: String) -> void:
 		"canvas": canvas()
 		"gallery": gallery()
 		"settings": settings_page()
+	responsive_layout.refresh()
 	is_busy = false
 	AudioHooks.fact("page", current)
 	AudioHooks.fact("background", drawings[topic].background_id if current == "canvas" else "")
@@ -155,6 +163,7 @@ func home() -> void:
 	bind_button(page, "GalleryButton", _show_gallery.bind(1))
 	bind_button(page, "SettingsButton", show_page.bind("settings"))
 	bind_button(page, "ExitButton", exit_info)
+	bind_button(page, "NoticeButton", play_notice)
 
 func _start_topic(id: int) -> void:
 	if not _allow_topic(id): return
@@ -269,9 +278,7 @@ func sticker_picker() -> void:
 		info("数量已满", "文字和贴纸最多 24 个，删除一个后再添加。", "denied")
 		return
 	modal("sticker_picker")
-	for item in [["AddDuButton", "weapon_du"], ["AddPinkButton", "weapon_pink"], ["AddSilverButton", "weapon_silver"], ["AddBlueButton", "weapon_blue"], ["AddVioletButton", "weapon_violet"]]:
-		var kind: String = item[1]
-		bind_button(overlay, item[0], _add_sticker.bind(kind))
+	overlay.sticker_selected.connect(_add_sticker)
 
 func _add_sticker(kind: String) -> void:
 	selected_tool = "移动"
@@ -432,6 +439,7 @@ func _refresh_gallery() -> void:
 	var view: GalleryPage = page
 	var entries := GalleryEntries.build(local_store.document, _gallery_topic_title)
 	view.refresh(entries, gallery_tab, gallery_filter, gallery_page, work_texture)
+	responsive_layout.refresh()
 	gallery_page = view.page_index
 
 func _gallery_topic_title(id: int) -> String:
@@ -583,7 +591,13 @@ func _reset_settings() -> void:
 func exit_info() -> void:
 	info("退出游戏", "直接关闭窗口或浏览器标签页即可。")
 
+func play_notice() -> void:
+	var view := modal("play_notice")
+	bind_button(view, "OkayButton", close_overlay)
+	view.get_node("Statement").grab_focus()
+
 func modal(scene_id: String, title: String = "", body: String = "") -> Control:
+	if current == "canvas" and is_instance_valid(page): page.cancel_touch_navigation()
 	close_overlay()
 	previous_focus = get_viewport().gui_get_focus_owner()
 	for control in page.find_children("*", "Control", true, false):
@@ -595,6 +609,7 @@ func modal(scene_id: String, title: String = "", body: String = "") -> Control:
 	if not title.is_empty(): overlay.get_node("Frame/Title").text = title
 	if not body.is_empty(): overlay.get_node("Frame/Body").text = body
 	dialog_host.add_child(overlay)
+	responsive_layout.refresh()
 	AudioHooks.fact("dialog", scene_id)
 	var close_button: Button = overlay.get_node("Frame/CloseButton")
 	close_button.pressed.connect(close_overlay)
@@ -610,6 +625,7 @@ func info(title: String, body: String, tone: String = "notice") -> void:
 func sticker_list() -> void:
 	modal("sticker_catalog")
 	bind_button(overlay, "WeaponButton", sticker_picker)
+	bind_button(overlay, "BrandButton", image_dialog.bind("黑白杜甫品牌背景", "res://assets/backgrounds/dufu-brand.png", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "CityButton", image_dialog.bind("科幻都市", "res://assets/backgrounds/scifi-city.jpg", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "MarketButton", image_dialog.bind("烟火夜市", "res://assets/backgrounds/night-market.jpg", "参考图片", "返回素材", sticker_list))
 	bind_button(overlay, "BackButton", close_overlay)
@@ -620,8 +636,12 @@ func close_overlay() -> void:
 			control.focus_mode = control.get_meta("previous_focus_mode", Control.FOCUS_ALL)
 	suspended_focus.clear()
 	if is_instance_valid(overlay):
-		dialog_host.remove_child(overlay)
+		var holder := overlay.get_parent()
+		holder.remove_child(overlay)
 		overlay.queue_free()
+		if holder != dialog_host:
+			dialog_host.remove_child(holder)
+			holder.queue_free()
 	overlay = null
 	AudioHooks.fact("dialog", "")
 	if is_instance_valid(previous_focus) and previous_focus.is_inside_tree() and previous_focus.is_visible_in_tree():
@@ -632,6 +652,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if submitting: return
 	if event.is_action_pressed("ui_cancel"):
 		if is_instance_valid(overlay): close_overlay()
+		elif current == "canvas" and responsive_layout.close_canvas_tools(): pass
 		elif current == "canvas" and drawings[topic].selected >= 0:
 			var view: CanvasPage = page
 			view.object_action("取消")

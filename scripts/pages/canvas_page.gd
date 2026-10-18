@@ -20,10 +20,7 @@ const PAGE_ACTIONS = {
 	"ReferenceButton": "reference",
 	"RestartButton": "restart", "SubmitButton": "submit",
 }
-const OBJECT_NAMES = {
-	"avatar": "杜甫", "text": "文字", "weapon_du": "杜甫重剑", "weapon_pink": "粉刃短刀",
-	"weapon_silver": "银纹长剑", "weapon_blue": "冰蓝长刃", "weapon_violet": "紫晶巨剑",
-}
+const OBJECT_NAMES = Drawing.Stickers.NAMES
 
 var surface: Drawing
 var topic_id := 0
@@ -32,6 +29,9 @@ var object_buttons: Dictionary = {}
 var view_zoom := 1.0
 var view_panning := false
 var fitted_size := Vector2i.ZERO
+var _touch_points: Dictionary = {}
+var _touch_navigating := false
+var _touch_selection := -1
 const MIN_ZOOM = 0.1
 const MAX_ZOOM = 4.0
 
@@ -79,9 +79,12 @@ func _ready() -> void:
 	$ZoomInButton.pressed.connect(func(): zoom_at(view_zoom * 1.25, canvas_view.size / 2))
 	$FitViewButton.pressed.connect(fit_view)
 	canvas_view.gui_input.connect(_view_input)
-	surface.gui_input.connect(_view_input)
+	surface.gui_input.connect(_view_input.bind(true))
+	surface.touch_input_router = _route_surface_touch
 	canvas_view.resized.connect(fit_view)
-	get_window().focus_exited.connect(func(): view_panning = false)
+	get_window().focus_exited.connect(cancel_touch_navigation)
+	visibility_changed.connect(func():
+		if not is_visible_in_tree(): cancel_touch_navigation())
 	fit_view()
 	var tool := "移动" if surface.selecting else "橡皮" if surface.erasing else "笔刷"
 	refresh_tools(tool, surface.ink, surface.pen_width)
@@ -151,6 +154,7 @@ func apply_canvas_size() -> void:
 
 func fit_view() -> void:
 	if not is_node_ready(): return
+	cancel_touch_navigation()
 	surface.finish()
 	fitted_size = surface.canvas_size()
 	canvas_width.set_value_no_signal(fitted_size.x)
@@ -181,7 +185,14 @@ func _update_view_controls() -> void:
 	$ZoomInButton.disabled = view_zoom >= MAX_ZOOM
 	surface.queue_redraw()
 
-func _view_input(event: InputEvent) -> void:
+func _view_input(event: InputEvent, from_surface: bool = false) -> void:
+	if event is InputEventMouse and event.device == -1: return
+	if event is InputEventScreenTouch or event is InputEventScreenDrag:
+		# Surface's own GUI callback supplies its transform. Empty view margins
+		# also accept gestures, with the view's local coordinates instead.
+		if not from_surface and _route_touch_event(event.xformed_by(canvas_view.get_global_transform_with_canvas()), true):
+			accept_event()
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
 			surface.finish()
@@ -206,3 +217,71 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_MIDDLE and not event.pressed:
 		view_panning = false
 		get_viewport().set_input_as_handled()
+
+func _route_surface_touch(event: InputEvent, from_gui: bool) -> bool:
+	var global_event := event.xformed_by(surface.get_global_transform_with_canvas()) if from_gui else event
+	return _route_touch_event(global_event, from_gui)
+
+func _route_touch_event(event: InputEvent, from_gui: bool) -> bool:
+	if not is_visible_in_tree(): return false
+	var point: Vector2 = canvas_view.get_global_transform_with_canvas().affine_inverse() * event.position
+	if event is InputEventScreenTouch:
+		if event.canceled:
+			if not _touch_points.has(event.index): return false
+			cancel_touch_navigation()
+			return true
+		if event.pressed:
+			# A new finger must pass the normal GUI hit test, so dialogs and
+			# controls over the canvas keep their input and do not mark the paper.
+			if not from_gui or not Rect2(Vector2.ZERO, canvas_view.size).has_point(point): return false
+			if _touch_points.has(event.index): return true
+			_touch_points[event.index] = point
+			if _touch_points.size() == 1:
+				_touch_selection = surface.state.selected
+				surface.begin((point - surface.position) / view_zoom, event.index)
+			elif not _touch_navigating:
+				surface.cancel()
+				surface.state.selected = _touch_selection
+				surface.selection_changed.emit()
+				_touch_navigating = true
+			return true
+		if not _touch_points.has(event.index): return false
+		_touch_points.erase(event.index)
+		if not _touch_navigating and surface.pointer == event.index: surface.finish()
+		if _touch_points.is_empty(): _touch_navigating = false
+		return true
+	if event is InputEventScreenDrag and _touch_points.has(event.index):
+		if _touch_navigating and _touch_points.size() >= 2:
+			var indices := _touch_points.keys()
+			var first: Vector2 = _touch_points[indices[0]]
+			var second: Vector2 = _touch_points[indices[1]]
+			var old_center := (first + second) / 2
+			var old_distance := first.distance_to(second)
+			_touch_points[event.index] = point
+			first = _touch_points[indices[0]]
+			second = _touch_points[indices[1]]
+			var artwork_anchor := (old_center - surface.position) / view_zoom
+			if old_distance > 1.0:
+				view_zoom = clampf(view_zoom * first.distance_to(second) / old_distance, MIN_ZOOM, MAX_ZOOM)
+			surface.scale = Vector2.ONE * view_zoom
+			surface.position = (first + second) / 2 - artwork_anchor * view_zoom
+			_clamp_view()
+			_update_view_controls()
+		else:
+			_touch_points[event.index] = point
+			# After a pinch, the remaining finger cannot start drawing until all
+			# fingers lift. That prevents a stray stroke at the end of a gesture.
+			if not _touch_navigating and surface.pointer == event.index:
+				surface.move_pen((point - surface.position) / view_zoom)
+		return true
+	return false
+
+func cancel_touch_navigation() -> void:
+	view_panning = false
+	if is_instance_valid(surface) and surface.pointer >= 0:
+		surface.cancel()
+	_touch_points.clear()
+	_touch_navigating = false
+
+func _exit_tree() -> void:
+	cancel_touch_navigation()

@@ -23,7 +23,7 @@ func run() -> void:
 	var surface = page.surface
 	for button in ["ShrinkButton", "GrowButton", "RotateLeftButton", "RotateRightButton"]:
 		assert(not page.has_node(button), "Transform toolbar buttons must be removed")
-	for kind in ["avatar", "text", "weapon_du", "weapon_pink", "weapon_silver", "weapon_blue", "weapon_violet"]:
+	for kind in ["avatar", "text", "dufu_greatsword", "dufu_cyber_mantis_blade", "dufu_longsword", "dufu_cyber_long_blade", "dufu_cyber_greatsword"]:
 		if kind == "avatar": surface.select_at(Surface.DEFAULT_POSITION)
 		else: surface.add_object(kind, "杜甫很忙")
 		var object: Dictionary = surface.selected_object()
@@ -97,7 +97,7 @@ func run() -> void:
 		assert(is_equal_approx(object.scale, 0.25))
 		assert_contained(surface, object)
 	# Every grip can grow beyond the old 2x cap, preserving axis/ratio semantics.
-	for kind in ["avatar", "text", "weapon_du", "weapon_silver"]:
+	for kind in ["avatar", "text", "dufu_greatsword", "dufu_longsword"]:
 		for handle in range(8):
 			surface.state = Surface.new_state()
 			if kind == "avatar": surface.state.selected = 0

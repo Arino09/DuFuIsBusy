@@ -57,14 +57,14 @@ try:
   page.goto('http://127.0.0.1:8765/DuFuIsBusy/');wait('UI_PAGE:home')
   click(292,552,'UI_PAGE:canvas')
   click(130,520,'UI_DIALOG:添加文字');fill(620,420,'麒麟献瑞，诗圣摸鱼。');fill(580,490,'40');fill(875,490,'663399');click(890,604,'TEXT_APPLIED:')
-  click(215,520,'UI_DIALOG:武器贴纸');click(720,657,'UI_PAGE:canvas');stroke((891,562),(700,480));click(788,359)
+  click(215,520,'UI_DIALOG:选择贴纸');click(506,242);click(720,503,'UI_PAGE:canvas');stroke((891,562),(700,480));click(788,359)
   for picker_x,destination in [(316,(570,500)),(518,(1000,460)),(922,(1140,480)),(1124,(1230,560))]:
-   click(215,520,'UI_DIALOG:武器贴纸');click(picker_x,657,'UI_PAGE:canvas');stroke((891,562),destination)
+   click(215,520,'UI_DIALOG:选择贴纸');click(506,242);click(picker_x,503,'UI_PAGE:canvas');stroke((891,562),destination)
   stroke((460,555),(1150,620))
   click(130,412,'UI_PAGE:canvas');stroke((600,670),(850,660))
   expected=data()['drafts']['-1'];assert len(expected['objects'])==7
   assert expected['objects'][1]['text']=='麒麟献瑞，诗圣摸鱼。'
-  assert {o['kind'] for o in expected['objects']}=={'avatar','text','weapon_du','weapon_pink','weapon_silver','weapon_blue','weapon_violet'}
+  assert {o['kind'] for o in expected['objects']}=={'avatar','text','dufu_greatsword','dufu_lightsaber','dufu_sniper_rifle','dufu_boxing_glove','dufu_ninja_mask'}
   shot('autosaved-canvas')
   i=len(logs);page.reload();wait('UI_PAGE:canvas',i);assert data()['drafts']['-1']==expected
   shot('after-refresh');checks.append('Immediate refresh restores raster pixels, Chinese text, all five weapon stickers, sticker rotation, Dufu position and prompt')
@@ -94,7 +94,7 @@ try:
   assert data()['works'][0]==first and data()['works'][1]==updated and len(data()['works'])==3
   shot('saved-second-work');checks.append('Opening gallery loads editable layers; editing changes draft only; saving an edited draft creates a new version; original and other entries remain unchanged')
   click(650,603);click(1270,270,'UI_PAGE:levels');click(1268,308,'UI_PAGE:canvas')
-  click(215,520,'UI_DIALOG:武器贴纸');click(316,657,'UI_PAGE:canvas')
+  click(215,520,'UI_DIALOG:选择贴纸');click(506,242);click(316,503,'UI_PAGE:canvas')
   before=data();assert '0' in before['drafts'] and '-1' in before['drafts']
   i=len(logs);page.reload();wait('UI_PAGE:canvas',i);assert data()['topic']==0 and data()['drafts']['0']==before['drafts']['0']
   checks.append('Multiple prompt drafts and multiple saved works coexist')

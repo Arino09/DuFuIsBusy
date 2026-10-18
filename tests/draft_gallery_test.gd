@@ -68,7 +68,7 @@ func run() -> void:
 	app.drawing.move_pen(Vector2(640, 145))
 	app.drawing.finish()
 	app.drawing.add_object("text", "自动保存草稿", 36, Color("3a9d8f"))
-	app.drawing.add_object("weapon_blue")
+	app.drawing.add_object("dufu_cyber_long_blade")
 	var state: Dictionary = app.drawings[0]
 	assert(state.submitted == -1 and state.result == null)
 	app.set_tool("橡皮")
@@ -112,7 +112,7 @@ func run() -> void:
 	click(app.page, "MyWorks/Cards/Work1/EditButton")
 	var saved_objects: int = app.drawing.state.objects.size()
 	app.local_store.fail_writes = true
-	app.drawing.add_object("weapon_violet")
+	app.drawing.add_object("dufu_cyber_greatsword")
 	var unsaved_undo: int = app.drawing.state.undo.size()
 	app._show_gallery(0)
 	assert(card_surface(app).state.objects.size() == saved_objects)
@@ -160,7 +160,7 @@ func run() -> void:
 	# represented once; subsequent edits become a distinct draft beside the work.
 	app = create_app()
 	app._start_topic(0)
-	app.drawing.add_object("weapon_du")
+	app.drawing.add_object("dufu_greatsword")
 	state = app.drawings[0]
 	state.submitted = state.revision
 	state.result = ImageTexture.create_from_image(state.pixels)

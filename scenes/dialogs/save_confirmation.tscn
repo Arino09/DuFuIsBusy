@@ -4,18 +4,36 @@
 
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="3_serif"]
 
 [node name="SaveConfirmation" type="Control"]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
 [node name="Frame" parent="." instance=ExtResource("2_frame")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="2"]
 text = "已保存"
@@ -24,30 +42,51 @@ text = "已保存"
 text = "自由创作 · 1"
 
 [node name="ContinueButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 566.0
-offset_top = 575.0
-offset_right = 768.0
-offset_bottom = 633.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = 125.0
+offset_right = 48.0
+offset_bottom = 183.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "继续编辑"
 
 [node name="GalleryButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 795.0
-offset_top = 575.0
-offset_right = 997.0
-offset_bottom = 633.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 75.0
+offset_top = 125.0
+offset_right = 277.0
+offset_bottom = 183.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "查看画廊"
 
 [node name="NextButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 575.0
-offset_right = 550.0
-offset_bottom = 633.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = 125.0
+offset_right = -170.0
+offset_bottom = 183.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "下一关"
 

@@ -4,14 +4,14 @@
 
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="2_frame"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="3_serif"]
 
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-dusword.png" id="4_du"]
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-pink-blade.png" id="5_pink"]
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-silver-sword.png" id="6_silver"]
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-blue-sword.png" id="7_blue"]
-[ext_resource type="Texture2D" path="res://assets/stickers/weapon-violet-greatsword.png" id="8_violet"]
-[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="9_font"]
+[ext_resource type="Texture2D" path="res://assets/stickers/dufu/greatsword.png" id="4_du"]
+[ext_resource type="Texture2D" path="res://assets/stickers/food/skewers.png" id="5_pink"]
+[ext_resource type="Texture2D" path="res://assets/stickers/dufu/longsword.png" id="6_silver"]
+[ext_resource type="Texture2D" path="res://assets/stickers/food/milk-tea-green.png" id="7_blue"]
+[ext_resource type="Texture2D" path="res://assets/stickers/dufu/cyber-greatsword.png" id="8_violet"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="9_font"]
 
 [sub_resource type="StyleBoxFlat" id="ReferencePanel"]
 content_margin_left = 18.0
@@ -30,15 +30,33 @@ corner_radius_bottom_left = 2
 corner_radius_bottom_right = 2
 
 [node name="StickerCatalog" type="Control"]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
 [node name="Frame" parent="." instance=ExtResource("2_frame")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="2"]
 text = "素材"
@@ -48,111 +66,181 @@ theme_override_fonts/font = ExtResource("9_font")
 text = ""
 
 [node name="ReferencePanel" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 218.0
-offset_top = 228.0
-offset_right = 593.0
-offset_bottom = 690.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -502.0
+offset_top = -222.0
+offset_right = -127.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("ReferencePanel")
 
 [node name="SampleDu" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 241.0
-offset_top = 251.0
-offset_right = 339.0
-offset_bottom = 440.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -479.0
+offset_top = -199.0
+offset_right = -381.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_du")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SamplePink" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 352.0
-offset_top = 251.0
-offset_right = 450.0
-offset_bottom = 440.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -368.0
+offset_top = -199.0
+offset_right = -270.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5_pink")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SampleSilver" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 463.0
-offset_top = 251.0
-offset_right = 561.0
-offset_bottom = 440.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -257.0
+offset_top = -199.0
+offset_right = -159.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("6_silver")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SampleBlue" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 274.0
-offset_top = 459.0
-offset_right = 372.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = 9.0
+offset_right = -348.0
+offset_bottom = 198.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("7_blue")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SampleViolet" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 418.0
-offset_top = 459.0
-offset_right = 516.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -302.0
+offset_top = 9.0
+offset_right = -204.0
+offset_bottom = 198.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("8_violet")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="WeaponTitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 643.0
-offset_top = 231.0
-offset_right = 1173.0
-offset_bottom = 283.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -219.0
+offset_right = 453.0
+offset_bottom = -167.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_fonts/font = ExtResource("3_serif")
-text = "武器贴纸"
+text = "贴纸素材"
 vertical_alignment = 1
 
 [node name="WeaponCaption" type="Label" parent="."]
-layout_mode = 0
-offset_left = 645.0
-offset_top = 287.0
-offset_right = 1204.0
-offset_bottom = 325.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -163.0
+offset_right = 484.0
+offset_bottom = -125.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 theme_override_fonts/font = ExtResource("9_font")
-text = "5 款"
+text = "5 个分类 · 共 50 款贴纸"
 vertical_alignment = 1
 
 [node name="WeaponButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 645.0
-offset_top = 344.0
-offset_right = 1203.0
-offset_bottom = 399.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -106.0
+offset_right = 483.0
+offset_bottom = -51.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "选择贴纸"
 
 [node name="SceneTitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 643.0
-offset_top = 427.0
-offset_right = 1173.0
-offset_bottom = 471.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -23.0
+offset_right = 453.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 26
@@ -161,41 +249,85 @@ text = "场景参考"
 vertical_alignment = 1
 
 [node name="CityButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 645.0
-offset_top = 489.0
-offset_right = 911.0
-offset_bottom = 544.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = 39.0
+offset_right = 191.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "科幻都市"
 
 [node name="MarketButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 931.0
-offset_top = 489.0
-offset_right = 1203.0
-offset_bottom = 544.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 211.0
+offset_top = 39.0
+offset_right = 483.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "烟火夜市"
 
+[node name="BrandButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = 111.0
+offset_right = 483.0
+offset_bottom = 166.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+text = "黑白杜甫品牌背景"
+
 [node name="MissingMaterialsNote" type="Label" parent="."]
-layout_mode = 0
-offset_left = 645.0
-offset_top = 587.0
-offset_right = 1202.0
-offset_bottom = 632.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = 137.0
+offset_right = 482.0
+offset_bottom = 182.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.52156863, 0.48235294, 0.40784314, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 text = ""
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1010.0
-offset_top = 717.0
-offset_right = 1226.0
-offset_bottom = 765.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 290.0
+offset_top = 267.0
+offset_right = 506.0
+offset_bottom = 315.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "返回画布"

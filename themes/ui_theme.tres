@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://eb474rhvm68w"]
 
-[ext_resource type="FontFile" uid="uid://vhcn57d1t4c7" path="res://assets/fonts/SourceSansSC.otf" id="1_sans"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="1_sans"]
 
 [sub_resource type="StyleBoxFlat" id="ButtonDisabled"]
 content_margin_left = 18.0
@@ -277,7 +277,7 @@ corner_radius_bottom_left = 2
 
 [resource]
 default_font = ExtResource("1_sans")
-default_font_size = 20
+default_font_size = 22
 Button/colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 Button/colors/font_disabled_color = Color(0.556863, 0.541176, 0.501961, 1)
 Button/colors/font_focus_color = Color(0.160784, 0.156863, 0.141176, 1)
@@ -301,7 +301,7 @@ CheckButton/styles/hover = SubResource("ButtonHover")
 CheckButton/styles/normal = SubResource("ButtonNormal")
 CheckButton/styles/pressed = SubResource("ButtonPressed")
 CompactRetryButton/base_type = &"Button"
-CompactRetryButton/font_sizes/font_size = 16
+CompactRetryButton/font_sizes/font_size = 20
 CompactRetryButton/styles/disabled = SubResource("CompactRetry")
 CompactRetryButton/styles/focus = SubResource("CompactRetry")
 CompactRetryButton/styles/hover = SubResource("CompactRetry")

@@ -4,7 +4,7 @@ extends RefCounted
 
 static var sink: Object
 
-## A moment, e.g. "canvas.object.add.weapon_du".
+## A moment, e.g. "canvas.object.add.dufu_greatsword".
 static func cue(key: String) -> void:
 	if is_instance_valid(sink): sink.cue(key)
 

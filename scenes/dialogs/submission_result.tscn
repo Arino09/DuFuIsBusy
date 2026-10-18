@@ -4,18 +4,36 @@
 
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="2_frame"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="3_serif"]
 
 [node name="SubmissionResult" type="Control"]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
 [node name="Frame" parent="." instance=ExtResource("2_frame")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="2"]
 text = "完成作品"
@@ -24,64 +42,106 @@ text = "完成作品"
 text = "保存后解锁下一关。"
 
 [node name="Artwork" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 214.0
-offset_top = 230.0
-offset_right = 1226.0
-offset_bottom = 560.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -506.0
+offset_top = -220.0
+offset_right = 506.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Remark" type="Label" parent="."]
-layout_mode = 0
-offset_left = 235.0
-offset_top = 581.0
-offset_right = 1215.0
-offset_bottom = 612.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -485.0
+offset_top = 131.0
+offset_right = 495.0
+offset_bottom = 162.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 theme_override_fonts/font = ExtResource("3_serif")
 text = ""
 vertical_alignment = 1
 
 
 [node name="ContinueButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 216.0
-offset_top = 626.0
-offset_right = 440.0
-offset_bottom = 675.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -504.0
+offset_top = 176.0
+offset_right = -280.0
+offset_bottom = 225.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "继续编辑"
 
 
 [node name="SaveButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 985.0
-offset_top = 626.0
-offset_right = 1209.0
-offset_bottom = 675.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 265.0
+offset_top = 176.0
+offset_right = 489.0
+offset_bottom = 225.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "保存作品"
 
 [node name="SaveAsButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 731.0
-offset_top = 626.0
-offset_right = 955.0
-offset_bottom = 675.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 11.0
+offset_top = 176.0
+offset_right = 235.0
+offset_bottom = 225.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "保存副本"
 
 [node name="DownloadButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 477.0
-offset_top = 626.0
-offset_right = 701.0
-offset_bottom = 675.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -243.0
+offset_top = 176.0
+offset_right = -19.0
+offset_bottom = 225.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "下载图片"
 

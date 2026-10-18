@@ -49,6 +49,14 @@ func test_encodings() -> void:
 	assert(gbk.errors.size() == 1 and gbk.errors[0].contains("UTF-8"), "GBK files ask for a UTF-8 re-save")
 
 func test_shipped_table() -> void:
+	assert(root.get_node_or_null("AudioDirector") != null, "AudioDirector must be autoloaded to receive game events")
+	var runtime := root.get_node_or_null("WwiseRuntimeManager")
+	assert(runtime != null and runtime.has_method("initialize"), "Use the project Wwise manager, not the addon default")
+	var bank_root: String = ProjectSettings.get_setting("wwise/common_user_settings/root_output_path", "")
+	assert(FileAccess.file_exists(bank_root.path_join("Web/Init.bnk")), "Wwise bank root points at the bundled banks")
+	for platform in ["windows", "web"]:
+		var info: String = ProjectSettings.get_setting("wwise/project_settings/" + platform + "_platform_info", "")
+		assert(ResourceLoader.exists(info), "Wwise platform resource is configured: " + platform)
 	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
 	assert(table.errors.is_empty(), "Shipped audio table has no errors: %s" % [table.errors])
 	assert(table.lookup("test.play") != "", "F9 test key points at a real event")
@@ -63,7 +71,7 @@ func test_shipped_table() -> void:
 				"fact": key += ".enter.x"
 				"param": key = "rtpc." + key
 			used[key] = true
-	for key in ["message.notice", "canvas.drag.begin.paint", "canvas.object.add.weapon_du", "canvas.object.select.avatar"]: used[key] = true
+	for key in ["message.notice", "canvas.drag.begin.paint", "canvas.object.add.dufu_greatsword", "canvas.object.select.avatar"]: used[key] = true
 	for key in used:
 		if key.ends_with(".enter.x"):
 			var name: String = key.trim_suffix(".enter.x")
@@ -75,6 +83,7 @@ func test_shipped_table() -> void:
 	assert(presets.load("res://export_presets.cfg") == OK, "Export presets load")
 	for section in ["preset.0", "preset.1"]:
 		assert(str(presets.get_value(section, "include_filter", "")).contains("addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv"), "Exports ship the audio table: " + section)
+		assert(str(presets.get_value(section, "include_filter", "")).contains("GeneratedSoundBanks/Web/*.bnk"), "Exports ship the shared banks: " + section)
 
 const WWISE_PROJECT := "res://addons/Wwise/wwise_project/DuFuIsBusy/"
 const BANK_PATH := "GeneratedSoundBanks/Web/Main.bnk"
@@ -136,6 +145,8 @@ func test_shipped_routing() -> void:
 		"canvas.drag.begin.paint": "Play_SFX_Brush_Loop", "canvas.drag.end.paint": "Stop_SFX_Brush_Loop",
 		"rtpc.canvas.drag_speed": "Brush_Speed", "canvas.drag.begin.erase": "",
 		"ui.press.primary.EnterButton": "", "canvas.drag.begin.move.avatar": "",
+		"canvas.drag.begin.move.dufu_greatsword": "", "canvas.object.add.dufu_cyber_long_blade": "",
+		"canvas.object.remove.dufu_greatsword": "", "dialog.enter.play_notice": "",
 	}
 	for page in ["home", "levels", "canvas", "gallery", "settings"]:
 		var suffix: String = {"home": "Home", "levels": "Level", "canvas": "Canvas", "gallery": "Gallery", "settings": "And_Enter_Settings"}[page]
@@ -170,6 +181,19 @@ func test_brush_audio() -> void:
 	var count: int = director.calls.size()
 	surface.finish()
 	assert(director.calls.size() == count, "Repeated finish cannot stop twice")
+	# A second finger cancels the provisional stroke, including its captured audio.
+	director.calls.clear()
+	surface.begin(Vector2(500, 150), 0)
+	surface.move_pen(Vector2(600, 150))
+	surface._process(0.1)
+	director._send_rtpc("canvas.drag_speed")
+	surface.erasing = true
+	surface.cancel()
+	assert(not surface.active and director.calls[-2] == "post Stop_SFX_Brush_Loop" and director.calls[-1] == "rtpc Brush_Speed=0.0", "Cancel stops the captured loop and immediately resets its speed")
+	count = director.calls.size()
+	surface.cancel()
+	assert(director.calls.size() == count, "Repeated cancellation cannot stop twice")
+	surface.erasing = false
 	surface.begin(Vector2(500, 150), 0)
 	surface.move_pen(Vector2(-1, 150))
 	assert(not surface.active and director.calls[-1] == "post Stop_SFX_Brush_Loop", "Leaving paper stops a touch stroke")

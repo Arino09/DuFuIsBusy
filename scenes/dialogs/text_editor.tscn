@@ -4,23 +4,41 @@
 
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="3_serif"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="4_creative"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="4_creative"]
 
 [ext_resource type="Script" path="res://scripts/dialogs/text_editor_dialog.gd" id="5_script"]
 
 [node name="TextEditor" type="Control"]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("5_script")
 
 [node name="Frame" parent="." instance=ExtResource("2_frame")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="2"]
 text = "添加文字"
@@ -30,89 +48,145 @@ text = ""
 visible = false
 
 [node name="TextLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 353.0
-offset_right = 985.0
-offset_bottom = 391.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = -97.0
+offset_right = 265.0
+offset_bottom = -59.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 text = "文字（最多 24 字）"
 vertical_alignment = 1
 
 [node name="TextInput" type="LineEdit" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 397.0
-offset_right = 1002.0
-offset_bottom = 446.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = -53.0
+offset_right = 282.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/font = ExtResource("4_creative")
 placeholder_text = "输入文字"
 max_length = 24
 
 [node name="FontSizeLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 470.0
-offset_right = 525.0
-offset_bottom = 514.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = 20.0
+offset_right = -195.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 text = "字号"
 vertical_alignment = 1
 
 [node name="FontSizeInput" type="SpinBox" parent="."]
-layout_mode = 0
-offset_left = 525.0
-offset_top = 470.0
-offset_right = 662.0
-offset_bottom = 514.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = 20.0
+offset_right = -58.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
 min_value = 16.0
 max_value = 64.0
 step = 2.0
 value = 32.0
 
 [node name="ColorLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 702.0
-offset_top = 470.0
-offset_right = 788.0
-offset_bottom = 514.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = 20.0
+offset_right = 68.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 text = "色号"
 vertical_alignment = 1
 
 [node name="ColorInput" type="LineEdit" parent="."]
-layout_mode = 0
-offset_left = 788.0
-offset_top = 470.0
-offset_right = 1002.0
-offset_bottom = 514.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 68.0
+offset_top = 20.0
+offset_right = 282.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "243d35"
 max_length = 6
 
 [node name="ErrorLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 523.0
-offset_right = 1005.0
-offset_bottom = 563.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = 73.0
+offset_right = 285.0
+offset_bottom = 113.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.643137, 0.262745, 0.196078, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
 [node name="ApplyButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 793.0
-offset_top = 575.0
-offset_right = 1000.0
-offset_bottom = 632.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 73.0
+offset_top = 125.0
+offset_right = 280.0
+offset_bottom = 182.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "确定"
