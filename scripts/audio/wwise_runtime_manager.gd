@@ -18,6 +18,13 @@ func _ready() -> void:
 func initialize() -> bool:
 	if wwise == null: return false
 	if not wwise.is_initialized():
+		# This checkout ships Web banks, which also work with the Windows runtime.
+		# Prefer dedicated Windows banks when they have been generated.
+		if OS.has_feature("windows"):
+			var bank_root: String = ProjectSettings.get_setting("wwise/common_user_settings/root_output_path", "")
+			if not FileAccess.file_exists(bank_root.path_join("Windows/Init.bnk")) and FileAccess.file_exists(bank_root.path_join("Web/Init.bnk")):
+				ProjectSettings.set_setting("wwise/project_settings/windows_platform_info", "res://Wwise/resources/Web.tres")
+				print("AUDIO_BANK_FALLBACK: Windows banks missing; using bundled Web banks")
 		if OS.has_feature("web"):
 			ProjectSettings.set_setting("wwise/common_user_settings/samples_per_frame", 3) # 2048 samples
 			ProjectSettings.set_setting("wwise/common_user_settings/number_of_refills_in_voice", 1) # four buffers
