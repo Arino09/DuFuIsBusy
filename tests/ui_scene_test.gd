@@ -147,6 +147,9 @@ func verify_authored_scenes() -> bool:
 	return true
 
 func run() -> void:
+	# Headless windows default to 64x64; authoring checks use the design aspect.
+	# Other aspect ratios are exercised by resolution_test.gd.
+	root.size = Vector2i(1440, 900)
 	if not verify_authored_scenes():
 		quit(1)
 		return

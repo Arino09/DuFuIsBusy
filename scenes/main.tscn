@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://cwwh4frkreaer"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
-[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="2"]
+[ext_resource type="Script" uid="uid://cevu14i6ydq0x" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Theme" uid="uid://eb474rhvm68w" path="res://themes/ui_theme.tres" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/pages/home.tscn" id="3"]
 
-[node name="DuFuIsBusy" type="Control"]
+[node name="DuFuIsBusy" type="Control" unique_id=2102436397]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ grow_vertical = 2
 theme = ExtResource("2")
 script = ExtResource("1")
 
-[node name="PageHost" type="Control" parent="."]
+[node name="PageHost" type="Control" parent="." unique_id=656117789]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,10 +23,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Home" parent="PageHost" instance=ExtResource("3")]
-layout_mode = 0
+[node name="Home" parent="PageHost" unique_id=414207253 instance=ExtResource("3")]
 
-[node name="DialogHost" type="Control" parent="."]
+[node name="DialogHost" type="Control" parent="." unique_id=711589221]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,7 +34,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PreferenceSaveTimer" type="Timer" parent="."]
+[node name="PreferenceSaveTimer" type="Timer" parent="." unique_id=1379559186]
 wait_time = 0.25
 one_shot = true
 

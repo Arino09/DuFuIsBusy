@@ -4,18 +4,36 @@
 
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame.tscn" id="2_frame"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="3_serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="3_serif"]
 
 [node name="ResetConfirmation" type="Control"]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
 [node name="Frame" parent="." instance=ExtResource("2_frame")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="2"]
 text = "恢复默认设置？"
@@ -24,20 +42,34 @@ text = "恢复默认设置？"
 text = "音量、音效、音乐、画质和减少动画将恢复默认。\n草稿、作品和关卡进度会保留。"
 
 [node name="CancelButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 566.0
-offset_top = 575.0
-offset_right = 768.0
-offset_bottom = 633.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = 125.0
+offset_right = 48.0
+offset_bottom = 183.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "取消"
 
 [node name="ConfirmButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 795.0
-offset_top = 575.0
-offset_right = 997.0
-offset_bottom = 633.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 75.0
+offset_top = 125.0
+offset_right = 277.0
+offset_bottom = 183.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"PrimaryButton"
 text = "恢复默认"

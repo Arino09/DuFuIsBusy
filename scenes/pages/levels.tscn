@@ -1,19 +1,37 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
 [ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
 
 [node name="Levels" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("Theme")
 
 [node name="Frame" parent="." instance=ExtResource("Frame")]
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="3"]
 text = "选关"
@@ -22,10 +40,18 @@ text = "选关"
 text = "保存完成作品后，解锁下一关。"
 
 [node name="Topic1" type="Control" parent="."]
-offset_left = 74.0
-offset_top = 255.0
-offset_right = 1368.0
-offset_bottom = 383.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = -195.0
+offset_right = 648.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 2
 metadata/topic_id = 0
 metadata/background_id = "country_road"
 metadata/remark = "这回能少走些路了。"
@@ -73,7 +99,7 @@ offset_right = 975.0
 offset_bottom = 95.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
@@ -95,10 +121,18 @@ mouse_filter = 2
 color = Color(0.847059, 0.831373, 0.792157, 1)
 
 [node name="Topic2" type="Control" parent="."]
-offset_left = 74.0
-offset_top = 383.0
-offset_right = 1368.0
-offset_bottom = 511.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = -67.0
+offset_right = 648.0
+offset_bottom = 61.0
+grow_horizontal = 2
+grow_vertical = 2
 metadata/topic_id = 1
 metadata/background_id = "star_platform"
 metadata/remark = "这身行头，该怎么穿？"
@@ -146,7 +180,7 @@ offset_right = 975.0
 offset_bottom = 95.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
@@ -168,10 +202,18 @@ mouse_filter = 2
 color = Color(0.847059, 0.831373, 0.792157, 1)
 
 [node name="Topic3" type="Control" parent="."]
-offset_left = 74.0
-offset_top = 511.0
-offset_right = 1368.0
-offset_bottom = 639.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = 61.0
+offset_right = 648.0
+offset_bottom = 189.0
+grow_horizontal = 2
+grow_vertical = 2
 metadata/topic_id = 2
 metadata/background_id = "bamboo_mountains"
 metadata/remark = "剑我收下，诗还得写。"
@@ -219,7 +261,7 @@ offset_right = 975.0
 offset_bottom = 95.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
@@ -241,10 +283,18 @@ mouse_filter = 2
 color = Color(0.847059, 0.831373, 0.792157, 1)
 
 [node name="Topic4" type="Control" parent="."]
-offset_left = 74.0
-offset_top = 639.0
-offset_right = 1368.0
-offset_bottom = 767.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = 189.0
+offset_right = 648.0
+offset_bottom = 317.0
+grow_horizontal = 2
+grow_vertical = 2
 metadata/topic_id = 3
 metadata/background_id = "tea_cottage"
 metadata/remark = "今天就在草堂歇一歇。"
@@ -292,7 +342,7 @@ offset_right = 975.0
 offset_bottom = 95.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 

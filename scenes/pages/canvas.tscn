@@ -2,8 +2,8 @@
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
-[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="CreativeFont"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="CreativeFont"]
 
 [ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
 
@@ -33,18 +33,22 @@ content_margin_bottom = 3.0
 bg_color = Color(0.141176, 0.239216, 0.207843, 1)
 
 [node name="Canvas" type="Control"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("Theme")
 script = ExtResource("Controller")
 
 [node name="Frame" parent="." instance=ExtResource("Frame")]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="3"]
 text = "画布"
@@ -67,9 +71,11 @@ vertical_alignment = 1
 theme_override_fonts/font = ExtResource("Serif")
 
 [node name="TopicPrompt" type="Label" parent="."]
+layout_mode = 1
+anchor_right = 1.0
 offset_left = 234.0
 offset_top = 249.0
-offset_right = 1117.0
+offset_right = -323.0
 offset_bottom = 291.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
@@ -78,9 +84,12 @@ text = "至少出现一种交通工具"
 vertical_alignment = 1
 
 [node name="ChangeTopicButton" type="Button" parent="."]
-offset_left = 1193.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -247.0
 offset_top = 249.0
-offset_right = 1349.0
+offset_right = -91.0
 offset_bottom = 293.0
 mouse_default_cursor_shape = 2
 text = "选关"
@@ -108,7 +117,7 @@ text = "笔刷"
 tooltip_text = "按住并拖动来画线"
 theme_type_variation = &"SelectableButton"
 toggle_mode = true
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 button_pressed = true
 theme_override_styles/normal = SubResource("CompactTool")
 theme_override_styles/hover = SubResource("CompactTool")
@@ -126,7 +135,7 @@ text = "橡皮"
 tooltip_text = "只擦除笔迹"
 theme_type_variation = &"SelectableButton"
 toggle_mode = true
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CompactTool")
 theme_override_styles/hover = SubResource("CompactTool")
 
@@ -143,7 +152,7 @@ text = "移动"
 tooltip_text = "点选杜甫、文字或贴纸；拖动图层移动，边柄自由拉伸，角柄等比缩放，圆柄旋转；点击空白取消选择"
 theme_type_variation = &"SelectableButton"
 toggle_mode = true
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CompactTool")
 theme_override_styles/hover = SubResource("CompactTool")
 
@@ -157,7 +166,7 @@ offset_right = 185.0
 offset_bottom = 412.0
 mouse_default_cursor_shape = 2
 text = "文字"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CompactTool")
 theme_override_styles/hover = SubResource("CompactTool")
 
@@ -168,7 +177,7 @@ offset_right = 285.0
 offset_bottom = 412.0
 mouse_default_cursor_shape = 2
 text = "贴纸"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CompactTool")
 theme_override_styles/hover = SubResource("CompactTool")
 
@@ -186,7 +195,7 @@ offset_right = 176.0
 offset_bottom = 445.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "粗细  12"
 vertical_alignment = 1
 
@@ -201,20 +210,26 @@ step = 4.0
 value = 12.0
 
 [node name="ReferenceButton" type="Button" parent="."]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
 theme_type_variation = &"QuietButton"
 offset_left = 311.0
-offset_top = 768.0
+offset_top = -132.0
 offset_right = 440.0
-offset_bottom = 801.0
+offset_bottom = -99.0
 mouse_default_cursor_shape = 2
 text = "素材"
 
 [node name="RestartButton" type="Button" parent="."]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
 theme_type_variation = &"QuietButton"
 offset_left = 450.0
-offset_top = 768.0
+offset_top = -132.0
 offset_right = 620.0
-offset_bottom = 801.0
+offset_bottom = -99.0
 mouse_default_cursor_shape = 2
 text = "清空草稿"
 
@@ -227,7 +242,7 @@ offset_right = 410.0
 offset_bottom = 379.0
 mouse_default_cursor_shape = 2
 text = "编辑"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 disabled = true
 
 [node name="DeleteObjectButton" type="Button" parent="."]
@@ -238,7 +253,7 @@ offset_right = 517.0
 offset_bottom = 379.0
 mouse_default_cursor_shape = 2
 text = "删除"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 disabled = true
 
 [node name="DeselectButton" type="Button" parent="."]
@@ -250,46 +265,59 @@ offset_bottom = 379.0
 mouse_default_cursor_shape = 2
 text = "取消"
 tooltip_text = "取消选择"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 disabled = true
 
 [node name="UndoButton" type="Button" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
 theme_type_variation = &"QuietButton"
-offset_left = 1080.0
+offset_left = -360.0
 offset_top = 337.0
-offset_right = 1200.0
+offset_right = -240.0
 offset_bottom = 379.0
 mouse_default_cursor_shape = 2
 text = "撤销"
 disabled = true
 
 [node name="RedoButton" type="Button" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
 theme_type_variation = &"QuietButton"
-offset_left = 1216.0
+offset_left = -224.0
 offset_top = 337.0
-offset_right = 1348.0
+offset_right = -92.0
 offset_bottom = 379.0
 mouse_default_cursor_shape = 2
 text = "重做"
 disabled = true
 
 [node name="DrawingStatus" type="Label" parent="."]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 theme_override_fonts/font = ExtResource("CreativeFont")
 offset_left = 313.0
-offset_top = 733.0
-offset_right = 1123.0
-offset_bottom = 762.0
+offset_top = -167.0
+offset_right = -317.0
+offset_bottom = -138.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "画笔"
 vertical_alignment = 1
 
 [node name="CanvasView" type="ColorRect" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 311.0
 offset_top = 397.0
-offset_right = 1351.0
-offset_bottom = 727.0
+offset_right = -89.0
+offset_bottom = -173.0
 clip_contents = true
 color = Color(0.84, 0.82, 0.78, 1)
 mouse_filter = 0
@@ -304,22 +332,29 @@ script = ExtResource("Drawing")
 
 
 [node name="SubmitButton" type="Button" parent="."]
-offset_left = 1131.0
-offset_top = 743.0
-offset_right = 1344.0
-offset_bottom = 786.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -309.0
+offset_top = -157.0
+offset_right = -96.0
+offset_bottom = -114.0
 mouse_default_cursor_shape = 2
 text = "完成作品"
 theme_type_variation = &"PrimaryButton"
 
 [node name="CanvasSize" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
 offset_left = 311.0
 offset_top = 183.0
-offset_right = 1351.0
+offset_right = -89.0
 offset_bottom = 225.0
 theme_override_constants/separation = 12
 theme_override_fonts/font = ExtResource("CreativeFont")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 
 [node name="SizeLabel" type="Label" parent="CanvasSize"]
 text = "画布尺寸"
@@ -349,48 +384,65 @@ tooltip_text = "保留左上角内容，缩小时裁切边缘；可撤销"
 
 [node name="SizeHint" type="Label" parent="CanvasSize"]
 text = "缩小会裁切 · 可撤销"
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 
 [node name="ZoomOutButton" type="Button" parent="."]
-offset_left = 642.0
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -78.0
 offset_top = 337.0
-offset_right = 702.0
+offset_right = -18.0
 offset_bottom = 379.0
 text = "−"
 tooltip_text = "缩小画布视角"
 
 [node name="ZoomLabel" type="Label" parent="."]
-offset_left = 710.0
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -10.0
 offset_top = 337.0
-offset_right = 790.0
+offset_right = 70.0
 offset_bottom = 379.0
 horizontal_alignment = 1
 vertical_alignment = 1
 text = "100%"
 
 [node name="ZoomInButton" type="Button" parent="."]
-offset_left = 798.0
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 78.0
 offset_top = 337.0
-offset_right = 858.0
+offset_right = 138.0
 offset_bottom = 379.0
 text = "+"
 tooltip_text = "放大画布视角"
 
 [node name="FitViewButton" type="Button" parent="."]
-offset_left = 872.0
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 152.0
 offset_top = 337.0
-offset_right = 1062.0
+offset_right = 342.0
 offset_bottom = 379.0
 theme_override_fonts/font = ExtResource("CreativeFont")
 text = "适应窗口"
 
 [node name="ViewHint" type="Label" parent="."]
-offset_left = 640.0
-offset_top = 765.0
-offset_right = 1117.0
-offset_bottom = 793.0
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -135.0
+offset_right = 397.0
+offset_bottom = -107.0
 theme_override_fonts/font = ExtResource("CreativeFont")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "滚轮缩放 · 中键拖动画布"
 
 [editable path="Frame"]

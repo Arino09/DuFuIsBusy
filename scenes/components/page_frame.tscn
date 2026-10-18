@@ -1,20 +1,38 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
 [ext_resource type="Script" path="res://scripts/ink_paper.gd" id="Paper"]
 
 [node name="PageFrame" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 1440.0
-offset_bottom = 900.0
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("Theme")
 
 [node name="Paper" type="Control" parent="."]
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("Paper")
 
@@ -31,18 +49,34 @@ text = "杜甫很忙"
 vertical_alignment = 1
 
 [node name="HeaderRule" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
 offset_left = 72.0
 offset_top = 78.0
-offset_right = 1368.0
+offset_right = -72.0
 offset_bottom = 79.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 color = Color(0.847059, 0.831373, 0.792157, 1)
 
 [node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
 offset_left = 72.0
 offset_top = 111.0
-offset_right = 1102.0
+offset_right = -338.0
 offset_bottom = 173.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
 theme_override_font_sizes/font_size = 42
@@ -51,41 +85,73 @@ text = ""
 vertical_alignment = 1
 
 [node name="Subtitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
 offset_left = 74.0
 offset_top = 182.0
-offset_right = 1214.0
+offset_right = -226.0
 offset_bottom = 216.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 text = ""
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]
-offset_left = 1192.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -248.0
 offset_top = 104.0
-offset_right = 1368.0
+offset_right = -72.0
 offset_bottom = 152.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "返回首页"
 theme_type_variation = &"QuietButton"
 
 [node name="StorageHint" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 72.0
-offset_top = 808.0
-offset_right = 1162.0
-offset_bottom = 842.0
+offset_top = -92.0
+offset_right = -278.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
 [node name="StorageRetry" type="Button" parent="."]
-offset_left = 1180.0
-offset_top = 807.0
-offset_right = 1368.0
-offset_bottom = 845.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -93.0
+offset_right = -72.0
+offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 text = "重试保存"
 theme_type_variation = &"CompactRetryButton"
