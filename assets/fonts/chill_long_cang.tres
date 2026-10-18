@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/ChillLongCangKaiShu_Bold.otf" id="1_kai"]
+[ext_resource type="FontFile" path="res://assets/fonts/CreativeSansSC.otf" id="2_fallback"]
+
+[resource]
+base_font = ExtResource("1_kai")
+fallbacks = Array[Font]([ExtResource("2_fallback")])

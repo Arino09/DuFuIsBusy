@@ -23,7 +23,7 @@ func _ready() -> void:
 	# A local compact theme keeps the page's large button padding out of inputs.
 	var compact := Theme.new()
 	compact.default_font = get_theme_default_font()
-	compact.default_font_size = 14
+	compact.default_font_size = 16
 	var field := StyleBoxFlat.new()
 	field.bg_color = Color("fffdf7")
 	field.border_color = Color("b7b1a4")
@@ -40,7 +40,9 @@ func _ready() -> void:
 	var selected := field.duplicate() as StyleBoxFlat
 	selected.bg_color = Color("243d35")
 	compact.set_stylebox("pressed", "Button", selected)
+	compact.set_stylebox("hover_pressed", "Button", selected)
 	compact.set_color("font_pressed_color", "Button", Color.WHITE)
+	compact.set_color("font_hover_pressed_color", "Button", Color.WHITE)
 	compact.set_color("font_color", "Label", Color("77736a"))
 	theme = compact
 	_rgb = _mode_button("RGB", 0, false)
