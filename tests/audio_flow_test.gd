@@ -39,42 +39,42 @@ func run() -> void:
 	await process_frame
 
 	# Page transitions play their dedicated exit and enter events once.
-	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), ["post Play_SFX_Exit_Home", "post Play_SFX_Enter_Level"])
-	expect("Start a level", await heard(func(): press(app.page, "Topic3/EnterButton")), ["post Play_SFX_Exit_Levels", "post Play_SFX_Enter_Canvas"])
+	expect("Start game", await heard(func(): press(app.page, "LevelsButton")), ["post Play_SFX_UI_Click", "post Play_SFX_Exit_Home", "post Play_SFX_Enter_Level"])
+	expect("Start a level", await heard(func(): press(app.page, "Topic3/EnterButton")), ["post Play_SFX_UI_Click", "post Play_SFX_Exit_Levels", "post Play_SFX_Enter_Canvas"])
 	assert(app.current == "canvas")
 
-	# No generic UI event is authored; tool changes are silent.
-	expect("Eraser tool", await heard(func(): press(app.page, "ToolEraser")), [])
-	expect("Move tool", await heard(func(): press(app.page, "ToolMove")), [])
-	expect("Brush tool", await heard(func(): press(app.page, "ToolBrush")), [])
+	# Tool buttons use the authored UI click event.
+	expect("Eraser tool", await heard(func(): press(app.page, "ToolEraser")), ["post Play_SFX_UI_Click"])
+	expect("Move tool", await heard(func(): press(app.page, "ToolMove")), ["post Play_SFX_UI_Click"])
+	expect("Brush tool", await heard(func(): press(app.page, "ToolBrush")), ["post Play_SFX_UI_Click"])
 
 	# Each brush stroke starts and stops its loop; RTPCs are checked in audio_test.gd.
 	expect("Brush stroke", await heard(func():
 		app.drawing.begin(Vector2(500, 150), -1)
 		app.drawing.move_pen(Vector2(600, 180))
 		app.drawing.finish()), ["post Play_SFX_Brush_Loop", "post Stop_SFX_Brush_Loop"])
-	expect("Undo", await heard(func(): press(app.page, "UndoButton")), [])
-	expect("Redo", await heard(func(): press(app.page, "RedoButton")), [])
+	expect("Undo", await heard(func(): press(app.page, "UndoButton")), ["post Play_SFX_UI_Click"])
+	expect("Redo", await heard(func(): press(app.page, "RedoButton")), ["post Play_SFX_UI_Click"])
 	app.apply_color(Color("3a9d8f"))
 	expect("Eraser stroke", await heard(func():
 		app.drawing.erasing = true
 		app.drawing.begin(Vector2(520, 160), -1)
 		app.drawing.finish()
-		app.drawing.erasing = false), [])
+		app.drawing.erasing = false), ["post Play_SFX_Eraser_Loop", "post Stop_SFX_Eraser_Loop"])
 
-	# Dialogs and layer edits remain silent until dedicated events are authored.
-	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), [])
-	expect("Add sticker", await heard(func(): press(app.overlay, "Scroll/Grid/food_authority/Content/UseButton")), [])
-	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), [])
-	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), [])
-	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), [])
-	expect("Open text editor", await heard(func(): press(app.page, "AddTextButton")), [])
+	# Buttons click; the current food sticker has no dedicated placement mapping.
+	expect("Open stickers", await heard(func(): press(app.page, "StickerButton")), ["post Play_SFX_UI_Click"])
+	expect("Add sticker", await heard(func(): press(app.overlay, "Scroll/Grid/food_authority/Content/UseButton")), ["post Play_SFX_UI_Click"])
+	expect("Delete layer", await heard(func(): press(app.page, "DeleteObjectButton")), ["post Play_SFX_UI_Click"])
+	expect("Open stickers again", await heard(func(): press(app.page, "StickerButton")), ["post Play_SFX_UI_Click"])
+	expect("Close dialog", await heard(func(): press(app.overlay, "Frame/CloseButton")), ["post Play_SFX_UI_Click"])
+	expect("Open text editor", await heard(func(): press(app.page, "AddTextButton")), ["post Play_SFX_UI_Click"])
 	app.overlay.get_node("TextInput").text = "诗圣摸鱼"
-	expect("Add text", await heard(func(): press(app.overlay, "ApplyButton")), [])
-	expect("Clear draft prompt", await heard(func(): press(app.page, "RestartButton")), [])
-	expect("Cancel clearing", await heard(func(): press(app.overlay, "CancelButton")), [])
-	expect("Clear draft prompt again", await heard(func(): press(app.page, "RestartButton")), [])
-	expect("Confirm clearing", await heard(func(): press(app.overlay, "ConfirmButton")), [])
+	expect("Add text", await heard(func(): press(app.overlay, "ApplyButton")), ["post Play_SFX_UI_Click"])
+	expect("Clear draft prompt", await heard(func(): press(app.page, "RestartButton")), ["post Play_SFX_UI_Click"])
+	expect("Cancel clearing", await heard(func(): press(app.overlay, "CancelButton")), ["post Play_SFX_UI_Click"])
+	expect("Clear draft prompt again", await heard(func(): press(app.page, "RestartButton")), ["post Play_SFX_UI_Click"])
+	expect("Confirm clearing", await heard(func(): press(app.overlay, "ConfirmButton")), ["post Play_SFX_UI_Click"])
 
 	# Submit, save and unlock the next level.
 	press(app.page, "ToolBrush")
@@ -84,8 +84,8 @@ func run() -> void:
 	var state: Dictionary = app.drawings[app.topic]
 	state.result = ImageTexture.create_from_image(state.pixels)
 	state.submitted = state.revision
-	expect("Submit", await heard(func(): press(app.page, "SubmitButton")), [])
-	expect("Save work", await heard(func(): press(app.overlay, "SaveButton")), [])
+	expect("Submit", await heard(func(): press(app.page, "SubmitButton")), ["post Play_SFX_UI_Click"])
+	expect("Save work", await heard(func(): press(app.overlay, "SaveButton")), ["post Play_SFX_UI_Click"])
 	press(app.overlay, "GalleryButton")
 	await process_frame
 
@@ -102,7 +102,7 @@ func run() -> void:
 	var slider: Slider = app.page.get_node("VolumeSlider")
 	slider.grab_focus()
 	director.binder.last_input_ms = Time.get_ticks_msec()
-	expect("Volume tick", await heard(func(): slider.value = clampf(slider.value + 5, 0, 100)), [])
+	expect("Volume tick", await heard(func(): slider.value = clampf(slider.value + 5, 0, 100)), ["post Play_SFX_UI_Slider"])
 	var music: BaseButton = app.page.get_node("MusicToggle")
 	music.grab_focus()
 	director.binder.last_input_ms = Time.get_ticks_msec()

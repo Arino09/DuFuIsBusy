@@ -110,7 +110,7 @@ func test_wwise_project() -> void:
 		assert(banked.has(fnv1(event)), "Event is in Main.bnk (regenerate the bank?): %s" % event)
 	for key in table.entries:
 		if key.begins_with("rtpc."):
-			var expected := "Brush_Speed" if key == "rtpc.canvas.drag_speed" else ""
+			var expected: String = {"rtpc.canvas.drag_speed": "Brush_Speed", "rtpc.canvas.erase_speed": "Eraser_Speed"}.get(key, "")
 			assert(table.entries[key] in [expected, Table.SILENT], "Only authored Game Parameters are mapped: " + key)
 
 ## Event ids in a bank's HIRC chunk (object type 4).
@@ -143,8 +143,8 @@ func test_shipped_routing() -> void:
 		"app.boot": "Play_Music_Theme", "test.play": "Play_SFX_Enter_Home",
 		"ui.toggle_on.default.MusicToggle": "Play_Music_Theme", "ui.toggle_off.default.MusicToggle": "Stop_Music_Theme",
 		"canvas.drag.begin.paint": "Play_SFX_Brush_Loop", "canvas.drag.end.paint": "Stop_SFX_Brush_Loop",
-		"rtpc.canvas.drag_speed": "Brush_Speed", "canvas.drag.begin.erase": "",
-		"ui.press.primary.EnterButton": "", "canvas.drag.begin.move.avatar": "",
+		"rtpc.canvas.drag_speed": "Brush_Speed", "canvas.drag.begin.erase": "Play_SFX_Eraser_Loop",
+		"ui.press.primary.EnterButton": "Play_SFX_UI_Click", "canvas.drag.begin.move.avatar": "",
 		"canvas.drag.begin.move.dufu_greatsword": "", "canvas.object.add.dufu_cyber_long_blade": "",
 		"canvas.object.remove.dufu_greatsword": "", "dialog.enter.play_notice": "",
 	}
@@ -209,7 +209,9 @@ func test_brush_audio() -> void:
 	surface.move_pen(Vector2(600, 150))
 	surface._process(0.1)
 	surface.finish()
-	assert(director.calls.is_empty(), "Erasing does not start or modulate the brush")
+	assert(director.calls.has("post Play_SFX_Eraser_Loop") and director.calls.has("post Stop_SFX_Eraser_Loop"), "Erasing starts and stops its own loop")
+	assert(director._rtpc["canvas.erase_speed"].value == 0.0, "Eraser speed resets on lift")
+	assert(not director.calls.has("post Play_SFX_Brush_Loop"), "Erasing does not start the brush loop")
 	surface.erasing = false
 	surface.begin(Vector2(500, 150), -1)
 	surface.free()
