@@ -1,10 +1,10 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/pages/gallery_page.gd" id="Controller"]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/SourceSerifSC.otf" id="Serif"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
 
 [ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
 
@@ -20,53 +20,189 @@
 
 [ext_resource type="Texture2D" path="res://assets/examples/restroom.jpg" id="Example4Texture"]
 
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/tab-light.png" id="TabLight"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/tab-dark.png" id="TabDark"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/filter-light.png" id="FilterLight"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/filter-dark.png" id="FilterDark"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/my-works-light.png" id="MyWorksLabel"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/examples-dark.png" id="ExamplesLabel"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/gallery/welcome.png" id="Welcome"]
+
+[sub_resource type="StyleBoxTexture" id="TabLightStyle"]
+texture = ExtResource("TabLight")
+texture_margin_left = 8.0
+content_margin_left = 18.0
+texture_margin_top = 8.0
+content_margin_top = 10.0
+texture_margin_right = 8.0
+content_margin_right = 18.0
+texture_margin_bottom = 8.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="TabDarkStyle"]
+texture = ExtResource("TabDark")
+texture_margin_left = 8.0
+content_margin_left = 18.0
+texture_margin_top = 8.0
+content_margin_top = 10.0
+texture_margin_right = 8.0
+content_margin_right = 18.0
+texture_margin_bottom = 8.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="FilterLightStyle"]
+texture = ExtResource("FilterLight")
+texture_margin_left = 8.0
+content_margin_left = 18.0
+texture_margin_top = 8.0
+content_margin_top = 10.0
+texture_margin_right = 8.0
+content_margin_right = 18.0
+texture_margin_bottom = 8.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="FilterDarkStyle"]
+texture = ExtResource("FilterDark")
+texture_margin_left = 8.0
+content_margin_left = 18.0
+texture_margin_top = 8.0
+content_margin_top = 10.0
+texture_margin_right = 8.0
+content_margin_right = 18.0
+texture_margin_bottom = 8.0
+content_margin_bottom = 10.0
+
+[sub_resource type="ButtonGroup" id="TabsGroup"]
+
+[sub_resource type="ButtonGroup" id="FiltersGroup"]
+
 [node name="Gallery" type="Control"]
-script = ExtResource("Controller")
+layout_mode = 3
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("Controller")
 theme = ExtResource("Theme")
 
 [node name="Frame" parent="." instance=ExtResource("Frame")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Title" parent="Frame" index="3"]
+visible = false
 text = "画廊"
 
 [node name="Subtitle" parent="Frame" index="4"]
 text = ""
 
+[node name="Welcome" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = -330.0
+offset_right = -171.0
+offset_bottom = -262.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("Welcome")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="MyWorksTab" type="Button" parent="."]
-offset_left = 74.0
-offset_top = 238.0
-offset_right = 294.0
-offset_bottom = 295.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -646.0
+offset_top = -228.0
+offset_right = -408.7
+offset_bottom = -158.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
-text = "我的作品"
-theme_type_variation = &"SelectableButton"
+tooltip_text = "我的作品"
+theme_override_constants/icon_max_width = 162
+theme_override_styles/normal = SubResource("TabLightStyle")
+theme_override_styles/hover = SubResource("TabLightStyle")
+theme_override_styles/pressed = SubResource("TabDarkStyle")
+theme_override_styles/hover_pressed = SubResource("TabDarkStyle")
 toggle_mode = true
 button_pressed = true
+button_group = SubResource("TabsGroup")
+icon = ExtResource("MyWorksLabel")
+icon_alignment = 1
+expand_icon = true
 
 [node name="ExamplesTab" type="Button" parent="."]
-offset_left = 309.0
-offset_top = 238.0
-offset_right = 529.0
-offset_bottom = 295.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -228.0
+offset_right = -152.70000000000005
+offset_bottom = -158.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
-text = "示例"
-theme_type_variation = &"SelectableButton"
+tooltip_text = "示例作品"
+theme_override_constants/icon_max_width = 162
+theme_override_styles/normal = SubResource("TabLightStyle")
+theme_override_styles/hover = SubResource("TabLightStyle")
+theme_override_styles/pressed = SubResource("TabDarkStyle")
+theme_override_styles/hover_pressed = SubResource("TabDarkStyle")
 toggle_mode = true
-
+button_group = SubResource("TabsGroup")
+icon = ExtResource("ExamplesLabel")
+icon_alignment = 1
+expand_icon = true
 
 [node name="MyWorks" type="Control" parent="."]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -720.0
+offset_top = -450.0
+offset_right = 720.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
 [node name="CountLabel" type="Label" parent="MyWorks"]
@@ -76,7 +212,7 @@ offset_right = 654.0
 offset_bottom = 349.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "草稿 · 0 幅    完成作品 · 0 幅"
 vertical_alignment = 1
 
@@ -163,10 +299,18 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Examples" type="Control" parent="."]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 1440.0
-offset_bottom = 900.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -720.0
+offset_top = -450.0
+offset_right = 720.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
 visible = false
 mouse_filter = 2
 
@@ -177,7 +321,7 @@ offset_right = 204.0
 offset_bottom = 353.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "分类"
 vertical_alignment = 1
 
@@ -185,10 +329,20 @@ vertical_alignment = 1
 offset_left = 205.0
 offset_top = 309.0
 offset_right = 326.0
-offset_bottom = 353.0
+offset_bottom = 358.0
 mouse_default_cursor_shape = 2
 text = "全部"
 theme_type_variation = &"SelectableButton"
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_focus_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_styles/normal = SubResource("FilterLightStyle")
+theme_override_styles/hover = SubResource("FilterLightStyle")
+theme_override_styles/pressed = SubResource("FilterDarkStyle")
+theme_override_styles/hover_pressed = SubResource("FilterDarkStyle")
+button_group = SubResource("FiltersGroup")
 toggle_mode = true
 button_pressed = true
 
@@ -196,40 +350,80 @@ button_pressed = true
 offset_left = 341.0
 offset_top = 309.0
 offset_right = 462.0
-offset_bottom = 353.0
+offset_bottom = 358.0
 mouse_default_cursor_shape = 2
 text = "武侠"
 theme_type_variation = &"SelectableButton"
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_focus_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_styles/normal = SubResource("FilterLightStyle")
+theme_override_styles/hover = SubResource("FilterLightStyle")
+theme_override_styles/pressed = SubResource("FilterDarkStyle")
+theme_override_styles/hover_pressed = SubResource("FilterDarkStyle")
+button_group = SubResource("FiltersGroup")
 toggle_mode = true
 
 [node name="FilterSciFi" type="Button" parent="Examples"]
 offset_left = 477.0
 offset_top = 309.0
 offset_right = 598.0
-offset_bottom = 353.0
+offset_bottom = 358.0
 mouse_default_cursor_shape = 2
 text = "科幻"
 theme_type_variation = &"SelectableButton"
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_focus_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_styles/normal = SubResource("FilterLightStyle")
+theme_override_styles/hover = SubResource("FilterLightStyle")
+theme_override_styles/pressed = SubResource("FilterDarkStyle")
+theme_override_styles/hover_pressed = SubResource("FilterDarkStyle")
+button_group = SubResource("FiltersGroup")
 toggle_mode = true
 
 [node name="FilterMarket" type="Button" parent="Examples"]
 offset_left = 613.0
 offset_top = 309.0
 offset_right = 734.0
-offset_bottom = 353.0
+offset_bottom = 358.0
 mouse_default_cursor_shape = 2
 text = "市井"
 theme_type_variation = &"SelectableButton"
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_focus_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_styles/normal = SubResource("FilterLightStyle")
+theme_override_styles/hover = SubResource("FilterLightStyle")
+theme_override_styles/pressed = SubResource("FilterDarkStyle")
+theme_override_styles/hover_pressed = SubResource("FilterDarkStyle")
+button_group = SubResource("FiltersGroup")
 toggle_mode = true
 
 [node name="FilterFun" type="Button" parent="Examples"]
 offset_left = 749.0
 offset_top = 309.0
 offset_right = 870.0
-offset_bottom = 353.0
+offset_bottom = 358.0
 mouse_default_cursor_shape = 2
 text = "脑洞"
 theme_type_variation = &"SelectableButton"
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_focus_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_styles/normal = SubResource("FilterLightStyle")
+theme_override_styles/hover = SubResource("FilterLightStyle")
+theme_override_styles/pressed = SubResource("FilterDarkStyle")
+theme_override_styles/hover_pressed = SubResource("FilterDarkStyle")
+button_group = SubResource("FiltersGroup")
 toggle_mode = true
 
 [node name="CountLabel" type="Label" parent="Examples"]
@@ -239,7 +433,7 @@ offset_right = 1372.0
 offset_bottom = 350.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "显示 4 幅示例"
 vertical_alignment = 1
 

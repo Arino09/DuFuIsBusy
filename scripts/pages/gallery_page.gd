@@ -9,6 +9,11 @@ signal view_work_requested(work: Dictionary)
 signal edit_work_requested(work: Dictionary)
 signal example_requested(index: int)
 
+const MY_WORKS_LIGHT = preload("res://assets/ui/gallery/my-works-light.png")
+const MY_WORKS_DARK = preload("res://assets/ui/gallery/my-works-dark.png")
+const EXAMPLES_LIGHT = preload("res://assets/ui/gallery/examples-light.png")
+const EXAMPLES_DARK = preload("res://assets/ui/gallery/examples-dark.png")
+
 var page_index := 0
 var _slot_works: Array[Dictionary] = [{}, {}, {}, {}]
 
@@ -24,6 +29,9 @@ var _slot_works: Array[Dictionary] = [{}, {}, {}, {}]
 ]
 
 func _ready() -> void:
+	$MyWorksTab.toggled.connect(func(_pressed: bool): _update_tab_art())
+	$ExamplesTab.toggled.connect(func(_pressed: bool): _update_tab_art())
+	_update_tab_art()
 	$MyWorksTab.pressed.connect(func(): tab_requested.emit(0))
 	$ExamplesTab.pressed.connect(func(): tab_requested.emit(1))
 	$MyWorks/EmptyState/CreateButton.pressed.connect(func(): create_requested.emit())
@@ -34,12 +42,15 @@ func _ready() -> void:
 		_work_cards[slot].get_node("EditButton").pressed.connect(_edit_work.bind(slot))
 	for button in _filter_buttons:
 		button.pressed.connect(_select_filter.bind(button.text))
+		button.toggled.connect(func(_pressed: bool): _update_filter_focus(button))
+		_update_filter_focus(button)
 	for card in _example_cards:
 		card.get_node("ViewButton").pressed.connect(_view_example.bind(int(card.get_meta("example_id"))))
 
 func refresh(works: Array, tab: int, filter: String, requested_page: int, texture_provider: Callable) -> void:
 	$MyWorksTab.set_pressed_no_signal(tab == 0)
 	$ExamplesTab.set_pressed_no_signal(tab == 1)
+	_update_tab_art()
 	_my_works.visible = tab == 0
 	_examples.visible = tab == 1
 	page_index = clampi(requested_page, 0, maxi(0, ceili(works.size() / 4.0) - 1))
@@ -47,6 +58,14 @@ func refresh(works: Array, tab: int, filter: String, requested_page: int, textur
 		_refresh_works(works, texture_provider)
 	else:
 		_refresh_examples(filter)
+
+func _update_tab_art() -> void:
+	$MyWorksTab.icon = MY_WORKS_LIGHT if $MyWorksTab.button_pressed else MY_WORKS_DARK
+	$ExamplesTab.icon = EXAMPLES_LIGHT if $ExamplesTab.button_pressed else EXAMPLES_DARK
+
+func _update_filter_focus(button: Button) -> void:
+	# Focused text must follow the selected background as well as the focus ring.
+	button.add_theme_color_override("font_focus_color", Color("fbfaf5") if button.button_pressed else Color("292824"))
 
 func _refresh_works(works: Array, texture_provider: Callable) -> void:
 	var draft_count := 0
@@ -81,6 +100,7 @@ func _refresh_works(works: Array, texture_provider: Callable) -> void:
 func _refresh_examples(filter: String) -> void:
 	for button in _filter_buttons:
 		button.set_pressed_no_signal(filter == button.text)
+		_update_filter_focus(button)
 	var count := 0
 	for card in _example_cards:
 		card.visible = filter == $Examples/FilterAll.text or card.get_meta("topic") == filter
