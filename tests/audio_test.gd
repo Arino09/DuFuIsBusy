@@ -15,6 +15,7 @@ func run() -> void:
 	test_wwise_project()
 	test_shipped_routing()
 	await test_brush_audio()
+	test_eraser_emitter()
 	await test_routing()
 	print("AUDIO_TESTS_PASSED")
 	quit()
@@ -212,10 +213,76 @@ func test_brush_audio() -> void:
 	assert(director.calls.has("post Play_SFX_Eraser_Loop") and director.calls.has("post Stop_SFX_Eraser_Loop"), "Erasing starts and stops its own loop")
 	assert(director._rtpc["canvas.erase_speed"].value == 0.0, "Eraser speed resets on lift")
 	assert(not director.calls.has("post Play_SFX_Brush_Loop"), "Erasing does not start the brush loop")
+	director.calls.clear()
+	surface.begin(Vector2(500, 150), 0)
+	surface.move_pen(Vector2(530, 150))
+	surface._process(0.1)
+	director._send_rtpc("canvas.erase_speed")
+	surface.erasing = false
+	surface.cancel()
+	assert(director.calls[-2] == "post Stop_SFX_Eraser_Loop" and director.calls[-1] == "rtpc Eraser_Speed=0.0", "Cancellation resets the captured eraser even after changing tools")
+	# Test actual handwriting speeds; the old 2000 px/s gesture hid inaudible slow strokes.
+	for pixels_per_second in [120.0, 300.0, 600.0]:
+		surface.begin(Vector2(400, 400), -1)
+		for frame in 12:
+			surface.move_pen(Vector2(400 + (frame + 1) * pixels_per_second * 0.05, 400))
+			surface._process(0.05)
+		var audible: float = director._rtpc["canvas.drag_speed"].value
+		var minimum: float = {120.0: 40.0, 300.0: 65.0, 600.0: 95.0}[pixels_per_second]
+		assert(audible >= minimum and audible <= 100.0, "Normal handwriting must escape the bank's quiet, heavily filtered range")
+		for frame in 20: surface._process(0.05)
+		assert(director._rtpc["canvas.drag_speed"].value == 0.0, "A stationary pen still settles to silence")
+		surface.finish()
 	surface.erasing = false
 	surface.begin(Vector2(500, 150), -1)
 	surface.free()
 	assert(director.calls[-1] == "post Stop_SFX_Brush_Loop", "Removing the canvas stops the loop")
+
+class RecordingBackend extends RefCounted:
+	var events: Array = []
+	var parameters: Array = []
+	var gains: Dictionary = {}
+
+	func post_event(event: String, emitter: Node) -> int:
+		events.append([event, emitter])
+		return 1
+
+	func set_rtpc_value(key: String, value: float, emitter: Node) -> bool:
+		parameters.append([key, value, emitter])
+		return true
+
+	func set_game_object_output_bus_volume(emitter: Node, _listener: Node, gain: float) -> bool:
+		gains[emitter] = gain
+		return true
+
+func test_eraser_emitter() -> void:
+	var director = load("res://scripts/audio/audio_director.gd").new()
+	var backend := RecordingBackend.new()
+	director.wwise = backend
+	director.running = true
+	director._music_emitter = Node.new()
+	director._eraser_emitter = Node.new()
+	director.load_table(Table.from_file(director.TABLE_PATH))
+	director.param("setting.volume", 50.0, true)
+	var eraser: Node = director._eraser_emitter
+	assert(is_equal_approx(backend.gains[director], 0.5), "UI and brush retain the requested master level")
+	assert(is_equal_approx(backend.gains[eraser], 0.5 * db_to_linear(12.0)), "Only the quiet eraser sample receives compensation")
+	director.cue("canvas.drag.begin.erase")
+	director.param("canvas.erase_speed", 70.0, true)
+	director.cue("canvas.drag.end.erase")
+	assert(backend.events == [["Play_SFX_Eraser_Loop", eraser], ["Stop_SFX_Eraser_Loop", eraser]], "Start and stop target the same eraser emitter")
+	assert(backend.parameters == [["Eraser_Speed", 70.0, eraser]], "Speed targets the emitter playing the eraser")
+	director.param("setting.sound", 0.0, true)
+	assert(backend.gains[eraser] == 0.0 and backend.gains[director] == 0.0, "Sound off mutes both existing loops and UI")
+	director.cue("canvas.drag.begin.erase")
+	assert(backend.events.size() == 2, "Sound off blocks new eraser loops")
+	director.cue("canvas.drag.end.erase")
+	assert(backend.events.size() == 3 and backend.events[-1][1] == eraser, "Stop still reaches the eraser while muted")
+	director.param("setting.sound", 1.0, true)
+	assert(backend.gains[eraser] > 0.0, "Sound on restores the compensated level")
+	director._music_emitter.free()
+	director._eraser_emitter.free()
+	director.free()
 
 func test_routing() -> void:
 	var director: Node = root.get_node("AudioDirector")
@@ -285,5 +352,9 @@ func test_routing() -> void:
 	director.calls.clear()
 	button.pressed.emit()
 	assert(director.calls.size() == 1, "Re-entering the tree does not connect twice")
+	director.calls.clear()
+	button.hide()
+	button.pressed.emit()
+	assert(director.calls.is_empty(), "Forwarding to a hidden control must not double the visible button's sound")
 	button.free()
 	spin.free()

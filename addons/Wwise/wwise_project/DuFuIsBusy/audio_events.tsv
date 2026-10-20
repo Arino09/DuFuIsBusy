@@ -212,6 +212,6 @@ rtpc.setting.sound		音效开关；直接静音音效发声体，并屏蔽新的
 rtpc.setting.music		音乐开关；直接静音音乐发声体，保留播放进度
 rtpc.setting.quality	-	设置「画质」，与声音无关
 rtpc.setting.motion	-	「减少动画」（暂无界面），与声音无关
-rtpc.canvas.drag_speed	Brush_Speed	笔刷速度 0–100（3000 画布像素/秒对应 100）；逐帧平滑，停留时回落，抬笔立即归零。控制笔刷循环声的音量和低通。
+rtpc.canvas.drag_speed	Brush_Speed	笔刷速度 0–100（600 画布像素/秒对应 100）；平滑后开方映射，让普通书写进入可听范围；停留回落，抬笔归零。控制循环声的音量和低通。
 rtpc.canvas.zoom		画布缩放倍数 0.1–4.0（1 = 100%）。待建 Game Parameter（建议 Canvas_Zoom）后填在这里
-rtpc.canvas.erase_speed	Eraser_Speed	橡皮擦移动速度 0–100；停留回落，抬起立即归零。
+rtpc.canvas.erase_speed	Eraser_Speed	橡皮速度 0–100，映射同笔刷；独立发声对象补偿素材音量 12 dB，并跟随音效开关和总音量；停留回落，抬起或取消归零。

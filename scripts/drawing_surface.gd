@@ -21,8 +21,9 @@ const HANDLE_SIZE = 14.0
 const TOUCH_HANDLE_SIZE = 22.0
 const HANDLE_DIRECTIONS = [Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0)]
 const ROTATE_HANDLE = 8
-# Wwise's brush curves use 0–100; measure canvas pixels so zoom does not change the sound.
-const BRUSH_FULL_SPEED := 3000.0
+# Wwise's curves attenuate and low-pass the bottom of their 0–100 range.
+# Normal handwriting must reach the audible range, not require a fast flick.
+const BRUSH_FULL_SPEED := 600.0
 const BRUSH_RESPONSE := 20.0
 var state: Dictionary = new_state()
 var ink := Color("243d35")
@@ -120,7 +121,9 @@ func _update_brush_audio(delta: float) -> void:
 	_brush_distance = 0.0
 	_brush_speed = lerpf(_brush_speed, target, 1.0 - exp(-BRUSH_RESPONSE * delta))
 	if _brush_speed < 0.1: _brush_speed = 0.0
-	AudioHooks.param("canvas.erase_speed" if _drag_audio_key == "erase" else "canvas.drag_speed", _brush_speed)
+	# Shape after smoothing so sparse pointer events do not make the sound pulse.
+	var audible_speed := sqrt(_brush_speed / 100.0) * 100.0
+	AudioHooks.param("canvas.erase_speed" if _drag_audio_key == "erase" else "canvas.drag_speed", audible_speed)
 
 func dimensions(object: Dictionary) -> Vector2:
 	if object.kind == "avatar": return Vector2(235, 235)
@@ -459,7 +462,7 @@ func cancel() -> void:
 	# Only restore the current, uncommitted drag; never traverse undo history.
 	if not active: return
 	AudioHooks.cue("canvas.drag.end." + _drag_audio_key)
-	if _drag_audio_key == "paint": AudioHooks.param("canvas.drag_speed", 0.0, true)
+	if _drag_audio_key in ["paint", "erase"]: AudioHooks.param("canvas.erase_speed" if _drag_audio_key == "erase" else "canvas.drag_speed", 0.0, true)
 	_brush_distance = 0.0
 	_brush_speed = 0.0
 	_drag_audio_key = ""

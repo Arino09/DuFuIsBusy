@@ -59,6 +59,9 @@ static func role_for(control: Control) -> String:
 
 func _relay(control: Control, verb: String, needs_intent: bool) -> void:
 	if not is_instance_valid(control) or not control.is_inside_tree(): return
+	# Workspace buttons forward their actions to hidden legacy controls.
+	# Only the visible button should contribute a click sound.
+	if not control.is_visible_in_tree(): return
 	if needs_intent and not _user_intent(control): return
 	emit.call(key_for(control, verb))
 
