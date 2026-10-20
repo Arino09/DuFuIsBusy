@@ -6,6 +6,9 @@ const TEXTURES := {
 	"star_platform": preload("res://assets/backgrounds/star-platform.svg"),
 	"bamboo_mountains": preload("res://assets/backgrounds/bamboo-mountains.svg"),
 	"tea_cottage": preload("res://assets/backgrounds/tea-cottage.svg"),
+	"night_market": preload("res://assets/backgrounds/night-market.svg"),
+	"office_desk": preload("res://assets/backgrounds/office-desk.svg"),
+	"film_city": preload("res://assets/backgrounds/film-city.svg"),
 }
 
 static func texture_for(id: String) -> Texture2D:

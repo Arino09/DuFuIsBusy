@@ -14,8 +14,11 @@ const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
 const Stickers = preload("res://scripts/sticker_catalog.gd")
 const STICKER_TEXTURES = Stickers.TEXTURES
 const STICKER_MAX_SIZE = Vector2(150, 180)
+# Only protect invertibility near zero; this is well below a visible canvas pixel.
+const SCALE_EPSILON = 0.0001
 const SELECTION_COLOR = Color("527fff")
-const HANDLE_SIZE = 10.0
+const HANDLE_SIZE = 14.0
+const TOUCH_HANDLE_SIZE = 22.0
 const HANDLE_DIRECTIONS = [Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0)]
 const ROTATE_HANDLE = 8
 # Wwise's brush curves use 0–100; measure canvas pixels so zoom does not change the sound.
@@ -29,6 +32,7 @@ var pen_width := 12:
 		queue_redraw()
 var erasing := false
 var selecting := false
+var touch_controls := false
 @export var preview_only := false
 @export var preview_kind: String = "none"
 var active := false
@@ -66,7 +70,8 @@ func _ready() -> void:
 		object.scale = minf(1.3, minf(maxf(1, size.x - 24) / extent.x, maxf(1, size.y - 24) / extent.y))
 		state.objects = [object]
 		preview_only = true
-	clip_contents = true
+	# Leave off-paper layers visible in the workspace; previews/export clip them.
+	clip_contents = preview_only
 	mouse_filter = Control.MOUSE_FILTER_IGNORE if preview_only else Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_MOVE if selecting else Control.CURSOR_CROSS
 	texture = ImageTexture.create_from_image(state.pixels)
@@ -135,19 +140,29 @@ func set_object_scale(object: Dictionary, value: Vector2) -> void:
 	if object.has("scale_y") or not is_equal_approx(value.x, value.y):
 		object.scale_y = value.y
 
+static func constrain_scale(value: float, minimum: float = SCALE_EPSILON) -> float:
+	# Preserve either sign without imposing a visible minimum sticker size.
+	return minf(value, -minimum) if value < 0 else maxf(value, minimum)
+
 func transform_for(object: Dictionary) -> Transform2D:
-	return Transform2D(object.rotation, object_scale(object), 0, object.position)
+	return Transform2D(object.rotation, render_scale(object), 0, object.position)
+
+static func flip_sign(object: Dictionary) -> Vector2:
+	return Vector2(-1 if object.get("flip_h", false) else 1, -1 if object.get("flip_v", false) else 1)
+
+static func render_scale(object: Dictionary) -> Vector2:
+	return object_scale(object) * flip_sign(object)
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("fffdf7"))
 	var background := Backgrounds.texture_for(state.background_id)
 	if background: draw_texture_rect(background, Rect2(Vector2.ZERO, size), false)
 	for object in state.objects:
-		if object.kind == "avatar": draw_object(object)
-	draw_set_transform(Vector2.ZERO)
-	if texture: draw_texture_rect(texture, Rect2(Vector2.ZERO, size), false)
-	for object in state.objects:
-		if object.kind != "avatar": draw_object(object)
+		draw_object(object)
+		# Ink stays just above Dufu, preserving the composition of existing saves.
+		if object.kind == "avatar":
+			draw_set_transform(Vector2.ZERO)
+			if texture: draw_texture_rect(texture, Rect2(Vector2.ZERO, size), false)
 	draw_set_transform(Vector2.ZERO)
 	# Draw the selection above every artwork layer, including ink and stickers.
 	if not preview_only and selecting and not selected_object().is_empty():
@@ -161,7 +176,7 @@ func _draw() -> void:
 
 func draw_object(object: Dictionary) -> void:
 	var extent := dimensions(object)
-	draw_set_transform(object.position, object.rotation, object_scale(object))
+	draw_set_transform(object.position, object.rotation, render_scale(object))
 	if object.kind == "avatar": draw_texture_rect(avatar, Rect2(-extent / 2, extent), false)
 	elif object.kind == "text":
 		draw_string(CREATIVE_FONT, Vector2(-extent.x / 2, -extent.y / 2 + CREATIVE_FONT.get_ascent(object.font_size)), object.text, HORIZONTAL_ALIGNMENT_LEFT, -1, object.font_size, object.color)
@@ -176,7 +191,7 @@ func resize_handles(object: Dictionary) -> PackedVector2Array:
 	return points
 
 func rotation_arm(object: Dictionary) -> PackedVector2Array:
-	var half: Vector2 = dimensions(object) * object_scale(object) / 2
+	var half: Vector2 = dimensions(object) * object_scale(object).abs() / 2
 	var unit := 1.0 / scale.x
 	var safe_area := Rect2(Vector2.ONE * 12 * unit, size - Vector2.ONE * 24 * unit)
 	# Use another side when the top of a layer touches the canvas edge.
@@ -190,18 +205,23 @@ func rotation_arm(object: Dictionary) -> PackedVector2Array:
 
 func draw_selection(object: Dictionary) -> void:
 	var unit := 1.0 / scale.x
+	var handle_size := TOUCH_HANDLE_SIZE if touch_controls else HANDLE_SIZE
+	# Small stickers retain a clear body; the touch hit area stays larger than the grip.
+	var visible_extent := dimensions(object) * object_scale(object).abs() * scale.x
+	handle_size = minf(handle_size, maxf(HANDLE_SIZE, minf(visible_extent.x, visible_extent.y) * 0.3))
 	var handles := resize_handles(object)
 	var outline := PackedVector2Array([handles[0], handles[2], handles[4], handles[6], handles[0]])
 	draw_polyline(outline, SELECTION_COLOR, 1.5 * unit, true)
 	var arm := rotation_arm(object)
 	draw_line(arm[0], arm[1], SELECTION_COLOR, 1.5 * unit, true)
 	for point in handles:
-		var rect := Rect2(point - Vector2.ONE * HANDLE_SIZE * unit / 2, Vector2.ONE * HANDLE_SIZE * unit)
+		var rect := Rect2(point - Vector2.ONE * handle_size * unit / 2, Vector2.ONE * handle_size * unit)
 		draw_rect(rect, Color.WHITE)
 		draw_rect(rect, SELECTION_COLOR, false, 1.5 * unit)
-	draw_circle(arm[1], 7 * unit, Color.WHITE)
-	draw_arc(arm[1], 7 * unit, 0, TAU, 32, SELECTION_COLOR, 1.5 * unit, true)
-	draw_arc(arm[1], 3.5 * unit, -PI * 0.8, PI * 0.65, 16, SELECTION_COLOR, 1.2 * unit, true)
+	var radius := 12.0 if touch_controls else 9.0
+	draw_circle(arm[1], radius * unit, Color.WHITE)
+	draw_arc(arm[1], radius * unit, 0, TAU, 32, SELECTION_COLOR, 1.5 * unit, true)
+	draw_arc(arm[1], radius * 0.5 * unit, -PI * 0.8, PI * 0.65, 16, SELECTION_COLOR, 1.2 * unit, true)
 
 func handle_at(p: Vector2, touch: bool = false) -> int:
 	var object := selected_object()
@@ -209,7 +229,7 @@ func handle_at(p: Vector2, touch: bool = false) -> int:
 	var points := resize_handles(object)
 	points.append(rotation_arm(object)[1])
 	var nearest := -1
-	var distance := (22.0 if touch else 12.0) / scale.x
+	var distance := (30.0 if touch else 18.0) / scale.x
 	for i in range(points.size()):
 		var candidate := points[i].distance_to(p)
 		if candidate < distance:
@@ -227,7 +247,7 @@ func update_cursor(p: Vector2) -> void:
 	if handle == ROTATE_HANDLE:
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	elif handle >= 0:
-		var direction: Vector2 = HANDLE_DIRECTIONS[handle].rotated(selected_object().rotation)
+		var direction: Vector2 = (HANDLE_DIRECTIONS[handle] * render_scale(selected_object()).sign()).rotated(selected_object().rotation)
 		var sector := posmod(roundi(direction.angle() / (PI / 4)), 4)
 		mouse_default_cursor_shape = [Control.CURSOR_HSIZE, Control.CURSOR_FDIAGSIZE, Control.CURSOR_VSIZE, Control.CURSOR_BDIAGSIZE][sector]
 	else:
@@ -318,7 +338,7 @@ func snapshot() -> Dictionary:
 	return {"pixels": state.pixels.duplicate(), "objects": state.objects.duplicate(true)}
 
 func begin(p: Vector2, id: int) -> void:
-	if active or not position_inside(p): return
+	if active or (not selecting and not position_inside(p)): return
 	drag_mode = "paint"
 	if selecting:
 		drag_handle = handle_at(p, id >= 0)
@@ -372,35 +392,23 @@ func move_pen(p: Vector2) -> void:
 	refresh()
 
 func resize_from_handle(object: Dictionary, p: Vector2) -> void:
-	var direction: Vector2 = HANDLE_DIRECTIONS[drag_handle]
+	var direction: Vector2 = HANDLE_DIRECTIONS[drag_handle] * flip_sign(drag_object)
 	var initial := object_scale(drag_object)
 	var extent := dimensions(drag_object)
 	var axis: Vector2 = (extent * direction * initial).rotated(drag_object.rotation)
 	var ratio := 1.0 + (p - drag_start).dot(axis) / axis.length_squared()
 	var target := initial
 	if direction.x == 0:
-		target.y = maxf(initial.y * ratio, minf(0.25, initial.y))
+		target.y *= constrain_scale(ratio, minf(1.0, SCALE_EPSILON / absf(initial.y)))
 	elif direction.y == 0:
-		target.x = maxf(initial.x * ratio, minf(0.25, initial.x))
+		target.x *= constrain_scale(ratio, minf(1.0, SCALE_EPSILON / absf(initial.x)))
 	else:
 		# Corners preserve the layer's current aspect ratio, including any stretch.
-		var minimum := minf(1.0, maxf(0.25 / initial.x, 0.25 / initial.y))
-		target = initial * maxf(ratio, minimum)
+		var minimum := minf(1.0, maxf(SCALE_EPSILON / absf(initial.x), SCALE_EPSILON / absf(initial.y)))
+		target = initial * constrain_scale(ratio, minimum)
 	var displacement := (extent * direction * (target - initial) / 2).rotated(drag_object.rotation)
-	# Stop at the paper boundary without moving the opposite grip or resizing
-	# the other axis. Each corner travels linearly throughout this gesture.
-	var fraction := 1.0
-	var points := resize_handles(drag_object)
-	for i in [0, 2, 4, 6]:
-		var delta: Vector2 = displacement + (extent * HANDLE_DIRECTIONS[i] * (target - initial) / 2).rotated(drag_object.rotation)
-		for component in [0, 1]:
-			if delta[component] > 0.00001:
-				fraction = minf(fraction, (canvas_size()[component] - points[i][component]) / delta[component])
-			elif delta[component] < -0.00001:
-				fraction = minf(fraction, -points[i][component] / delta[component])
-	fraction = clampf(fraction, 0, 1)
-	set_object_scale(object, initial.lerp(target, fraction))
-	object.position = drag_object.position + displacement * fraction
+	set_object_scale(object, target)
+	object.position = drag_object.position + displacement
 
 func stamp(p: Vector2) -> void:
 	var radius := pen_width * 0.5
@@ -482,16 +490,50 @@ func travel(redo: bool) -> void:
 	selection_changed.emit()
 
 func constrain(object: Dictionary) -> void:
-	var extent := canvas_size()
-	var scaling := object_scale(object).max(Vector2.ONE * 0.25)
-	var d := dimensions(object) * scaling
-	var cosine := absf(cos(object.rotation))
-	var sine := absf(sin(object.rotation))
-	var bounds := Vector2(d.x * cosine + d.y * sine, d.x * sine + d.y * cosine)
-	var fit := minf(1.0, minf(extent.x / bounds.x, extent.y / bounds.y))
-	set_object_scale(object, scaling * fit)
-	var half: Vector2 = bounds * fit / 2
-	object.position = Vector2(clampf(object.position.x, half.x, extent.x - half.x), clampf(object.position.y, half.y, extent.y - half.y))
+	# Objects can cross any paper edge. Only guard against a zero-size transform.
+	var value := object_scale(object)
+	set_object_scale(object, Vector2(constrain_scale(value.x), constrain_scale(value.y)))
+
+func select_object(id: int) -> void:
+	finish()
+	state.selected = id if state.objects.any(func(object: Dictionary): return object.id == id) else -1
+	queue_redraw()
+	selection_changed.emit()
+
+func reorder_selected(action: String) -> void:
+	finish()
+	var object := selected_object()
+	if object.is_empty(): return
+	var index: int = state.objects.find(object)
+	var target := index
+	match action:
+		"top": target = state.objects.size() - 1
+		"bottom": target = 0
+		"up": target = mini(index + 1, state.objects.size() - 1)
+		"down": target = maxi(index - 1, 0)
+	if index == target: return
+	var prior := snapshot()
+	state.objects.remove_at(index)
+	state.objects.insert(target, object)
+	record(prior)
+
+func flip_selected(vertical: bool) -> void:
+	finish()
+	var object := selected_object()
+	if object.is_empty(): return
+	var prior := snapshot()
+	var key := "flip_v" if vertical else "flip_h"
+	if object.get(key, false): object.erase(key)
+	else: object[key] = true
+	record(prior)
+
+func center_selected() -> void:
+	finish()
+	var object := selected_object()
+	if object.is_empty(): return
+	var prior := snapshot()
+	object.position = Vector2(canvas_size()) / 2
+	record(prior)
 
 func add_object(kind: String, text: String = "", font_size: int = 32, color: Color = Color("243d35")) -> void:
 	if kind != "text" and not STICKER_TEXTURES.has(kind): return
@@ -548,7 +590,7 @@ func has_creation() -> bool:
 static func has_creation_in(candidate: Dictionary) -> bool:
 	if not candidate.pixels.is_invisible() or candidate.objects.size() > 1: return true
 	var person: Dictionary = candidate.objects[0]
-	return person.position.distance_to(initial_avatar_position(candidate.pixels.get_size())) > 0.5 or object_scale(person).distance_to(Vector2.ONE) > 0.001 or absf(person.rotation) > 0.001
+	return person.position.distance_to(initial_avatar_position(candidate.pixels.get_size())) > 0.5 or object_scale(person).distance_to(Vector2.ONE) > 0.001 or absf(person.rotation) > 0.001 or person.get("flip_h", false) or person.get("flip_v", false)
 
 func artwork() -> Image:
 	finish()

@@ -11,7 +11,7 @@ func run() -> void:
 	var app = Fixtures.MainScene.instantiate()
 	app.set_script(Fixtures.IsolatedApp)
 	app.saved_document = Store.empty_document()
-	app.saved_document.completed_topics = [0, 1, 2, 3]
+	app.saved_document.completed_topics = [0, 1, 2, 3, 4, 5]
 	root.add_child(app)
 	var backgrounds: Array[String] = []
 	for id in app.content_catalog.topic_ids():

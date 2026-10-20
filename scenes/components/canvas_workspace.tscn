@@ -1,0 +1,283 @@
+[gd_scene format=3 uid="uid://yhx1f0ncyyrr"]
+
+[ext_resource type="Theme" path="res://themes/canvas_theme.tres" id="1_45bss"]
+[ext_resource type="Script" uid="uid://cei2wpj6sagxr" path="res://scripts/ui/touch_toolbar.gd" id="2_27i5a"]
+[ext_resource type="PackedScene" path="res://scenes/components/canvas_palette_panel.tscn" id="3_c1ntv"]
+[ext_resource type="PackedScene" path="res://scenes/components/canvas_layers_panel.tscn" id="4_5md0e"]
+[ext_resource type="PackedScene" path="res://scenes/components/canvas_size_panel.tscn" id="5_jq0xb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0nd6"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ul01a"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eb52v"]
+bg_color = Color(0.2442353, 0.3305098, 0.30290195, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vbeib"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsagy"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="MobileUI" type="Control" unique_id=1307830940]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_45bss")
+
+[node name="Toolbar" type="ScrollContainer" parent="." unique_id=270930632]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -72.0
+offset_right = -320.0
+offset_bottom = -16.0
+follow_focus = true
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+scroll_deadzone = 12
+
+[node name="Tools" type="HBoxContainer" parent="Toolbar" unique_id=214583118]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ToolBrush" type="Button" parent="Toolbar/Tools" unique_id=1073526402]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SelectableButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+button_pressed = true
+text = "笔刷"
+
+[node name="PaletteButton" type="Button" parent="Toolbar/Tools" unique_id=470661629]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "调色板 · 当前颜色 #243D35"
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_p0nd6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ul01a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_eb52v")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_vbeib")
+theme_override_styles/focus = SubResource("StyleBoxFlat_qsagy")
+text = "调色板"
+
+[node name="ToolEraser" type="Button" parent="Toolbar/Tools" unique_id=535756812]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SelectableButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "橡皮"
+
+[node name="ToolMove" type="Button" parent="Toolbar/Tools" unique_id=1078114990]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SelectableButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "移动"
+
+[node name="AddTextButton" type="Button" parent="Toolbar/Tools" unique_id=459574754]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "文字"
+
+[node name="StickerButton" type="Button" parent="Toolbar/Tools" unique_id=814501829]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "贴纸"
+
+[node name="LayersButton" type="Button" parent="Toolbar/Tools" unique_id=386225948]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "图层"
+
+[node name="CanvasButton" type="Button" parent="Toolbar/Tools" unique_id=1996268071]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "画布"
+
+[node name="ChangeTopicButton" type="Button" parent="Toolbar/Tools" unique_id=464252008]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "选关"
+
+[node name="ReferenceButton" type="Button" parent="Toolbar/Tools" unique_id=1363179263]
+custom_minimum_size = Vector2(64, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+text = "素材"
+
+[node name="RestartButton" type="Button" parent="Toolbar/Tools" unique_id=320997080]
+custom_minimum_size = Vector2(112, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+text = "清空草稿"
+
+[node name="TouchToolbar" type="Node" parent="." unique_id=1115780895]
+script = ExtResource("2_27i5a")
+
+[node name="Drawer" type="Control" parent="." unique_id=624558973]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Shade" type="ColorRect" parent="Drawer" unique_id=34912385]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.115, 0.1, 0.42)
+
+[node name="Panel" type="Panel" parent="Drawer" unique_id=1650127053]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = -8.0
+
+[node name="Title" type="Label" parent="Drawer" unique_id=1377382576]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -208.0
+offset_top = 16.0
+offset_right = 128.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 26
+text = "调色板"
+
+[node name="CloseButton" type="Button" parent="Drawer" unique_id=1018287986]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 136.0
+offset_top = 16.0
+offset_right = 208.0
+offset_bottom = 72.0
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "收起"
+
+[node name="Scroll" type="ScrollContainer" parent="Drawer" unique_id=1466790524]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -208.0
+offset_top = 80.0
+offset_right = 208.0
+offset_bottom = -20.0
+follow_focus = true
+horizontal_scroll_mode = 0
+scroll_deadzone = 12
+
+[node name="Content" type="VBoxContainer" parent="Drawer/Scroll" unique_id=1308248401]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PalettePanel" parent="Drawer/Scroll/Content" unique_id=191946745 instance=ExtResource("3_c1ntv")]
+layout_mode = 2
+
+[node name="ColorPicker" parent="Drawer/Scroll/Content/PalettePanel" index="6" unique_id=511202430]
+color = Color(0.14117648, 0.2392157, 0.20784314, 1)
+
+[node name="LayersPanel" parent="Drawer/Scroll/Content" unique_id=1569112916 instance=ExtResource("4_5md0e")]
+visible = false
+layout_mode = 2
+
+[node name="CanvasPanel" parent="Drawer/Scroll/Content" unique_id=1420998519 instance=ExtResource("5_jq0xb")]
+visible = false
+layout_mode = 2
+
+[editable path="Drawer/Scroll/Content/PalettePanel"]
+[editable path="Drawer/Scroll/Content/LayersPanel"]
+[editable path="Drawer/Scroll/Content/CanvasPanel"]

@@ -19,7 +19,7 @@ func run() -> void:
 	assert(surface.canvas_size() == Vector2i(1080, 1080))
 	assert(surface.size == Vector2(1080, 1080))
 	assert(page.canvas_width.value == 1080 and page.canvas_height.value == 1080)
-	assert(is_equal_approx(surface.scale.x, 330.0 / 1080))
+	assert(is_equal_approx(surface.scale.x, minf(page.canvas_view.size.x, page.canvas_view.size.y) / 1080))
 	var initial_position: Vector2 = surface.position
 	var anchor: Vector2 = page.canvas_view.size / 2
 	var canvas_point: Vector2 = (anchor - surface.position) / page.view_zoom
@@ -95,7 +95,7 @@ func run() -> void:
 	surface.add_object("dufu_greatsword")
 	assert(surface.selected_object().position == Vector2(800, 450))
 	surface.resize_canvas(Vector2i(512, 512))
-	assert(surface.selected_object().position.x < 512)
+	assert(surface.selected_object().position == Vector2(800, 450), "Resizing paper preserves off-paper layer positions")
 	surface.travel(false)
 	assert(surface.selected_object().is_empty())
 	var encoded: Dictionary = Store.encode(surface.state)

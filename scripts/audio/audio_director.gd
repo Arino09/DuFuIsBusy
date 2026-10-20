@@ -1,6 +1,6 @@
 extends Node
 ## Routes semantic keys from AudioHooks and the UI binder to the Wwise events and RTPCs named in one TSV.
-## Every event plays on this node as the single game object; without Wwise (Linux CI, headless) calls are only recorded.
+## Music and effects use separate emitters so preferences also work with existing banks.
 
 const Hooks = preload("res://scripts/audio/audio_hooks.gd")
 const Table = preload("res://scripts/audio/audio_table.gd")
@@ -23,6 +23,9 @@ var _rtpc: Dictionary = {}
 var _reported: Dictionary = {}
 var _table_time := 0
 var _reload_wait := 0.0
+var _music_emitter: Node
+var _mix := {"volume": 70.0, "sound": true, "music": true}
+var _sent_gains: Dictionary = {}
 
 func _init() -> void:
 	binder = Binder.new(cue)
@@ -58,7 +61,13 @@ func start() -> void:
 		wwise = Engine.get_singleton("Wwise")
 		bank_loaded = wwise.load_bank(BANK)
 		wwise.register_listener(self)
+		_music_emitter = Node.new()
+		_music_emitter.name = "MusicEmitter"
+		add_child(_music_emitter)
+		wwise.register_game_obj(_music_emitter, "Music")
+		wwise.add_listener(_music_emitter, self)
 	print("AUDIO_STATUS wwise=%s bank=%s keys=%d table_errors=%d" % [wwise != null, bank_loaded, table.entries.size(), table.errors.size()])
+	_apply_mix()
 	cue("app.boot")
 	for name in _facts:
 		if not _facts[name].is_empty(): cue("%s.enter.%s" % [name, _facts[name]])
@@ -73,10 +82,14 @@ func cue(key: String) -> void:
 			print("AUDIO_UNMAPPED: ", key)
 		return
 	if event.is_empty(): return
+	var music: bool = "_Music_" in event
+	# Muting the emitter stops already-playing tails/loops too. Skip new effects
+	# while muted, but always deliver Stop events for a previously started loop.
+	if not music and not _mix.sound and not event.begins_with("Stop_"): return
 	if verbose: print("AUDIO: %s -> %s" % [key, event])
 	if wwise == null:
 		_record("post " + event)
-	elif wwise.post_event(event, self) == 0 and verbose and not _reported.has(event):
+	elif wwise.post_event(event, _music_emitter if music else self) == 0 and verbose and not _reported.has(event):
 		_reported[event] = true
 		print("AUDIO_POST_FAILED: %s (not in bank %s yet?)" % [event, BANK])
 
@@ -97,10 +110,26 @@ func _commit_facts() -> void:
 		if not new.is_empty(): cue("%s.enter.%s" % [name, new])
 
 func param(key: String, value: float, immediate: bool = false) -> void:
+	if key in ["setting.volume", "setting.sound", "setting.music"]:
+		var preference := key.trim_prefix("setting.")
+		_mix[preference] = clampf(value, 0, 100) if preference == "volume" else value > 0.5
+		if running: _apply_mix()
 	var state: Dictionary = _rtpc.get(key, {"value": NAN, "sent": NAN, "time": -RTPC_INTERVAL_MS})
 	state.value = value
 	_rtpc[key] = state
 	if running and (immediate or Time.get_ticks_msec() - state.time >= RTPC_INTERVAL_MS): _send_rtpc(key)
+
+func _apply_mix() -> void:
+	var master: float = _mix.volume / 100.0
+	for channel in ["music", "sound"]:
+		var gain := master if _mix[channel] else 0.0
+		if _sent_gains.get(channel, -1.0) == gain: continue
+		_sent_gains[channel] = gain
+		if wwise == null:
+			_record("gain %s=%s" % [channel, gain])
+		else:
+			if not wwise.set_game_object_output_bus_volume(_music_emitter if channel == "music" else self, self, gain):
+				push_warning("AUDIO_MIX_FAILED: " + channel)
 
 func _send_rtpc(key: String) -> void:
 	var state: Dictionary = _rtpc[key]

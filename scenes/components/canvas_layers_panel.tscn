@@ -1,0 +1,140 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://themes/canvas_theme.tres" id="1_qramj"]
+
+[node name="LayersPanel" type="VBoxContainer" unique_id=1569112916]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 700.0
+size_flags_horizontal = 3
+theme = ExtResource("1_qramj")
+theme_override_constants/separation = 12
+
+[node name="SelectionTitle" type="Label" parent="." unique_id=1698873665]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "选中图层"
+autowrap_mode = 3
+
+[node name="LayerPicker" type="OptionButton" parent="." unique_id=730175020]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "选择图层（从上到下）"
+popup/item_0/id = -2
+popup/item_1/text = "0 · 杜甫"
+popup/item_1/id = 0
+
+[node name="SelectionActions" type="HBoxContainer" parent="." unique_id=64824981]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EditObjectButton" type="Button" parent="SelectionActions" unique_id=1701886093]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+text = "编辑"
+
+[node name="DeleteObjectButton" type="Button" parent="SelectionActions" unique_id=2113111059]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+text = "删除"
+
+[node name="DeselectButton" type="Button" parent="SelectionActions" unique_id=1667384952]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+text = "取消选择"
+
+[node name="OrderUp" type="HBoxContainer" parent="." unique_id=1668727498]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="top" type="Button" parent="OrderUp" unique_id=1657377350]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "移到最上层"
+metadata/action = "top"
+
+[node name="up" type="Button" parent="OrderUp" unique_id=705583372]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "上移一层"
+metadata/action = "up"
+
+[node name="OrderDown" type="HBoxContainer" parent="." unique_id=763078768]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="down" type="Button" parent="OrderDown" unique_id=1910932367]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "下移一层"
+metadata/action = "down"
+
+[node name="bottom" type="Button" parent="OrderDown" unique_id=1167169361]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "移到最下层"
+metadata/action = "bottom"
+
+[node name="Mirrors" type="HBoxContainer" parent="." unique_id=273176246]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="flip_h" type="Button" parent="Mirrors" unique_id=915850259]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+toggle_mode = true
+text = "水平镜像"
+metadata/action = "flip_h"
+
+[node name="flip_v" type="Button" parent="Mirrors" unique_id=630714874]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+toggle_mode = true
+text = "垂直镜像"
+metadata/action = "flip_v"
+
+[node name="Center" type="HBoxContainer" parent="." unique_id=826847606]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="center" type="Button" parent="Center" unique_id=2035783878]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 18
+text = "移回画布中央"
+metadata/action = "center"

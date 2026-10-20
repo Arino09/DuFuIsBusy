@@ -2,7 +2,7 @@ extends RefCounted
 ## Gallery drafts are views of persisted snapshots, never extra saved works.
 const Drawing = preload("res://scripts/drawing_surface.gd")
 const Store = preload("res://scripts/local_store.gd")
-const TOPICS = [-1, 0, 1, 2, 3]
+const TOPICS = [-1, 0, 1, 2, 3, 4, 5]
 
 static func build(document: Dictionary, topic_title: Callable) -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []

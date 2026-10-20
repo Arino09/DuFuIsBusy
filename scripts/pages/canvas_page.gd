@@ -9,6 +9,7 @@ signal artwork_changed
 
 const Drawing = preload("res://scripts/drawing_surface.gd")
 const AudioHooks = preload("res://scripts/audio/audio_hooks.gd")
+const CanvasLayout = preload("res://scripts/ui/mobile_canvas.gd")
 const TOOL_NAMES = {"ToolBrush": "笔刷", "ToolEraser": "橡皮", "ToolMove": "移动"}
 const TOOL_AUDIO_IDS = {"笔刷": "brush", "橡皮": "eraser", "移动": "move"}
 const OBJECT_ACTIONS = {
@@ -32,8 +33,12 @@ var fitted_size := Vector2i.ZERO
 var _touch_points: Dictionary = {}
 var _touch_navigating := false
 var _touch_selection := -1
+var _desktop_layout := true
+var workspace_layout = CanvasLayout.new()
 const MIN_ZOOM = 0.1
 const MAX_ZOOM = 4.0
+const LAYER_ACTIONS = ["top", "up", "down", "bottom", "flip_h", "flip_v", "center"]
+const LAYER_LABELS = ["移到最上层", "上移一层", "下移一层", "移到最下层", "水平镜像（左右对称）", "垂直镜像（上下对称）", "移回画布中央"]
 
 @onready var palette = $ColorPalette
 @onready var width_label: Label = $WidthLabel
@@ -45,6 +50,8 @@ const MAX_ZOOM = 4.0
 @onready var canvas_width: SpinBox = $CanvasSize/CanvasWidth
 @onready var canvas_height: SpinBox = $CanvasSize/CanvasHeight
 @onready var zoom_label: Label = $ZoomLabel
+@onready var layer_picker: OptionButton = $LayerTools/LayerPicker
+@onready var layer_menu: MenuButton = $LayerTools/LayerMenu
 
 func prepare(state: Dictionary, id: int, prompt: String) -> void:
 	# Set the session before DrawingSurface._ready creates its image texture.
@@ -55,6 +62,8 @@ func prepare(state: Dictionary, id: int, prompt: String) -> void:
 
 func _ready() -> void:
 	if surface == null: surface = $CanvasView/DrawingSurface
+	resized.connect(_layout_desktop)
+	_layout_desktop()
 	palette.color_changed.connect(func(color: Color): color_changed.emit(color))
 	for node_name in TOOL_NAMES:
 		var tool: String = TOOL_NAMES[node_name]
@@ -85,9 +94,22 @@ func _ready() -> void:
 	get_window().focus_exited.connect(cancel_touch_navigation)
 	visibility_changed.connect(func():
 		if not is_visible_in_tree(): cancel_touch_navigation())
+	layer_picker.item_selected.connect(select_layer)
+	for index in LAYER_LABELS.size():
+		if index in [4, 6]: layer_menu.get_popup().add_separator()
+		if index in [4, 5]: layer_menu.get_popup().add_check_item(LAYER_LABELS[index], index)
+		else: layer_menu.get_popup().add_item(LAYER_LABELS[index], index)
+	layer_menu.get_popup().id_pressed.connect(func(id: int): layer_action(LAYER_ACTIONS[id]))
 	fit_view()
 	var tool := "移动" if surface.selecting else "橡皮" if surface.erasing else "笔刷"
 	refresh_tools(tool, surface.ink, surface.pen_width)
+
+func set_desktop_layout(enabled: bool) -> void:
+	_desktop_layout = enabled
+	if enabled: _layout_desktop()
+
+func _layout_desktop() -> void:
+	if _desktop_layout and is_node_ready(): workspace_layout.activate_desktop(self)
 
 func refresh_tools(tool: String, color: Color, width: int) -> void:
 	surface.finish()
@@ -115,10 +137,38 @@ func update_controls() -> void:
 		object_buttons[action].disabled = object.is_empty()
 	object_buttons["编辑"].disabled = object.is_empty() or object.kind != "text"
 	object_buttons["删除"].disabled = object.is_empty() or object.kind == "avatar"
+	layer_picker.clear()
+	layer_picker.add_item("选择图层（从上到下）", -2)
+	for index in range(state.objects.size() - 1, -1, -1):
+		var item: Dictionary = state.objects[index]
+		layer_picker.add_item("%d · %s" % [item.id, OBJECT_NAMES[item.kind]], item.id)
+		if not object.is_empty() and item.id == object.id: layer_picker.select(layer_picker.item_count - 1)
+	layer_menu.disabled = object.is_empty()
+	$LayerTools/CenterLayerButton.disabled = object.is_empty()
+	var popup := layer_menu.get_popup()
+	var layer_index: int = state.objects.find(object)
+	for index in [0, 1]: popup.set_item_disabled(popup.get_item_index(index), layer_index == state.objects.size() - 1)
+	for index in [2, 3]: popup.set_item_disabled(popup.get_item_index(index), layer_index == 0)
+	for index in [4, 5]: popup.set_item_checked(popup.get_item_index(index), object.get(LAYER_ACTIONS[index], false))
 	drawing_status.text = "点击图层进行移动、缩放或旋转" if surface.selecting else "橡皮" if surface.erasing else "画笔"
-	if not object.is_empty(): drawing_status.text = "已选中：" + OBJECT_NAMES[object.kind] + " · 拖动移动，边柄拉伸，角柄等比缩放，圆柄旋转"
+	if not object.is_empty(): drawing_status.text = "已选中：" + OBJECT_NAMES[object.kind] + " · 拖动移动，边柄拉伸/镜像，角柄等比缩放，圆柄旋转"
+	workspace_layout.sync_controls()
 	print("DRAW_STATE:", topic_id, ":", state.revision, ":", surface.has_creation(), ":", state.undo.size(), ":", state.redo.size())
 	print("OBJECT_STATE:", state.objects.size(), ":", state.selected)
+
+func select_layer(index: int) -> void:
+	var id := layer_picker.get_item_id(index) if index > 0 else -1
+	tool_requested.emit("移动")
+	# Standalone canvas scenes have no app controller to change the tool.
+	surface.selecting = true
+	surface.erasing = false
+	surface.select_object(id)
+
+func layer_action(action: String) -> void:
+	match action:
+		"flip_h", "flip_v": surface.flip_selected(action == "flip_v")
+		"center": surface.center_selected()
+		_: surface.reorder_selected(action)
 
 func object_action(action: String) -> void:
 	match action:
@@ -194,7 +244,11 @@ func _view_input(event: InputEvent, from_surface: bool = false) -> void:
 			accept_event()
 		return
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_MIDDLE:
+		if not from_surface and event.button_index == MOUSE_BUTTON_LEFT and surface.selecting:
+			if event.pressed: surface.begin((event.position - surface.position) / view_zoom, -1)
+			elif surface.pointer == -1: surface.finish()
+			accept_event()
+		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			surface.finish()
 			view_panning = event.pressed
 			accept_event()

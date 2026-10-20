@@ -1,448 +1,622 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3 uid="uid://u7ofbgp0xpxs"]
 
-[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
+[ext_resource type="Theme" uid="uid://yajo11g31bph" path="res://themes/canvas_theme.tres" id="1_onfpi"]
+[ext_resource type="Script" uid="uid://0ak1gsyrynbr" path="res://scripts/pages/canvas_page.gd" id="2_r5w72"]
+[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="3_lw0b6"]
+[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="6_8ysk1"]
+[ext_resource type="Script" uid="uid://u2i8awqyc4n7" path="res://scripts/components/color_palette.gd" id="7_6rkaj"]
+[ext_resource type="Script" uid="uid://c6j05hr8ver65" path="res://scripts/drawing_surface.gd" id="8_f3xy5"]
+[ext_resource type="PackedScene" uid="uid://yhx1f0ncyyrr" path="res://scenes/components/canvas_workspace.tscn" id="9_auivh"]
 
-[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="Serif"]
-[ext_resource type="FontVariation" path="res://assets/fonts/chill_long_cang.tres" id="CreativeFont"]
-
-[ext_resource type="PackedScene" path="res://scenes/components/page_frame.tscn" id="Frame"]
-
-[ext_resource type="Script" path="res://scripts/drawing_surface.gd" id="Drawing"]
-
-[ext_resource type="Script" path="res://scripts/pages/canvas_page.gd" id="Controller"]
-[ext_resource type="Script" path="res://scripts/components/color_palette.gd" id="Palette"]
-
-
-[sub_resource type="StyleBoxFlat" id="CompactTool"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y4e7s"]
 content_margin_left = 5.0
+content_margin_top = 2.0
 content_margin_right = 5.0
-content_margin_top = 3.0
-content_margin_bottom = 3.0
-bg_color = Color(0.984314, 0.980392, 0.960784, 1)
+content_margin_bottom = 2.0
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.847059, 0.831373, 0.792157, 1)
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
 
-[sub_resource type="StyleBoxFlat" id="CompactToolSelected"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6ypc"]
 content_margin_left = 5.0
+content_margin_top = 2.0
 content_margin_right = 5.0
-content_margin_top = 3.0
-content_margin_bottom = 3.0
-bg_color = Color(0.141176, 0.239216, 0.207843, 1)
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.99215686, 0.96862745, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7176471, 0.69411767, 0.6431373, 1)
 
-[node name="Canvas" type="Control"]
+[sub_resource type="Theme" id="Theme_eqxij"]
+default_font = ExtResource("6_8ysk1")
+default_font_size = 16
+Button/colors/font_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+Button/colors/font_focus_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+Button/colors/font_hover_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_y4e7s")
+Button/styles/normal = SubResource("StyleBoxFlat_m6ypc")
+Button/styles/pressed = SubResource("StyleBoxFlat_y4e7s")
+Label/colors/font_color = Color(0.46666667, 0.4509804, 0.41568628, 1)
+LineEdit/colors/font_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+LineEdit/colors/font_focus_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+LineEdit/colors/font_hover_color = Color(0.16078432, 0.15686275, 0.14117648, 1)
+LineEdit/styles/normal = SubResource("StyleBoxFlat_m6ypc")
+
+[node name="Canvas" type="Control" unique_id=688221129]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("Theme")
-script = ExtResource("Controller")
+theme = ExtResource("1_onfpi")
+script = ExtResource("2_r5w72")
 
-[node name="Frame" parent="." instance=ExtResource("Frame")]
+[node name="Frame" parent="." unique_id=1425284423 instance=ExtResource("3_lw0b6")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+theme = ExtResource("1_onfpi")
+
+[node name="BrandTitle" parent="Frame" index="1"]
+visible = false
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 240.0
+offset_bottom = 38.0
+
+[node name="HeaderRule" parent="Frame" index="2"]
+visible = false
 
 [node name="Title" parent="Frame" index="3"]
+visible = false
 text = "画布"
 
 [node name="Subtitle" parent="Frame" index="4"]
 visible = false
-text = ""
 
+[node name="BackButton" parent="Frame" index="5"]
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 72.0
+offset_bottom = 64.0
+grow_horizontal = 1
+grow_vertical = 1
+theme_override_font_sizes/font_size = 20
+text = "返回"
 
-[node name="TopicLabel" type="Label" parent="."]
-offset_left = 95.0
-offset_top = 249.0
-offset_right = 220.0
-offset_bottom = 291.0
-mouse_filter = 2
+[node name="StorageHint" parent="Frame" index="6"]
+anchors_preset = 2
+anchor_right = 0.0
+offset_left = 8.0
+offset_top = -34.0
+offset_right = 108.0
+offset_bottom = -76.0
+grow_horizontal = 1
+grow_vertical = 0
+theme_override_font_sizes/font_size = 12
+text = "草稿已保存"
+clip_text = true
+
+[node name="StorageRetry" parent="Frame" index="7"]
+anchors_preset = 1
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -96.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 64.0
+grow_horizontal = 0
+grow_vertical = 1
+theme = ExtResource("1_onfpi")
+theme_override_font_sizes/font_size = 16
+text = "重试"
+
+[node name="TopicLabel" type="Label" parent="." unique_id=1324322299]
+visible = false
+layout_mode = 0
+offset_right = 56.0
+offset_bottom = 44.0
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_fonts/font = ExtResource("6_8ysk1")
 theme_override_font_sizes/font_size = 21
 text = "题目"
 vertical_alignment = 1
-theme_override_fonts/font = ExtResource("Serif")
 
-[node name="TopicPrompt" type="Label" parent="."]
+[node name="TopicPrompt" type="Label" parent="." unique_id=1642080585]
 layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_left = 234.0
-offset_top = 249.0
-offset_right = -323.0
-offset_bottom = 291.0
-mouse_filter = 2
+offset_left = 304.0
+offset_top = 8.0
+offset_right = -104.0
+offset_bottom = 64.0
+grow_horizontal = 2
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
-theme_override_font_sizes/font_size = 23
-text = "至少出现一种交通工具"
+theme_override_font_sizes/font_size = 20
+text = "自由创作"
 vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
 
-[node name="ChangeTopicButton" type="Button" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -247.0
-offset_top = 249.0
-offset_right = -91.0
-offset_bottom = 293.0
+[node name="ChangeTopicButton" type="Button" parent="." unique_id=1129906554]
+visible = false
+layout_mode = 0
+offset_left = 1216.0
+offset_top = 190.0
+offset_right = 1368.0
+offset_bottom = 234.0
 mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
 text = "选关"
 
-
-[node name="ToolsTitle" type="Label" parent="."]
-offset_left = 94.0
-offset_top = 310.0
-offset_right = 285.0
-offset_bottom = 336.0
-mouse_filter = 2
+[node name="ToolsTitle" type="Label" parent="." unique_id=1300690596]
+visible = false
+layout_mode = 0
+offset_right = 216.0
+offset_bottom = 28.0
 theme_override_colors/font_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_fonts/font = ExtResource("6_8ysk1")
 theme_override_font_sizes/font_size = 23
-text = "工具"
+text = "画笔与颜色"
 vertical_alignment = 1
-theme_override_fonts/font = ExtResource("Serif")
 
-[node name="ToolBrush" type="Button" parent="."]
-offset_left = 91.0
-offset_top = 340.0
-offset_right = 151.0
-offset_bottom = 373.0
-mouse_default_cursor_shape = 2
-text = "笔刷"
+[node name="ToolBrush" type="Button" parent="." unique_id=1213173117]
+visible = false
+layout_mode = 0
+offset_right = 66.6667
+offset_bottom = 44.0
 tooltip_text = "按住并拖动来画线"
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SelectableButton"
-toggle_mode = true
 theme_override_font_sizes/font_size = 20
+toggle_mode = true
 button_pressed = true
-theme_override_styles/normal = SubResource("CompactTool")
-theme_override_styles/hover = SubResource("CompactTool")
+text = "笔刷"
 
-theme_override_styles/pressed = SubResource("CompactToolSelected")
-theme_override_styles/hover_pressed = SubResource("CompactToolSelected")
-
-[node name="ToolEraser" type="Button" parent="."]
-offset_left = 158.0
-offset_top = 340.0
-offset_right = 218.0
-offset_bottom = 373.0
-mouse_default_cursor_shape = 2
-text = "橡皮"
+[node name="ToolEraser" type="Button" parent="." unique_id=946266874]
+visible = false
+layout_mode = 0
+offset_right = 66.6667
+offset_bottom = 44.0
 tooltip_text = "只擦除笔迹"
-theme_type_variation = &"SelectableButton"
-toggle_mode = true
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("CompactTool")
-theme_override_styles/hover = SubResource("CompactTool")
-
-theme_override_styles/pressed = SubResource("CompactToolSelected")
-theme_override_styles/hover_pressed = SubResource("CompactToolSelected")
-
-[node name="ToolMove" type="Button" parent="."]
-offset_left = 225.0
-offset_top = 340.0
-offset_right = 285.0
-offset_bottom = 373.0
 mouse_default_cursor_shape = 2
+theme_type_variation = &"SelectableButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "橡皮"
+
+[node name="ToolMove" type="Button" parent="." unique_id=1304946142]
+visible = false
+layout_mode = 0
+offset_right = 66.6667
+offset_bottom = 44.0
+tooltip_text = "点选杜甫、文字或贴纸；拖动图层移动，边柄自由拉伸，拖过对边镜像，角柄等比缩放，圆柄旋转；点击空白取消选择"
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SelectableButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
 text = "移动"
-tooltip_text = "点选杜甫、文字或贴纸；拖动图层移动，边柄自由拉伸，角柄等比缩放，圆柄旋转；点击空白取消选择"
-theme_type_variation = &"SelectableButton"
-toggle_mode = true
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("CompactTool")
-theme_override_styles/hover = SubResource("CompactTool")
 
-theme_override_styles/pressed = SubResource("CompactToolSelected")
-theme_override_styles/hover_pressed = SubResource("CompactToolSelected")
-
-[node name="AddTextButton" type="Button" parent="."]
-offset_left = 91.0
-offset_top = 379.0
-offset_right = 185.0
-offset_bottom = 412.0
+[node name="AddTextButton" type="Button" parent="." unique_id=1539383097]
+visible = false
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 44.0
 mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
 text = "文字"
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("CompactTool")
-theme_override_styles/hover = SubResource("CompactTool")
 
-[node name="StickerButton" type="Button" parent="."]
-offset_left = 191.0
-offset_top = 379.0
-offset_right = 285.0
-offset_bottom = 412.0
+[node name="StickerButton" type="Button" parent="." unique_id=1025413785]
+visible = false
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 44.0
 mouse_default_cursor_shape = 2
-text = "贴纸"
 theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("CompactTool")
-theme_override_styles/hover = SubResource("CompactTool")
+text = "贴纸"
 
-[node name="ColorPalette" type="Control" parent="."]
-offset_left = 91.0
-offset_top = 452.0
-offset_right = 285.0
-offset_bottom = 800.0
-script = ExtResource("Palette")
+[node name="ColorPalette" type="Control" parent="." unique_id=426786488]
+visible = false
+anchors_preset = 0
+offset_right = 194.0
+offset_bottom = 348.0
+theme = SubResource("Theme_eqxij")
+script = ExtResource("7_6rkaj")
 
-[node name="WidthLabel" type="Label" parent="."]
-offset_left = 94.0
-offset_top = 417.0
-offset_right = 176.0
-offset_bottom = 445.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
+[node name="WidthLabel" type="Label" parent="." unique_id=1967572155]
+visible = false
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(0.466667, 0.45098, 0.415686, 1)
 theme_override_font_sizes/font_size = 20
 text = "粗细  12"
 vertical_alignment = 1
 
-[node name="WidthSlider" type="HSlider" parent="."]
-offset_left = 178.0
-offset_top = 419.0
-offset_right = 285.0
-offset_bottom = 444.0
+[node name="WidthSlider" type="HSlider" parent="." unique_id=772217376]
+visible = false
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 32.0
 min_value = 4.0
 max_value = 56.0
 step = 4.0
 value = 12.0
 
-[node name="ReferenceButton" type="Button" parent="."]
-layout_mode = 1
-anchor_top = 1.0
-anchor_bottom = 1.0
-theme_type_variation = &"QuietButton"
-offset_left = 311.0
-offset_top = -132.0
-offset_right = 440.0
-offset_bottom = -99.0
+[node name="ReferenceButton" type="Button" parent="." unique_id=35199008]
+visible = false
+layout_mode = 0
+offset_left = 72.0
+offset_top = 800.0
+offset_right = 176.0
+offset_bottom = 844.0
 mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
 text = "素材"
 
-[node name="RestartButton" type="Button" parent="."]
-layout_mode = 1
-anchor_top = 1.0
-anchor_bottom = 1.0
-theme_type_variation = &"QuietButton"
-offset_left = 450.0
-offset_top = -132.0
-offset_right = 620.0
-offset_bottom = -99.0
+[node name="RestartButton" type="Button" parent="." unique_id=700618889]
+visible = false
+layout_mode = 0
+offset_left = 184.0
+offset_top = 800.0
+offset_right = 288.0
+offset_bottom = 844.0
 mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
 text = "清空草稿"
 
-
-[node name="EditObjectButton" type="Button" parent="."]
-theme_type_variation = &"QuietButton"
-offset_left = 311.0
-offset_top = 337.0
-offset_right = 410.0
-offset_bottom = 379.0
+[node name="EditObjectButton" type="Button" parent="." unique_id=1069097871]
+visible = false
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 44.0
 mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+disabled = true
 text = "编辑"
+
+[node name="DeleteObjectButton" type="Button" parent="." unique_id=788997270]
+visible = false
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 44.0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 20
 disabled = true
-
-[node name="DeleteObjectButton" type="Button" parent="."]
-theme_type_variation = &"QuietButton"
-offset_left = 418.0
-offset_top = 337.0
-offset_right = 517.0
-offset_bottom = 379.0
-mouse_default_cursor_shape = 2
 text = "删除"
-theme_override_font_sizes/font_size = 20
-disabled = true
 
-[node name="DeselectButton" type="Button" parent="."]
-theme_type_variation = &"QuietButton"
-offset_left = 525.0
-offset_top = 337.0
-offset_right = 624.0
-offset_bottom = 379.0
-mouse_default_cursor_shape = 2
-text = "取消"
+[node name="DeselectButton" type="Button" parent="." unique_id=1730445730]
+visible = false
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 44.0
 tooltip_text = "取消选择"
+mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 20
 disabled = true
+text = "取消选择"
 
-[node name="UndoButton" type="Button" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-theme_type_variation = &"QuietButton"
-offset_left = -360.0
-offset_top = 337.0
-offset_right = -240.0
-offset_bottom = 379.0
+[node name="UndoButton" type="Button" parent="." unique_id=925706280]
+layout_mode = 0
+offset_left = 152.0
+offset_top = 8.0
+offset_right = 216.0
+offset_bottom = 64.0
 mouse_default_cursor_shape = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
+disabled = true
 text = "撤销"
-disabled = true
 
-[node name="RedoButton" type="Button" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-theme_type_variation = &"QuietButton"
-offset_left = -224.0
-offset_top = 337.0
-offset_right = -92.0
-offset_bottom = 379.0
+[node name="RedoButton" type="Button" parent="." unique_id=1915793575]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 8.0
+offset_right = 288.0
+offset_bottom = 64.0
 mouse_default_cursor_shape = 2
-text = "重做"
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 20
 disabled = true
+text = "重做"
 
-[node name="DrawingStatus" type="Label" parent="."]
-layout_mode = 1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_fonts/font = ExtResource("CreativeFont")
-offset_left = 313.0
-offset_top = -167.0
-offset_right = -317.0
-offset_bottom = -138.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.466667, 0.450980, 0.415686, 1)
+[node name="DrawingStatus" type="Label" parent="." unique_id=261408020]
+visible = false
+layout_mode = 0
+offset_left = 312.0
+offset_top = 800.0
+offset_right = 1152.0
+offset_bottom = 844.0
+theme_override_colors/font_color = Color(0.466667, 0.45098, 0.415686, 1)
+theme_override_fonts/font = ExtResource("6_8ysk1")
 theme_override_font_sizes/font_size = 20
 text = "画笔"
 vertical_alignment = 1
+clip_text = true
 
-[node name="CanvasView" type="ColorRect" parent="."]
+[node name="CanvasView" type="ColorRect" parent="." unique_id=1557006063]
+clip_contents = true
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 311.0
-offset_top = 397.0
-offset_right = -89.0
-offset_bottom = -173.0
-clip_contents = true
-color = Color(0.84, 0.82, 0.78, 1)
-mouse_filter = 0
+offset_left = 8.0
+offset_top = 72.0
+offset_right = -8.0
+offset_bottom = -96.0
+grow_horizontal = 2
+grow_vertical = 2
 tooltip_text = "滚轮缩放视角 · 按住鼠标中键拖动画布"
+color = Color(0.84, 0.82, 0.78, 1)
 
-[node name="DrawingSurface" type="Control" parent="CanvasView"]
-offset_right = 1080.0
+[node name="DrawingSurface" type="Control" parent="CanvasView" unique_id=1008039435]
+anchors_preset = 0
+offset_left = 346.0
+offset_right = 1426.0
 offset_bottom = 1080.0
-clip_contents = true
+scale = Vector2(0.67777777, 0.67777777)
 mouse_default_cursor_shape = 3
-script = ExtResource("Drawing")
+script = ExtResource("8_f3xy5")
 
+[node name="LayerTools" type="HBoxContainer" parent="." unique_id=853073484]
+visible = false
+layout_mode = 0
+offset_left = 312.0
+offset_top = 306.0
+offset_right = 856.0
+offset_bottom = 350.0
+theme_override_constants/separation = 8
 
-[node name="SubmitButton" type="Button" parent="."]
+[node name="LayerPicker" type="OptionButton" parent="LayerTools" unique_id=439885866]
+custom_minimum_size = Vector2(256, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "选择任意图层，包括已移出画布的图层"
+theme_override_font_sizes/font_size = 20
+selected = 0
+fit_to_longest_item = false
+item_count = 2
+popup/item_0/text = "选择图层（从上到下）"
+popup/item_0/id = -2
+popup/item_1/text = "0 · 杜甫"
+popup/item_1/id = 0
+
+[node name="LayerMenu" type="MenuButton" parent="LayerTools" unique_id=1202000607]
+custom_minimum_size = Vector2(144, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "顺序与镜像"
+flat = false
+item_count = 9
+popup/item_0/text = "移到最上层"
+popup/item_0/id = 0
+popup/item_1/text = "上移一层"
+popup/item_1/id = 1
+popup/item_2/text = "下移一层"
+popup/item_2/id = 2
+popup/item_3/text = "移到最下层"
+popup/item_3/id = 3
+popup/item_4/id = -1
+popup/item_4/separator = true
+popup/item_5/text = "水平镜像（左右对称）"
+popup/item_5/checkable = 1
+popup/item_5/id = 4
+popup/item_6/text = "垂直镜像（上下对称）"
+popup/item_6/checkable = 1
+popup/item_6/id = 5
+popup/item_7/id = -1
+popup/item_7/separator = true
+popup/item_8/text = "移回画布中央"
+popup/item_8/id = 6
+
+[node name="CenterLayerButton" type="Button" parent="LayerTools" unique_id=1438435783]
+custom_minimum_size = Vector2(128, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "移回中央"
+
+[node name="SubmitButton" type="Button" parent="." unique_id=155025469]
 layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 64.0
+grow_horizontal = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+theme_override_font_sizes/font_size = 20
+text = "完成"
+
+[node name="CanvasSize" type="HBoxContainer" parent="." unique_id=1999548944]
+visible = false
+layout_mode = 0
+offset_left = 312.0
+offset_top = 250.0
+offset_right = 1368.0
+offset_bottom = 294.0
+theme_override_constants/separation = 12
+
+[node name="SizeLabel" type="Label" parent="CanvasSize" unique_id=1009710910]
+custom_minimum_size = Vector2(88, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "画布尺寸"
+vertical_alignment = 1
+
+[node name="CanvasWidth" type="SpinBox" parent="CanvasSize" unique_id=1622397331]
+custom_minimum_size = Vector2(128, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "宽度（256–2048 像素）"
+min_value = 256.0
+max_value = 2048.0
+value = 1080.0
+suffix = "px"
+
+[node name="TimesLabel" type="Label" parent="CanvasSize" unique_id=1978203596]
+custom_minimum_size = Vector2(16, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "×"
+vertical_alignment = 1
+
+[node name="CanvasHeight" type="SpinBox" parent="CanvasSize" unique_id=1260812341]
+custom_minimum_size = Vector2(128, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "高度（256–2048 像素）"
+min_value = 256.0
+max_value = 2048.0
+value = 1080.0
+suffix = "px"
+
+[node name="ApplySizeButton" type="Button" parent="CanvasSize" unique_id=1346142945]
+custom_minimum_size = Vector2(128, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "保留左上角内容，缩小时裁切边缘；可撤销"
+theme_override_font_sizes/font_size = 20
+text = "应用尺寸"
+
+[node name="SizeHint" type="Label" parent="CanvasSize" unique_id=481007676]
+custom_minimum_size = Vector2(220, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "缩小会裁切 · 可撤销"
+vertical_alignment = 1
+clip_text = true
+
+[node name="ZoomOutButton" type="Button" parent="." unique_id=557079314]
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -309.0
-offset_top = -157.0
-offset_right = -96.0
-offset_bottom = -114.0
-mouse_default_cursor_shape = 2
-text = "完成作品"
-theme_type_variation = &"PrimaryButton"
-
-[node name="CanvasSize" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchor_right = 1.0
-offset_left = 311.0
-offset_top = 183.0
-offset_right = -89.0
-offset_bottom = 225.0
-theme_override_constants/separation = 12
-theme_override_fonts/font = ExtResource("CreativeFont")
-theme_override_font_sizes/font_size = 20
-
-[node name="SizeLabel" type="Label" parent="CanvasSize"]
-text = "画布尺寸"
-
-[node name="CanvasWidth" type="SpinBox" parent="CanvasSize"]
-custom_minimum_size = Vector2(140, 0)
-min_value = 256.0
-max_value = 2048.0
-value = 1080.0
-suffix = "px"
-tooltip_text = "宽度（256–2048 像素）"
-
-[node name="TimesLabel" type="Label" parent="CanvasSize"]
-text = "×"
-
-[node name="CanvasHeight" type="SpinBox" parent="CanvasSize"]
-custom_minimum_size = Vector2(140, 0)
-min_value = 256.0
-max_value = 2048.0
-value = 1080.0
-suffix = "px"
-tooltip_text = "高度（256–2048 像素）"
-
-[node name="ApplySizeButton" type="Button" parent="CanvasSize"]
-text = "应用尺寸"
-tooltip_text = "保留左上角内容，缩小时裁切边缘；可撤销"
-
-[node name="SizeHint" type="Label" parent="CanvasSize"]
-text = "缩小会裁切 · 可撤销"
-theme_override_font_sizes/font_size = 20
-
-[node name="ZoomOutButton" type="Button" parent="."]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -78.0
-offset_top = 337.0
-offset_right = -18.0
-offset_bottom = 379.0
-text = "−"
+offset_left = -304.0
+offset_top = -72.0
+offset_right = -248.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
 tooltip_text = "缩小画布视角"
+theme_override_font_sizes/font_size = 20
+text = "−"
 
-[node name="ZoomLabel" type="Label" parent="."]
+[node name="ZoomLabel" type="Label" parent="." unique_id=1573935399]
 layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -10.0
-offset_top = 337.0
-offset_right = 70.0
-offset_bottom = 379.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -72.0
+offset_right = -200.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 16
+text = "68%"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "100%"
 
-[node name="ZoomInButton" type="Button" parent="."]
+[node name="ZoomInButton" type="Button" parent="." unique_id=1304705511]
 layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 78.0
-offset_top = 337.0
-offset_right = 138.0
-offset_bottom = 379.0
-text = "+"
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -192.0
+offset_top = -72.0
+offset_right = -136.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
 tooltip_text = "放大画布视角"
+theme_override_font_sizes/font_size = 20
+text = "+"
 
-[node name="FitViewButton" type="Button" parent="."]
+[node name="FitViewButton" type="Button" parent="." unique_id=1668799129]
 layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 152.0
-offset_top = 337.0
-offset_right = 342.0
-offset_bottom = 379.0
-theme_override_fonts/font = ExtResource("CreativeFont")
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -72.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("6_8ysk1")
+theme_override_font_sizes/font_size = 20
 text = "适应窗口"
 
-[node name="ViewHint" type="Label" parent="."]
+[node name="ViewHint" type="Label" parent="." unique_id=444301275]
 layout_mode = 1
-anchor_left = 0.5
+anchors_preset = 12
 anchor_top = 1.0
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -80.0
-offset_top = -135.0
-offset_right = 397.0
-offset_bottom = -107.0
-theme_override_fonts/font = ExtResource("CreativeFont")
-theme_override_font_sizes/font_size = 20
+offset_left = 116.0
+offset_top = -92.0
+offset_right = -8.0
+offset_bottom = -76.0
+grow_horizontal = 2
+grow_vertical = 0
+tooltip_text = "画笔"
+theme_override_fonts/font = ExtResource("6_8ysk1")
+theme_override_font_sizes/font_size = 12
 text = "滚轮缩放 · 中键拖动画布"
+vertical_alignment = 1
+clip_text = true
+
+[node name="MobileUI" parent="." unique_id=1307830940 instance=ExtResource("9_auivh")]
+layout_mode = 1
+
+[node name="Toolbar" parent="MobileUI" index="0" unique_id=270930632]
+offset_top = -73.0
+offset_right = 8.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Shade" parent="MobileUI/Drawer" parent_id_path=PackedInt32Array(1307830940, 624558973) index="0" unique_id=34912385]
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="LayerTools/CenterLayerButton" to="." method="layer_action" binds= ["center"]]
 
 [editable path="Frame"]
+[editable path="MobileUI"]
+[editable path="MobileUI/Drawer/Scroll/Content/PalettePanel"]
+[editable path="MobileUI/Drawer/Scroll/Content/LayersPanel"]
+[editable path="MobileUI/Drawer/Scroll/Content/CanvasPanel"]

@@ -11,7 +11,7 @@ func _initialize() -> void:
 
 func run() -> void:
 	var catalog := Catalog.new()
-	assert(catalog.topic_ids() == [0, 1, 2, 3], "Existing save topic IDs must remain compatible")
+	assert(catalog.topic_ids() == [0, 1, 2, 3, 4, 5], "Existing save topic IDs must remain compatible")
 	assert(catalog.example_ids() == [0, 1, 2, 3], "Existing example links must remain compatible")
 	var levels := LEVELS.instantiate()
 	var home := HOME.instantiate()

@@ -3,7 +3,6 @@ extends Node
 const LayoutState = preload("res://scripts/ui/layout_state.gd")
 const MobilePages = preload("res://scripts/ui/mobile_pages.gd")
 const MobileDialogs = preload("res://scripts/ui/mobile_dialogs.gd")
-const MobileCanvas = preload("res://scripts/ui/mobile_canvas.gd")
 const DESKTOP_SIZE := Vector2i(1440, 900)
 
 var app: Control
@@ -14,7 +13,6 @@ var _page: Control
 var _dialog: Control
 var _page_state = LayoutState.new()
 var _dialog_state = LayoutState.new()
-var _canvas: RefCounted
 var _signature := Vector3.ZERO
 var _poll := 0.0
 
@@ -29,7 +27,7 @@ func refresh() -> void:
 	_apply.call_deferred()
 
 func close_canvas_tools() -> bool:
-	return _canvas != null and _canvas.close_tools()
+	return is_instance_valid(app.page) and app.current == "canvas" and app.page.workspace_layout.close_tools()
 
 func _process(delta: float) -> void:
 	_poll += delta
@@ -148,11 +146,11 @@ func _page_frame(page: Control, extent: Vector2) -> void:
 	for path in ["Frame/BrandTitle", "Frame/HeaderRule", "Frame/Subtitle"]: s.hide(page.get_node(path))
 	s.rect(page.get_node("Frame/Title"), Rect2(16, 12, extent.x - 136, 44))
 	s.font(page.get_node("Frame/Title"), 30)
-	s.rect(page.get_node("Frame/BackButton"), Rect2(extent.x - 116, 12, 100, 44))
+	s.rect(page.get_node("Frame/BackButton"), Rect2(extent.x - 116, 8, 100, 56))
 	s.rect(page.get_node("Frame/StorageHint"), Rect2(16, extent.y - 36, extent.x - 32, 28))
 	s.font(page.get_node("Frame/StorageHint"), 16)
 	s.put(page.get_node("Frame/StorageHint"), "clip_text", true)
-	s.rect(page.get_node("Frame/StorageRetry"), Rect2(extent.x - 124, extent.y - 42, 108, 40))
+	s.rect(page.get_node("Frame/StorageRetry"), Rect2(extent.x - 124, extent.y - 64, 108, 56))
 	s.font(page.get_node("Frame/StorageRetry"), 18)
 
 func _apply() -> void:
@@ -165,17 +163,16 @@ func _apply() -> void:
 		if page != _page:
 			_page = page
 			_page_state = LayoutState.new()
-			_canvas = null
 		if compact:
+			if app.current == "canvas": page.set_desktop_layout(false)
 			var bounds := _usable_rect()
 			_mobile_theme(page, _page_state)
 			var height := bounds.size.y
 			if app.current == "canvas":
-				if _canvas == null: _canvas = MobileCanvas.new()
 				_unwrap(page, app.page_host)
 				_page_state.rect(page, bounds)
 				_page_frame(page, bounds.size)
-				_canvas.apply(page, bounds.size, _page_state, refresh)
+				page.workspace_layout.apply(page, bounds.size, _page_state, refresh)
 			else:
 				var scroll := _scroll_target(page, app.page_host, bounds)
 				_page_state.put(page, "mouse_filter", Control.MOUSE_FILTER_PASS)
@@ -186,9 +183,9 @@ func _apply() -> void:
 				_page_frame(page, Vector2(bounds.size.x, height))
 				scroll.queue_sort()
 		else:
-			if _canvas != null: _canvas.close()
 			_unwrap(page, app.page_host)
 			_page_state.restore()
+			if app.current == "canvas": page.set_desktop_layout(true)
 	var dialog: Control = app.overlay
 	if is_instance_valid(dialog):
 		if dialog != _dialog:

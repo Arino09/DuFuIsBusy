@@ -141,7 +141,7 @@ func test_shipped_routing() -> void:
 	var table: RefCounted = Table.from_file("res://addons/Wwise/wwise_project/DuFuIsBusy/audio_events.tsv")
 	var expected := {
 		"app.boot": "Play_Music_Theme", "test.play": "Play_SFX_Enter_Home",
-		"ui.toggle_on.default.MusicToggle": "Play_Music_Theme", "ui.toggle_off.default.MusicToggle": "Stop_Music_Theme",
+		"ui.toggle_on.default.MusicToggle": "", "ui.toggle_off.default.MusicToggle": "",
 		"canvas.drag.begin.paint": "Play_SFX_Brush_Loop", "canvas.drag.end.paint": "Stop_SFX_Brush_Loop",
 		"rtpc.canvas.drag_speed": "Brush_Speed", "canvas.drag.begin.erase": "",
 		"ui.press.primary.EnterButton": "", "canvas.drag.begin.move.avatar": "",
@@ -248,7 +248,7 @@ func test_routing() -> void:
 	Hooks.param("setting.volume", 50.0)
 	Hooks.param("setting.volume", 50.0)
 	Hooks.param("setting.unknown", 1.0)
-	assert(director.calls == PackedStringArray(["rtpc Volume_Master=50.0"]), "RTPCs dedupe and skip unmapped keys")
+	assert("rtpc Volume_Master=50.0" in director.calls and "gain music=0.5" in director.calls and "gain sound=0.5" in director.calls, "RTPCs dedupe and skip unmapped keys")
 	Hooks.param("setting.volume", 60.0)
 	Hooks.param("setting.volume", 70.0)
 	await create_timer(0.1).timeout

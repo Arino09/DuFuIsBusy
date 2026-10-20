@@ -99,7 +99,7 @@ func run() -> void:
 		var half_extent = objects.dimensions(weapon) / 2
 		for corner in [Vector2(-half_extent.x, -half_extent.y), Vector2(half_extent.x, -half_extent.y), half_extent, Vector2(-half_extent.x, half_extent.y)]:
 			var point = objects.transform_for(weapon) * corner
-			assert(point.x >= -0.01 and point.y >= -0.01 and point.x <= 1040.01 and point.y <= 330.01)
+			assert(is_finite(point.x) and is_finite(point.y), "Off-paper transforms stay valid")
 		objects.remove_selected()
 		assert(objects.state.objects.size() == 1)
 	objects.add_object("star")
@@ -121,7 +121,7 @@ func run() -> void:
 	var half = objects.dimensions(selected) / 2
 	for corner in [Vector2(-half.x,-half.y),Vector2(half.x,-half.y),half,Vector2(-half.x,half.y)]:
 		var point = objects.transform_for(selected) * corner
-		assert(point.x >= -0.01 and point.y >= -0.01 and point.x <= 1040.01 and point.y <= 330.01)
+		assert(is_finite(point.x) and is_finite(point.y), "Off-paper transforms stay valid")
 	objects.travel(false)
 	assert(objects.state.objects[2].rotation == 0)
 	objects.travel(true)

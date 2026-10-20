@@ -63,10 +63,23 @@ func run() -> void:
 	legacy.objects[0].erase("scale_y")
 	assert(Drawing.object_scale(Store.decode(legacy).objects[0]) == Vector2.ONE)
 	assert(Store.encode(Store.decode(legacy)) == legacy, "Uniform legacy saves must round-trip unchanged")
-	for bad_scale in [0, -1, INF, NAN, "1", null, [1, 1]]:
-		var bad_stretch = encoded.duplicate(true)
-		bad_stretch.objects[0].scale_y = bad_scale
-		assert(Store.decode(bad_stretch).is_empty(), "Invalid vertical scales must be rejected")
+	for axis in ["scale", "scale_y"]:
+		for bad_scale in [0, INF, -INF, NAN, "1", null, [1, 1]]:
+			var bad_stretch = encoded.duplicate(true)
+			bad_stretch.objects[0][axis] = bad_scale
+			assert(Store.decode(bad_stretch).is_empty(), "Zero and invalid scales must be rejected")
+	for value in [Vector2(-3, 4), Vector2(3, -4), Vector2(-3, -4)]:
+		var mirrored = encoded.duplicate(true)
+		mirrored.objects[2].scale = value.x
+		mirrored.objects[2].scale_y = value.y
+		var restored_mirror := Store.decode(JSON.parse_string(JSON.stringify(mirrored)))
+		assert(not restored_mirror.is_empty())
+		assert(Drawing.object_scale(restored_mirror.objects[2]) == value)
+		assert(Store.encode(Store.decode(mirrored)) == mirrored, "Signed scales must round-trip unchanged")
+	var uniform_mirror = legacy.duplicate(true)
+	uniform_mirror.objects[0].scale = -1.0
+	assert(Drawing.object_scale(Store.decode(uniform_mirror).objects[0]) == -Vector2.ONE)
+	assert(Store.encode(Store.decode(uniform_mirror)) == uniform_mirror)
 	var enlarged = encoded.duplicate(true)
 	enlarged.objects[0].scale = 3.0
 	enlarged.objects[0].scale_y = 4.0
@@ -108,7 +121,7 @@ func run() -> void:
 	var invalid_document: Dictionary = original.duplicate(true)
 	invalid_document.erase("completed_topics")
 	assert(not Store.validate_document(invalid_document), "Saved progress is required")
-	for progress in [[0, 0], [-1], [4], [0.5], "0"]:
+	for progress in [[0, 0], [-1], [6], [0.5], "0"]:
 		invalid_document.completed_topics = progress
 		assert(not Store.validate_document(invalid_document), "Invalid completed topics were accepted")
 	document.version = 1

@@ -7,11 +7,13 @@ const Store = preload("res://scripts/local_store.gd")
 func _initialize() -> void:
 	call_deferred("run")
 
-func assert_contained(surface, object: Dictionary) -> void:
+func assert_valid_transform(surface, object: Dictionary) -> void:
 	for point in surface.resize_handles(object):
-		assert(point.x >= -0.01 and point.x <= Surface.WIDTH + 0.01)
-		assert(point.y >= -0.01 and point.y <= Surface.HEIGHT + 0.01)
-	assert(surface.position_inside(surface.rotation_arm(object)[1]))
+		assert(is_finite(point.x) and is_finite(point.y))
+	var value: Vector2 = surface.object_scale(object)
+	assert(value.is_finite() and value.x != 0.0 and value.y != 0.0)
+	var inverse: Transform2D = surface.transform_for(object).affine_inverse()
+	assert(inverse.x.is_finite() and inverse.y.is_finite() and inverse.origin.is_finite())
 
 func run() -> void:
 	root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
@@ -84,18 +86,20 @@ func run() -> void:
 		assert(surface.state.revision == revision + 1)
 		assert(surface.state.undo.size() == mini(20, undo_count + 1))
 		assert(surface.state.pixels.get_data() == pixels)
-		assert_contained(surface, object)
+		assert_valid_transform(surface, object)
 		var loaded: Dictionary = Store.decode(Store.encode(surface.state))
 		assert(not loaded.is_empty())
 		assert(is_equal_approx(loaded.objects[-1].rotation, object.rotation))
 		assert(surface.object_scale(loaded.objects[-1]).is_equal_approx(surface.object_scale(object)))
-		# Dragging through the opposite grip clamps size instead of flipping the layer.
+		# Dragging a corner through the opposite grip reverses both signed axes.
 		var grips = surface.resize_handles(object)
+		var previous_scale: Vector2 = surface.object_scale(object)
 		surface.begin(grips[4], -1)
 		surface.move_pen(grips[4] - (grips[4] - grips[0]) * 2)
 		surface.finish()
-		assert(is_equal_approx(object.scale, 0.25))
-		assert_contained(surface, object)
+		assert(surface.object_scale(object).is_equal_approx(-previous_scale))
+		assert(surface.resize_handles(object)[0].is_equal_approx(grips[0]))
+		assert_valid_transform(surface, object)
 	# Every grip can grow beyond the old 2x cap, preserving axis/ratio semantics.
 	for kind in ["avatar", "text", "dufu_greatsword", "dufu_longsword"]:
 		for handle in range(8):
@@ -128,8 +132,8 @@ func run() -> void:
 			surface.move_pen(enlarged.position + Vector2(10, 10))
 			surface.finish()
 			assert(surface.object_scale(enlarged).is_equal_approx(expected))
-			assert_contained(surface, enlarged)
-	# A side grip stops at the paper edge with its opposite edge and height fixed.
+			assert_valid_transform(surface, enlarged)
+	# A side grip crosses the paper edge with its opposite edge and height fixed.
 	surface.state = Surface.new_state()
 	surface.state.selected = 0
 	var stretched: Dictionary = surface.selected_object()
@@ -141,8 +145,8 @@ func run() -> void:
 	surface.finish()
 	assert(is_equal_approx(surface.object_scale(stretched).y, 0.85))
 	assert(surface.resize_handles(stretched)[7].is_equal_approx(edge_points[7]))
-	assert(is_equal_approx(surface.resize_handles(stretched)[3].x, surface.canvas_size().x))
-	assert_contained(surface, stretched)
+	assert(surface.resize_handles(stretched)[3].x > surface.canvas_size().x)
+	assert_valid_transform(surface, stretched)
 	# Selected handles win even when another layer covers that position.
 	surface.state = Surface.new_state()
 	surface.select_at(Surface.DEFAULT_POSITION)
@@ -166,7 +170,7 @@ func run() -> void:
 	motion.position = surface.get_global_transform_with_canvas() * Vector2(1300, 500)
 	root.push_input(motion, true)
 	assert(surface.active)
-	assert_contained(surface, surface.selected_object())
+	assert_valid_transform(surface, surface.selected_object())
 	motion.position = surface.get_global_transform_with_canvas() * Vector2(600, 165)
 	root.push_input(motion, true)
 	assert(surface.selected_object().position.is_equal_approx(Vector2(600, 165)))
@@ -205,7 +209,140 @@ func run() -> void:
 	surface.move_pen(Vector2(530, 165))
 	surface.finish()
 	assert(surface.has_ink())
+	test_mirrored_handles(surface)
+	test_small_scale_history(surface)
 	page.queue_free()
 	await process_frame
+	if DisplayServer.get_name() != "headless": await test_mirror_rendering()
 	print("AVATAR_ROTATION_TESTS_PASSED")
 	quit()
+
+func test_mirrored_handles(surface) -> void:
+	surface.selecting = true
+	for initial in [Vector2(1.2, 0.8), Vector2(-1.2, 0.8), Vector2(1.2, -0.8), Vector2(-1.2, -0.8)]:
+		for rotation in [0.0, 0.35]:
+			for handle in range(8):
+				surface.state = Surface.new_state()
+				surface.add_object("dufu_greatsword")
+				var object: Dictionary = surface.selected_object()
+				object.position = Vector2(540, 540)
+				object.rotation = rotation
+				# Menu mirrors compose with signed scales and remain in old saves.
+				object.flip_h = true
+				surface.set_object_scale(object, initial)
+				var original: Dictionary = object.duplicate(true)
+				var handles = surface.resize_handles(object)
+				var start: Vector2 = handles[handle]
+				var opposite: Vector2 = handles[(handle + 4) % 8]
+				var direction: Vector2 = Surface.HANDLE_DIRECTIONS[handle]
+				var expected: Vector2 = initial * Vector2(-1 if direction.x != 0 else 1, -1 if direction.y != 0 else 1)
+				var revision: int = surface.state.revision
+				surface.begin(start, -1 if handle % 2 else 3)
+				assert(surface.drag_mode == "scale" and surface.drag_handle == handle)
+				# Passing zero in either direction must retain a usable, anchored transform.
+				for ratio in [0.0, -0.001, -0.01, -1.0, 0.001, 0.01, 1.0, -1.0]:
+					surface.move_pen(start + (start - opposite) * (ratio - 1.0))
+					assert_valid_transform(surface, object)
+					assert(surface.resize_handles(object)[(handle + 4) % 8].is_equal_approx(opposite))
+					var actual: Vector2 = surface.object_scale(object)
+					if ratio == 0.0:
+						# The singular point gets only a subpixel numerical guard.
+						if direction.x != 0: assert(absf(actual.x) <= 0.0002)
+						if direction.y != 0: assert(absf(actual.y) <= 0.0002)
+					else:
+						var expected_small: Vector2 = initial * Vector2(ratio if direction.x != 0 else 1.0, ratio if direction.y != 0 else 1.0)
+						assert(actual.is_equal_approx(expected_small), "Crossing zero must not clamp small positive or negative scales")
+				surface.finish()
+				assert(surface.object_scale(object).is_equal_approx(expected))
+				assert(surface.state.revision == revision + 1)
+				assert(surface.rotation_arm(object)[1].distance_to(object.position) > 0)
+				# Selection uses the mirrored transform, including points away from the center.
+				var inside: Vector2 = surface.transform_for(object) * (surface.dimensions(object) * Vector2(0.2, 0.1))
+				surface.select_at(inside)
+				assert(surface.state.selected == object.id)
+				var loaded := Store.decode(Store.encode(surface.state))
+				assert(not loaded.is_empty() and surface.object_scale(loaded.objects[-1]).is_equal_approx(expected))
+				surface.travel(false)
+				surface.select_object(original.id)
+				assert(surface.selected_object() == original)
+				surface.travel(true)
+				surface.select_object(original.id)
+				object = surface.selected_object()
+				# Mirroring survives later movement and can be canceled during another resize.
+				surface.begin(object.position, -1)
+				surface.move_pen(object.position + Vector2(10, 10))
+				surface.finish()
+				assert(surface.object_scale(object).is_equal_approx(expected))
+				var mirrored: Dictionary = object.duplicate(true)
+				handles = surface.resize_handles(object)
+				surface.begin(handles[handle], -1)
+				surface.move_pen(handles[handle] + (handles[handle] - handles[(handle + 4) % 8]))
+				surface.cancel()
+				assert(surface.selected_object() == mirrored)
+
+func test_small_scale_history(surface) -> void:
+	surface.selecting = true
+	for pointer_id in [-1, 3]:
+		for ratio in [0.01, -0.001]:
+			for handle in range(8):
+				surface.state = Surface.new_state()
+				surface.add_object("dufu_greatsword")
+				var object: Dictionary = surface.selected_object()
+				object.position = Vector2(540, 540)
+				object.rotation = 0.35
+				surface.set_object_scale(object, Vector2(1.2, 0.8))
+				var original: Dictionary = object.duplicate(true)
+				var grips = surface.resize_handles(object)
+				var direction: Vector2 = Surface.HANDLE_DIRECTIONS[handle]
+				var expected := Vector2(1.2 * ratio if direction.x != 0 else 1.2, 0.8 * ratio if direction.y != 0 else 0.8)
+				surface.begin(grips[handle], pointer_id)
+				assert(surface.drag_mode == "scale" and surface.drag_handle == handle)
+				surface.move_pen(grips[(handle + 4) % 8] + (grips[handle] - grips[(handle + 4) % 8]) * ratio)
+				surface.finish()
+				assert(surface.object_scale(object).is_equal_approx(expected), "Small stickers must stay small after releasing a grip")
+				assert_valid_transform(surface, object)
+				var saved: Dictionary = Store.decode(JSON.parse_string(JSON.stringify(Store.encode(surface.state))))
+				assert(not saved.is_empty() and surface.object_scale(saved.objects[-1]).is_equal_approx(expected))
+				surface.travel(false)
+				surface.select_object(original.id)
+				assert(surface.selected_object() == original)
+				surface.travel(true)
+				surface.select_object(original.id)
+				object = surface.selected_object()
+				assert(surface.object_scale(object).is_equal_approx(expected))
+				surface.begin(object.position, pointer_id)
+				assert(surface.drag_mode == "move")
+				surface.move_pen(object.position + Vector2(10, 10))
+				surface.finish()
+				assert(surface.object_scale(object).is_equal_approx(expected), "Moving a tiny sticker must not enlarge it")
+				# It can still be grabbed and enlarged after shrinking and mirroring.
+				grips = surface.resize_handles(object)
+				surface.begin(grips[handle], pointer_id)
+				assert(surface.drag_mode == "scale" and surface.drag_handle == handle)
+				surface.move_pen(grips[handle] + (grips[handle] - grips[(handle + 4) % 8]) * 10)
+				surface.finish()
+				var enlarged := expected * Vector2(11.0 if direction.x != 0 else 1.0, 11.0 if direction.y != 0 else 1.0)
+				assert(surface.object_scale(object).distance_to(enlarged) < 0.0001)
+
+func test_mirror_rendering() -> void:
+	var surface := Surface.new()
+	surface.state = Surface.new_state("paper", Vector2i(256, 256))
+	root.add_child(surface)
+	surface.state.objects[0].position = Vector2(-500, -500)
+	surface.add_object("dufu_greatsword")
+	var object: Dictionary = surface.selected_object()
+	var original: Image = await surface.artwork()
+	for value in [Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)]:
+		surface.set_object_scale(object, value)
+		var reflected: Image = await surface.artwork()
+		var expected: Image = original.duplicate()
+		if value.x < 0: expected.flip_x()
+		if value.y < 0: expected.flip_y()
+		assert(reflected.get_data() == expected.get_data(), "Signed scales must mirror exported sticker pixels")
+		var loaded := Store.decode(Store.encode(surface.state))
+		surface.state = loaded
+		surface.refresh()
+		var restored: Image = await surface.artwork()
+		assert(restored.get_data() == reflected.get_data(), "Reloading must preserve the mirrored export")
+		object = surface.state.objects[-1]
+	surface.free()

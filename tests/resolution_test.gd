@@ -8,10 +8,10 @@ const MainScene = preload("res://scenes/main.tscn")
 const BASE := Vector2(1440, 900)
 const WINDOW_SIZES := [
 	Vector2i(1152, 720), Vector2i(1920, 1080), Vector2i(2560, 1440),
-	Vector2i(1280, 1024), Vector2i(3440, 1440), Vector2i(1152, 720),
+	Vector2i(1280, 1024), Vector2i(2477, 1075), Vector2i(3440, 1440), Vector2i(1152, 720),
 ]
 const CANVAS_CONTROLS := [
-	"Frame/BackButton", "ColorPalette", "CanvasSize", "ChangeTopicButton",
+	"Frame/BackButton", "ColorPalette", "CanvasSize", "LayerTools", "ChangeTopicButton",
 	"ZoomOutButton", "ZoomInButton", "FitViewButton", "UndoButton", "RedoButton",
 	"ReferenceButton", "RestartButton", "SubmitButton", "DrawingStatus", "ViewHint",
 ]
@@ -41,12 +41,29 @@ func resize_window(extent: Vector2i) -> Vector2:
 	await process_frame
 	await process_frame
 	var factor := minf(extent.x / BASE.x, extent.y / BASE.y)
-	var expected := Vector2(extent) / factor
+	var expected := (Vector2(extent) / factor + Vector2.ONE * 0.001).floor()
 	var logical := root.get_visible_rect().size
 	check(logical.is_equal_approx(expected), "Wrong expanded viewport for %s: %s" % [extent, logical])
-	check(root.get_final_transform().get_scale().is_equal_approx(Vector2.ONE * factor),
+	check(root.get_final_transform().get_scale().distance_to(Vector2.ONE * factor) <= 1.0 / minf(logical.x, logical.y),
 		"Window stretch is not uniform for %s" % extent)
 	return logical
+
+func verify_canvas_spacing(page: Control, extent: Vector2i) -> void:
+	var paths := [
+		"ToolBrush", "ToolEraser", "ToolMove", "AddTextButton", "StickerButton",
+		"ZoomOutButton", "ZoomInButton", "FitViewButton", "UndoButton", "RedoButton",
+		"SubmitButton", "MobileUI/Toolbar/Tools/PaletteButton", "Frame/BackButton",
+	]
+	for i in paths.size():
+		var control: Control = page.get_node(paths[i])
+		if not control.is_visible_in_tree(): continue
+		check(control.size.x >= 56 and control.size.y >= 56, "Small canvas control at %s: %s %s" % [extent, paths[i], control.size])
+		check(not control.get_global_rect().intersects(page.canvas_view.get_global_rect()), "Control overlaps artwork at %s: %s" % [extent, paths[i]])
+		for j in range(i + 1, paths.size()):
+			var other: Control = page.get_node(paths[j])
+			if not other.is_visible_in_tree(): continue
+			check(not control.get_global_rect().grow(3.9).intersects(other.get_global_rect().grow(3.9)),
+				"Controls need at least 8px spacing at %s: %s and %s" % [extent, paths[i], paths[j]])
 
 func centered_children(scene: Control) -> Dictionary:
 	var result := {}
@@ -87,12 +104,14 @@ func verify_pages(app: Control) -> void:
 				"Canvas view did not use the added window space at %s" % extent)
 			check_inside(canvas_view, viewport)
 			for path in CANVAS_CONTROLS: check_inside(scene.get_node(path), viewport)
-			check(scene.get_node("ColorPalette").get_global_rect().end.x < canvas_view.global_position.x,
-				"Palette overlaps canvas view at %s" % extent)
-			check(scene.get_node("SubmitButton").global_position.y > canvas_view.get_global_rect().end.y,
-				"Completion button overlaps canvas view at %s" % extent)
-			check(scene.get_node("FitViewButton").get_global_rect().end.x <= scene.get_node("UndoButton").global_position.x,
-				"Zoom controls overlap history controls at %s" % extent)
+			verify_canvas_spacing(scene, extent)
+			for panel_id in ["palette", "layers", "canvas"]:
+				scene.workspace_layout.open_panel(panel_id)
+				await process_frame
+				Fixtures.assert_canvas_drawer(scene)
+				scene.workspace_layout.close_tools()
+			check(canvas_view.size.x * canvas_view.size.y / (logical.x * logical.y) > 0.80,
+				"Desktop canvas must fill most of the screen at %s" % extent)
 
 func verify_dialogs(app: Control) -> void:
 	for id in Controller.DIALOG_SCENES:

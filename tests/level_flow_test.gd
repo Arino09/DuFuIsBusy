@@ -16,10 +16,7 @@ func new_app(document: Dictionary = {}) -> Control:
 	return app
 
 func click(view: Node, path: NodePath) -> void:
-	var button: BaseButton = view.get_node(path)
-	assert(button.is_visible_in_tree(), "Hidden control: %s" % path)
-	assert(not button.disabled, "Disabled control: %s" % path)
-	button.pressed.emit()
+	Fixtures.click(view, path)
 
 func assert_dialog(app: Control, id: String) -> void:
 	assert(is_instance_valid(app.overlay))
@@ -43,7 +40,7 @@ func run() -> void:
 	assert_progress(app, [])
 	click(app.page, "LevelsButton")
 	assert(not app.page.get_node("Topic1/EnterButton").disabled)
-	for card in ["Topic2", "Topic3", "Topic4"]:
+	for card in ["Topic2", "Topic3", "Topic4", "Topic5", "Topic6"]:
 		assert(app.page.get_node(card + "/EnterButton").disabled)
 	# Even an emitted signal cannot bypass the navigation guard.
 	app.page.get_node("Topic3/EnterButton").pressed.emit()
@@ -147,7 +144,7 @@ func run() -> void:
 	# A complete current-format journey advances only after each successful save.
 	app = new_app(persisted)
 	await process_frame
-	for id in [1, 2, 3]:
+	for id in [1, 2, 3, 4, 5]:
 		app._start_topic(id)
 		assert(app.current == "canvas" and app.topic == id)
 		app.drawing.add_object("dufu_longsword")
@@ -162,11 +159,11 @@ func run() -> void:
 		assert_progress(app, after_save)
 		assert_dialog(app, "save_confirmation")
 		click(app.overlay, "NextButton")
-		if id < 3:
+		if id < 5:
 			assert(app.current == "canvas" and app.topic == id + 1)
 		else:
 			assert(app.current == "levels")
-	assert(app.local_store.document.works.size() == 3)
+	assert(app.local_store.document.works.size() == 5)
 	app.free()
 	await process_frame
 

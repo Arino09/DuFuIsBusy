@@ -13,8 +13,9 @@ func run() -> void:
 	var surface_id: int = app.drawing.get_instance_id()
 	app.drawing.begin(Vector2(500, 150), -1)
 	app.drawing.finish()
-	# Inline palette changes the brush without opening or replacing the canvas.
+	# Exercise the underlying palette component; the workspace uses the settings drawer.
 	var palette = app.page.get_node("ColorPalette")
+	palette.show()
 	assert(palette.is_visible_in_tree() and not app.page.has_node("PaletteButton"))
 	palette.get_node("HexInput").text_submitted.emit("oops")
 	assert(palette.get_node("HexInput").has_theme_color_override("font_color"))
@@ -63,7 +64,7 @@ func run() -> void:
 	palette_restore.free()
 	palette.get_node("HexInput").text_submitted.emit("3a9d8f")
 	# Modal focus still blocks the inline controls and returns to its source.
-	var source: Button = app.page.get_node("AddTextButton")
+	var source: Button = app.page.get_node("MobileUI/Toolbar").find_child("AddTextButton", true, false)
 	source.grab_focus()
 	click(app.page, "AddTextButton")
 	for control in app.page.find_children("*", "Control", true, false):
@@ -85,6 +86,11 @@ func run() -> void:
 	assert(app.local_store.document.tools.color_history == app.color_history)
 	# Route real pointer events through the embedded wheel and channel slider.
 	await process_frame
+	# Expose this component above the workspace after responsive layout settles.
+	palette.show()
+	palette.z_index = 10
+	palette.get_parent().move_child(palette, palette.get_parent().get_child_count() - 1)
+	await process_frame
 	var prior_color: Color = app.pen_color
 	var wheel: ColorPicker = palette.get_node("Wheel")
 	pointer_click(wheel.get_global_transform_with_canvas() * Vector2(106, 108))
@@ -99,6 +105,8 @@ func run() -> void:
 
 func click(view: Node, path: NodePath) -> void:
 	var button: BaseButton = view.get_node(path)
+	if not button.is_visible_in_tree() and view.has_node("MobileUI/Toolbar"):
+		button = view.get_node("MobileUI/Toolbar").find_child(button.name, true, false)
 	assert(button.is_visible_in_tree(), "Button is hidden: %s" % path)
 	assert(not button.disabled, "Button is disabled: %s" % path)
 	button.pressed.emit()

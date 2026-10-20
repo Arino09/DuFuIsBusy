@@ -9,11 +9,6 @@ signal view_work_requested(work: Dictionary)
 signal edit_work_requested(work: Dictionary)
 signal example_requested(index: int)
 
-const MY_WORKS_LIGHT = preload("res://assets/ui/gallery/my-works-light.png")
-const MY_WORKS_DARK = preload("res://assets/ui/gallery/my-works-dark.png")
-const EXAMPLES_LIGHT = preload("res://assets/ui/gallery/examples-light.png")
-const EXAMPLES_DARK = preload("res://assets/ui/gallery/examples-dark.png")
-
 var page_index := 0
 var _slot_works: Array[Dictionary] = [{}, {}, {}, {}]
 
@@ -60,8 +55,8 @@ func refresh(works: Array, tab: int, filter: String, requested_page: int, textur
 		_refresh_examples(filter)
 
 func _update_tab_art() -> void:
-	$MyWorksTab.icon = MY_WORKS_LIGHT if $MyWorksTab.button_pressed else MY_WORKS_DARK
-	$ExamplesTab.icon = EXAMPLES_LIGHT if $ExamplesTab.button_pressed else EXAMPLES_DARK
+	for button: Button in [$MyWorksTab, $ExamplesTab]:
+		button.add_theme_color_override("font_focus_color", Color("fbfaf5") if button.button_pressed else Color("292824"))
 
 func _update_filter_focus(button: Button) -> void:
 	# Focused text must follow the selected background as well as the focus ring.

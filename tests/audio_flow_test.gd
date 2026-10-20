@@ -20,9 +20,7 @@ func expect(label: String, got: PackedStringArray, want: Array) -> void:
 	assert(got == PackedStringArray(want), "%s: heard %s, expected %s" % [label, got, want])
 
 func press(view: Node, path: NodePath) -> void:
-	var control: BaseButton = view.get_node(path)
-	assert(control.is_visible_in_tree() and not control.disabled, "Cannot press " + str(path))
-	control.pressed.emit()
+	UiTest.click(view, path)
 
 func run() -> void:
 	director = root.get_node("AudioDirector")
@@ -107,8 +105,10 @@ func run() -> void:
 	music.grab_focus()
 	director.binder.last_input_ms = Time.get_ticks_msec()
 	music.set_pressed_no_signal(true)
-	expect("Music off", await heard(func(): music.button_pressed = false), ["post Stop_Music_Theme"])
+	expect("Music off", await heard(func(): music.button_pressed = false), [])
+	assert(director._sent_gains.music == 0.0)
 	director.binder.last_input_ms = Time.get_ticks_msec()
-	expect("Music on", await heard(func(): music.button_pressed = true), ["post Play_Music_Theme"])
+	expect("Music on", await heard(func(): music.button_pressed = true), [])
+	assert(director._sent_gains.music > 0.0)
 	print("AUDIO_FLOW_TESTS_PASSED")
 	quit()

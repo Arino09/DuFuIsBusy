@@ -72,7 +72,7 @@ func set_mobile_layout(enabled: bool, available_width: float = 0.0) -> void:
 	_available_width = available_width
 	$Categories.add_theme_constant_override("h_separation", 8 if enabled else 12)
 	for button in category_buttons.values():
-		button.custom_minimum_size = Vector2(124 if enabled else 180, 48 if enabled else 44)
+		button.custom_minimum_size = Vector2(124 if enabled else 180, 56 if enabled else 44)
 		if enabled: button.add_theme_font_size_override("font_size", 18)
 		else: button.remove_theme_font_size_override("font_size")
 	_update_cards()
@@ -89,7 +89,7 @@ func _configure_card(card: PanelContainer) -> void:
 	# Configure before adding to the grid, so a category change never briefly
 	# forces its parent back to the desktop column width.
 	var card_width := maxf(100.0, (_available_width - 24.0) / 2.0) if _mobile_layout else 184.0
-	card.custom_minimum_size = Vector2(card_width, 232 if _mobile_layout else 240)
+	card.custom_minimum_size = Vector2(card_width, 248 if _mobile_layout else 240)
 	var preview: TextureRect = card.get_node("Content/Preview")
 	preview.custom_minimum_size.y = 100 if _mobile_layout else 140
 	var label: Label = card.get_node("Content/Name")
@@ -97,6 +97,6 @@ func _configure_card(card: PanelContainer) -> void:
 	label.custom_minimum_size.y = 46 if _mobile_layout else 0
 	label.add_theme_font_size_override("font_size", 18 if _mobile_layout else 23)
 	var button: Button = card.get_node("Content/UseButton")
-	button.custom_minimum_size.y = 48 if _mobile_layout else 40
+	button.custom_minimum_size.y = 56 if _mobile_layout else 40
 	if _mobile_layout: button.add_theme_font_size_override("font_size", 20)
 	else: button.remove_theme_font_size_override("font_size")

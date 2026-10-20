@@ -15,6 +15,8 @@ static func apply(page: Control, id: String, extent: Vector2, state) -> float:
 static func _place(page: Control, path: String, bounds: Rect2, state, font_size: int = 0) -> Control:
 	var control := page.get_node(path) as Control
 	if font_size > 0: state.font(control, font_size)
+	if control is BaseButton or control is Slider:
+		bounds.size = bounds.size.max(Vector2(56, 56))
 	# Release the desktop label's one-line minimum width before assigning its bounds.
 	if control is Label: state.put(control, "autowrap_mode", TextServer.AUTOWRAP_WORD_SMART)
 	state.rect(control, bounds)
@@ -60,64 +62,54 @@ static func _home(page: Control, extent: Vector2, state) -> float:
 static func _levels(page: Control, extent: Vector2, state) -> float:
 	var width := extent.x - MARGIN * 2.0
 	var wide := width >= 600.0
-	var row_height := 126.0 if wide else 174.0
-	for index in range(4):
+	var row_height := 134.0 if wide else 182.0
+	var rows := page.get_children().filter(func(child: Node): return child.has_meta("topic_id"))
+	for index in rows.size():
 		var row := _place(page, "Topic%d" % (index + 1), Rect2(MARGIN, TOP + index * row_height, width, row_height), state)
 		_place(row, "Number", Rect2(0.0, 0.0, 38.0, 44.0), state, 22)
-		_place(row, "Title", Rect2(42.0, 0.0, 94.0, 44.0), state, 32)
+		_place(row, "Title", Rect2(42.0, 0.0, width - 160.0, 44.0), state, 26)
 		_place(row, "EnterButton", Rect2(width - 108.0, 0.0, 108.0, 48.0), state, 22)
 		if wide:
-			_wrap(_place(row, "Prompt", Rect2(152.0, 0.0, width - 280.0, 50.0), state, 22), state)
-			_wrap(_place(row, "Status", Rect2(152.0, 54.0, width - 160.0, 42.0), state, 19), state)
+			state.rect(row.get_node("Title"), Rect2(42.0, 0.0, 190.0, 44.0))
+			_wrap(_place(row, "Prompt", Rect2(248.0, 0.0, width - 376.0, 58.0), state, 22), state)
+			_wrap(_place(row, "Status", Rect2(248.0, 62.0, width - 256.0, 42.0), state, 19), state)
 		else:
-			_wrap(_place(row, "Prompt", Rect2(0.0, 54.0, width, 58.0), state, 22), state)
-			_wrap(_place(row, "Status", Rect2(0.0, 116.0, width, 40.0), state, 19), state)
+			_wrap(_place(row, "Prompt", Rect2(0.0, 64.0, width, 58.0), state, 22), state)
+			_wrap(_place(row, "Status", Rect2(0.0, 126.0, width, 40.0), state, 19), state)
 		_place(row, "Divider", Rect2(0.0, row_height - 10.0, width, 1.0), state)
-	return maxf(extent.y, TOP + 4.0 * row_height + 44.0)
+	return maxf(extent.y, TOP + rows.size() * row_height + 44.0)
 
 static func _settings(page: Control, extent: Vector2, state) -> float:
-	var width := minf(extent.x - MARGIN * 2.0, 680.0)
+	# The game uses landscape orientation; keep a horizontal form at every size.
+	var width := minf(extent.x - 40.0, 720.0)
 	var x := (extent.x - width) * 0.5
-	var wide := width >= 600.0
-	var y := TOP
-	if wide:
-		_place(page, "VolumeCaption", Rect2(x, y, 96.0, 48.0), state, 22)
-		_place(page, "VolumeSlider", Rect2(x + 104.0, y, width - 180.0, 48.0), state)
-		_place(page, "VolumeLabel", Rect2(x + width - 64.0, y, 64.0, 48.0), state, 22)
-		y += 68.0
-		var half := (width - 28.0) * 0.5
-		for index in range(4):
-			var caption: String = ["SoundToggleCaption", "MusicToggleCaption", "LanguageCaption", "QualityCaption"][index]
-			var value: String = ["SoundToggle", "MusicToggle", "LanguageValue", "QualityOption"][index]
-			var column_x := x + (index % 2) * (half + 28.0)
-			var row_y := y + floorf(index / 2.0) * 64.0
-			_place(page, caption, Rect2(column_x, row_y, 84.0, 48.0), state, 22)
-			_place(page, value, Rect2(column_x + 96.0, row_y, half - 96.0, 48.0), state, 22)
-		y += 128.0
-	else:
-		_place(page, "VolumeCaption", Rect2(x, y, width - 76.0, 36.0), state, 22)
-		_place(page, "VolumeLabel", Rect2(x + width - 68.0, y, 68.0, 36.0), state, 22)
-		_place(page, "VolumeSlider", Rect2(x, y + 40.0, width, 48.0), state)
-		y += 104.0
-		for index in range(4):
-			var caption: String = ["SoundToggleCaption", "MusicToggleCaption", "LanguageCaption", "QualityCaption"][index]
-			var value: String = ["SoundToggle", "MusicToggle", "LanguageValue", "QualityOption"][index]
-			_place(page, caption, Rect2(x, y, 96.0, 48.0), state, 22)
-			_place(page, value, Rect2(x + width - 160.0, y, 160.0, 48.0), state, 22)
-			y += 64.0
+	var y := 80.0
+	_place(page, "VolumeCaption", Rect2(x, y, 80.0, 56.0), state, 26)
+	_place(page, "VolumeSlider", Rect2(x + 88.0, y, width - 168.0, 56.0), state)
+	_place(page, "VolumeLabel", Rect2(x + width - 64.0, y, 64.0, 56.0), state, 24)
+	y += 68.0
+	var row_width := (width - 24.0) * 0.5
+	for index in range(2):
+		var caption: String = ["SoundToggleCaption", "MusicToggleCaption"][index]
+		var toggle: String = ["SoundToggle", "MusicToggle"][index]
+		var row_x := x + index * (row_width + 24.0)
+		_place(page, caption, Rect2(row_x, y, 72.0, 64.0), state, 26)
+		_place(page, toggle, Rect2(row_x + row_width - 148.0, y, 148.0, 64.0), state, 24)
+	y += 80.0
 	_place(page, "Divider", Rect2(x, y, width, 1.0), state)
-	_place(page, "ResetButton", Rect2(x, y + 18.0, width, 48.0), state, 22)
-	_wrap(_place(page, "SettingsNote", Rect2(x, y + 82.0, width, 68.0), state, 19), state)
-	return maxf(extent.y, y + 194.0)
+	var reset_width := minf(240.0, width * 0.46)
+	_place(page, "ResetButton", Rect2(x, y + 16.0, reset_width, 64.0), state, 24)
+	_wrap(_place(page, "SettingsNote", Rect2(x + reset_width + 24.0, y + 16.0, width - reset_width - 24.0, 64.0), state, 18), state)
+	return maxf(extent.y, y + 92.0)
 
 static func _gallery(page: Control, extent: Vector2, state) -> float:
 	var width := extent.x - MARGIN * 2.0
 	var welcome_width := minf(width, 360.0)
-	_place(page, "Welcome", Rect2(MARGIN, TOP, welcome_width, 52.0), state)
+	_place(page, "Welcome", Rect2(MARGIN, TOP, width, 52.0), state, 28 if width >= 340.0 else 24)
 	var tab_width := (width - 12.0) * 0.5
 	for index in range(2):
 		var tab := _place(page, ["MyWorksTab", "ExamplesTab"][index], Rect2(MARGIN + index * (tab_width + 12.0), TOP + 64.0, tab_width, 52.0), state)
-		state.put(tab, "theme_override_constants/icon_max_width", int(minf(162.0, tab_width - 40.0)))
+		state.font(tab, 24)
 	var works := _place(page, "MyWorks", Rect2(MARGIN, TOP + 132.0, width, 0.0), state)
 	_wrap(_place(works, "CountLabel", Rect2(0.0, 0.0, width, 38.0), state, 20), state)
 	_place(works, "PreviousButton", Rect2(0.0, 46.0, tab_width, 48.0), state, 22)
@@ -135,8 +127,8 @@ static func _gallery(page: Control, extent: Vector2, state) -> float:
 	var filter_width := (width - 8.0 * (filter_columns - 1)) / filter_columns
 	for index in range(5):
 		var name: String = ["FilterAll", "FilterWuxia", "FilterSciFi", "FilterMarket", "FilterFun"][index]
-		_place(examples, name, Rect2((index % filter_columns) * (filter_width + 8.0), floorf(float(index) / filter_columns) * 56.0, filter_width, 48.0), state, 20)
-	var filter_height := ceilf(5.0 / filter_columns) * 56.0
+		_place(examples, name, Rect2((index % filter_columns) * (filter_width + 8.0), floorf(float(index) / filter_columns) * 64.0, filter_width, 56.0), state, 20)
+	var filter_height := ceilf(5.0 / filter_columns) * 64.0
 	_place(examples, "CountLabel", Rect2(0.0, filter_height, width, 32.0), state, 20)
 	var examples_grid_y := filter_height + 40.0
 	var examples_height := examples_grid_y + _gallery_cards(examples.get_node("Cards"), width, examples_grid_y, true, state)
@@ -147,7 +139,7 @@ static func _gallery_cards(grid: GridContainer, width: float, top: float, exampl
 	var columns := 2 if width >= 600.0 else 1
 	var card_width := (width - 16.0 * (columns - 1)) / columns
 	var picture_height := minf(224.0, card_width * 0.52)
-	var card_height := picture_height + 108.0
+	var card_height := picture_height + 116.0
 	state.put(grid, "columns", columns)
 	state.put(grid, "theme_override_constants/h_separation", 16)
 	state.put(grid, "theme_override_constants/v_separation", 20)

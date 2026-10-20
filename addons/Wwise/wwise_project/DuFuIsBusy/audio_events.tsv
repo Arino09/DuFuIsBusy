@@ -79,8 +79,8 @@ ui.toggle_on	-	可切换按钮被打开。工具、标签、筛选重复点击�
 ui.toggle_off	-	可切换按钮被关闭
 ui.toggle_on.default.SoundToggle	-	设置「音效」开关打开
 ui.toggle_off.default.SoundToggle	-	设置「音效」开关关闭
-ui.toggle_on.default.MusicToggle	Play_Music_Theme	设置「音乐」开关打开
-ui.toggle_off.default.MusicToggle	Stop_Music_Theme	设置「音乐」开关关闭
+ui.toggle_on.default.MusicToggle	-	由 AudioDirector 直接控制音乐发声体音量，避免重复启动音乐
+ui.toggle_off.default.MusicToggle	-	由 AudioDirector 直接控制音乐发声体音量，避免重复启动音乐
 ui.drag	-	拖动滑条 / 调 SpinBox 数值（仅玩家操作时；代码改值不响）。每一格都会触发，Wwise 里请设播放上限
 ui.drag.default.WidthSlider		画布笔刷粗细滑条（4–56，每格 4）
 ui.drag.default.VolumeSlider		设置音量滑条
@@ -207,9 +207,9 @@ storage.enter.error	-	本地存储从正常变成失败（空间不足、被浏�
 storage.enter.ok	-	存储恢复正常；启动后第一次保存成功也会触发，所以默认静音
 storage.exit.error		存储失败状态结束
 # ===== RTPC（中间列填 Game Parameter 名；数值自动节流，最后一个值一定送达）=====
-rtpc.setting.volume		设置「音量」滑条，0–100，默认 70。Wwise 里还没有 Game Parameter；建的时候叫 Volume_Master，映射到主总线音量后填在这里
-rtpc.setting.sound		设置「音效」开关：开 = 1，关 = 0。待建 Game Parameter（建议 Volume_SFX）后填在这里
-rtpc.setting.music		设置「音乐」开关：开 = 1，关 = 0。待建 Game Parameter（建议 Volume_Music）后填在这里
+rtpc.setting.volume		主音量 0–100；AudioDirector 直接控制音乐和音效发声体输出，无需新增 SoundBank 参数
+rtpc.setting.sound		音效开关；直接静音音效发声体，并屏蔽新的音效事件
+rtpc.setting.music		音乐开关；直接静音音乐发声体，保留播放进度
 rtpc.setting.quality	-	设置「画质」，与声音无关
 rtpc.setting.motion	-	「减少动画」（暂无界面），与声音无关
 rtpc.canvas.drag_speed	Brush_Speed	笔刷速度 0–100（3000 画布像素/秒对应 100）；逐帧平滑，停留时回落，抬笔立即归零。控制笔刷循环声的音量和低通。

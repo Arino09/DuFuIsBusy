@@ -38,6 +38,9 @@ jobs:
           timeout 60s godot --headless --path . --script tests/avatar_rotation_test.gd 2>&1 | tee handles-test.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' handles-test.log; then exit 1; fi
           grep 'AVATAR_ROTATION_TESTS_PASSED' handles-test.log
+          timeout 60s godot --headless --path . --script tests/feedback_test.gd 2>&1 | tee feedback-test.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' feedback-test.log; then exit 1; fi
+          grep 'FEEDBACK_TESTS_PASSED' feedback-test.log
       - name: Test persistent layer serialization
         run: |
           timeout 60s godot --headless --path . --script tests/storage_test.gd 2>&1 | tee storage-test.log

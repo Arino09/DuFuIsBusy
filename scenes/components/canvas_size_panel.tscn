@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://themes/canvas_theme.tres" id="1_s0d8u"]
+
+[node name="CanvasPanel" type="VBoxContainer" unique_id=1420998519]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 700.0
+size_flags_horizontal = 3
+theme = ExtResource("1_s0d8u")
+theme_override_constants/separation = 12
+
+[node name="TopicPrompt" type="Label" parent="." unique_id=1950730901]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "自由创作"
+autowrap_mode = 3
+
+[node name="SizeHint" type="Label" parent="." unique_id=78523527]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "画布尺寸 · 缩小会裁切，可撤销"
+autowrap_mode = 3
+
+[node name="Dimensions" type="HBoxContainer" parent="." unique_id=2099682439]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CanvasWidth" type="SpinBox" parent="Dimensions" unique_id=367430058]
+custom_minimum_size = Vector2(100, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 256.0
+max_value = 2048.0
+value = 1080.0
+suffix = "px"
+
+[node name="CanvasHeight" type="SpinBox" parent="Dimensions" unique_id=209272055]
+custom_minimum_size = Vector2(100, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 256.0
+max_value = 2048.0
+value = 1080.0
+suffix = "px"
+
+[node name="ApplySizeButton" type="Button" parent="." unique_id=2130426853]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+text = "应用尺寸"

@@ -27,15 +27,12 @@ func create_app(document: Dictionary = {}) -> Variant:
 	app.set_script(IsolatedApp)
 	# Gallery coverage visits every topic; unlocking is tested in level_flow_test.
 	app.saved_document = Store.empty_document() if document.is_empty() else document.duplicate(true)
-	app.saved_document.completed_topics = [0, 1, 2, 3]
+	app.saved_document.completed_topics = [0, 1, 2, 3, 4, 5]
 	root.add_child(app)
 	return app
 
 func click(view: Node, path: NodePath) -> void:
-	var button: BaseButton = view.get_node(path)
-	assert(button.is_visible_in_tree(), "Button is hidden: %s" % path)
-	assert(not button.disabled, "Button is disabled: %s" % path)
-	button.pressed.emit()
+	Fixtures.click(view, path)
 
 func card_count(app: Control) -> int:
 	var count := 0

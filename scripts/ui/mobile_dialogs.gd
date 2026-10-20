@@ -2,7 +2,7 @@ extends RefCounted
 ## Reflow existing dialog controls without changing controller-facing node paths.
 
 const GAP := 10.0
-const BUTTON_HEIGHT := 48.0
+const BUTTON_HEIGHT := 56.0
 
 static func apply(dialog: Control, id: String, extent: Vector2, state) -> float:
 	var panel_width := minf(680.0, extent.x - 24.0)
@@ -11,9 +11,9 @@ static func apply(dialog: Control, id: String, extent: Vector2, state) -> float:
 	var width := panel_width - 32.0
 	var y := 24.0
 	var title: Label = dialog.get_node("Frame/Title")
-	var title_height := _label(title, state, Rect2(x, y, width - 54.0, 48.0), 26)
-	_rect(dialog, "Frame/CloseButton", Rect2(x + width - 48.0, y, 48.0, 48.0), state, 24)
-	y += maxf(48.0, title_height) + GAP
+	var title_height := _label(title, state, Rect2(x, y, width - 64.0, BUTTON_HEIGHT), 26)
+	_rect(dialog, "Frame/CloseButton", Rect2(x + width - BUTTON_HEIGHT, y, BUTTON_HEIGHT, BUTTON_HEIGHT), state, 24)
+	y += maxf(BUTTON_HEIGHT, title_height) + GAP
 	match id:
 		"busy":
 			state.hide(dialog.get_node("Frame/Body"))
@@ -41,7 +41,7 @@ static func apply(dialog: Control, id: String, extent: Vector2, state) -> float:
 			var categories: HFlowContainer = dialog.get_node("Categories")
 			var columns := maxi(1, int(floor((width + 8.0) / 132.0)))
 			var rows := int(ceil(float(categories.get_child_count()) / columns))
-			var category_height := rows * 48.0 + (rows - 1) * 8.0
+			var category_height := rows * BUTTON_HEIGHT + (rows - 1) * 8.0
 			state.rect(categories, Rect2(x, y, width, category_height))
 			y += category_height + GAP
 			var list_height := maxf(230.0, minf(600.0, extent.y - y - 28.0))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://scripts/pages/gallery_page.gd" id="Controller"]
 
@@ -28,11 +28,10 @@
 
 [ext_resource type="Texture2D" path="res://assets/ui/gallery/filter-dark.png" id="FilterDark"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/gallery/my-works-light.png" id="MyWorksLabel"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/gallery/examples-dark.png" id="ExamplesLabel"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/gallery/welcome.png" id="Welcome"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/ChillLongCangKaiShu_Regular.otf" id="GalleryFont"]
 
 [sub_resource type="StyleBoxTexture" id="TabLightStyle"]
 texture = ExtResource("TabLight")
@@ -119,7 +118,7 @@ text = "画廊"
 [node name="Subtitle" parent="Frame" index="4"]
 text = ""
 
-[node name="Welcome" type="TextureRect" parent="."]
+[node name="Welcome" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -133,9 +132,11 @@ offset_bottom = -262.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("Welcome")
-expand_mode = 1
-stretch_mode = 5
+text = "又来卢浮宫参观啦"
+theme_override_fonts/font = ExtResource("GalleryFont")
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.30, 0.35, 0.32, 1)
+vertical_alignment = 1
 
 [node name="MyWorksTab" type="Button" parent="."]
 layout_mode = 1
@@ -160,9 +161,13 @@ theme_override_styles/hover_pressed = SubResource("TabDarkStyle")
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("TabsGroup")
-icon = ExtResource("MyWorksLabel")
-icon_alignment = 1
-expand_icon = true
+text = "我的作品"
+theme_override_fonts/font = ExtResource("GalleryFont")
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
 
 [node name="ExamplesTab" type="Button" parent="."]
 layout_mode = 1
@@ -186,9 +191,13 @@ theme_override_styles/pressed = SubResource("TabDarkStyle")
 theme_override_styles/hover_pressed = SubResource("TabDarkStyle")
 toggle_mode = true
 button_group = SubResource("TabsGroup")
-icon = ExtResource("ExamplesLabel")
-icon_alignment = 1
-expand_icon = true
+text = "示例作品"
+theme_override_fonts/font = ExtResource("GalleryFont")
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.157, 0.141, 1)
+theme_override_colors/font_pressed_color = Color(0.984, 0.98, 0.961, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.984, 0.98, 0.961, 1)
 
 [node name="MyWorks" type="Control" parent="."]
 layout_mode = 1

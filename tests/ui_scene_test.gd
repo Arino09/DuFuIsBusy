@@ -81,11 +81,36 @@ class IsolatedApp:
 func _initialize() -> void:
 	call_deferred("run")
 
-func click(view: Node, path: NodePath) -> void:
+static func click(view: Node, path: NodePath) -> void:
 	var button: BaseButton = view.get_node(path)
+	if not button.is_visible_in_tree() and view.has_node("MobileUI/Toolbar"):
+		var original_name := button.name
+		button = view.get_node("MobileUI/Toolbar").find_child(original_name, true, false)
+		if button == null:
+			view.workspace_layout.open_panel("layers")
+			button = view.get_node("MobileUI/Drawer").find_child(original_name, true, false)
+		else:
+			view.get_node("MobileUI/Toolbar").ensure_control_visible(button)
+		assert(button != null, "Missing drawer action: %s" % path)
 	assert(button.is_visible_in_tree(), "Button is hidden: %s" % path)
 	assert(not button.disabled, "Button is disabled: %s" % path)
 	button.pressed.emit()
+
+static func assert_canvas_drawer(page: Control) -> void:
+	var drawer: Control = page.get_node("MobileUI/Drawer")
+	var panel: Panel = drawer.get_node("Panel")
+	var background := panel.get_global_rect()
+	var style := panel.get_theme_stylebox("panel") as StyleBoxFlat
+	assert(background.has_area() and background.size.x >= 280, "Drawer needs a full-width background")
+	assert(style != null and style.bg_color.a == 1.0, "Drawer background must be opaque")
+	var title: Control = drawer.get_node("Title")
+	var close: Control = drawer.get_node("CloseButton")
+	var scroll: Control = drawer.get_node("Scroll")
+	for control in [title, close, scroll]:
+		assert(background.encloses(control.get_global_rect()), "Drawer control outside its background: %s" % control.name)
+	assert(not title.get_global_rect().intersects(close.get_global_rect()), "Drawer title overlaps its close button")
+	assert(close.get_global_rect().position.x > background.get_center().x, "Close button must sit at the top right")
+	assert(scroll.get_global_rect().position.y >= maxf(title.get_global_rect().end.y, close.get_global_rect().end.y) + 8, "Drawer content must start below the header")
 
 func visible_card_count(cards: Node) -> int:
 	var count := 0
@@ -129,7 +154,24 @@ func verify_authored_scenes() -> bool:
 	for collection in [Controller.PAGE_SCENES, Controller.DIALOG_SCENES]:
 		for id in collection:
 			var scene: Control = collection[id].instantiate()
+			var authored_toolbar_offsets := Vector4()
+			if id == "canvas" and collection == Controller.PAGE_SCENES:
+				assert(scene.has_node("MobileUI/Toolbar/Tools/LayersButton"), "Toolbar must exist before scripts run")
+				assert(scene.has_node("MobileUI/Toolbar/Tools/PaletteButton"), "Palette button must be authored in the bottom toolbar")
+				var workspace: Control = scene.get_node("MobileUI")
+				assert(workspace.scene_file_path == "res://scenes/components/canvas_workspace.tscn")
+				for panel in ["PalettePanel", "LayersPanel", "CanvasPanel"]:
+					var control: Control = workspace.get_node("Drawer/Scroll/Content/" + panel)
+					assert(not control.scene_file_path.is_empty(), "Each settings panel must be an editable scene")
+				# A designer's position change must survive the desktop controller's setup.
+				var toolbar: Control = workspace.get_node("Toolbar")
+				toolbar.offset_left += 2
+				authored_toolbar_offsets = Vector4(toolbar.offset_left, toolbar.offset_top, toolbar.offset_right, toolbar.offset_bottom)
 			root.add_child(scene)
+			if id == "canvas" and collection == Controller.PAGE_SCENES:
+				var toolbar: Control = scene.get_node("MobileUI/Toolbar")
+				assert(Vector4(toolbar.offset_left, toolbar.offset_top, toolbar.offset_right, toolbar.offset_bottom) == authored_toolbar_offsets, "Runtime setup must preserve authored toolbar offsets")
+				assert_canvas_drawer(scene)
 			assert(scene.size == Vector2(1440, 900), "Wrong scene viewport: %s" % id)
 			assert(scene.theme != null, "Scene needs its own theme for standalone preview: %s" % id)
 			assert(scene.get_node("Frame/Title") is Label)
@@ -208,34 +250,35 @@ func run() -> void:
 	assert(app.drawing.has_ink())
 	assert(app.local_store.document.tools.width == 28)
 
-	# Inline palette changes the brush without opening or replacing the canvas.
+	# The settings drawer changes the brush without replacing the canvas.
 	var palette = app.page.get_node("ColorPalette")
-	assert(palette.is_visible_in_tree() and not app.page.has_node("PaletteButton"))
-	palette.get_node("HexInput").text_submitted.emit("oops")
-	assert(palette.get_node("HexInput").has_theme_color_override("font_color"))
-	palette.get_node("HexInput").text_submitted.emit("3a9d8f")
+	assert(not palette.is_visible_in_tree())
+	click(app.page, "MobileUI/Toolbar/Tools/PaletteButton")
+	var drawer: Control = app.page.get_node("MobileUI/Drawer")
+	assert(drawer.visible)
+	var hex: LineEdit = drawer.get_node("Scroll").find_child("HexInput", true, false)
+	hex.text_submitted.emit("oops")
+	assert(hex.has_theme_color_override("font_color"))
+	hex.text_submitted.emit("3a9d8f")
 	assert(app.overlay == null and app.pen_color == Color("3a9d8f"))
 	assert(app.drawing.ink == app.pen_color)
 	assert_same_canvas(app, canvas_id, surface_id)
+	assert(app.responsive_layout.close_canvas_tools() and not drawer.visible)
 	assert(app.color_history == ["243d35"], "Adjusting a color must not fill usage history")
-	click(palette, "HSV")
-	assert(palette.hsv_mode and palette._labels[0].text == "H")
-	assert(palette._values[0].max_value == 360 and palette._values[1].max_value == 100)
-	palette._values[0].value = 240
-	palette._values[1].value = 100
-	palette._values[2].value = 100
+	click(app.page, "MobileUI/Toolbar/Tools/PaletteButton")
+	var wheel: ColorPicker = drawer.find_child("ColorPicker", true, false)
+	var red: SpinBox = drawer.find_child("RedInput", true, false)
+	var green: SpinBox = drawer.find_child("GreenInput", true, false)
+	var blue: SpinBox = drawer.find_child("BlueInput", true, false)
+	wheel.color_changed.emit(Color.BLUE)
 	assert(app.pen_color.is_equal_approx(Color.BLUE))
-	# Preserve hue and saturation while passing through black.
-	palette._values[2].value = 0
-	palette._values[0].value = 120
-	palette._values[2].value = 100
-	assert(app.pen_color.is_equal_approx(Color.GREEN))
-	click(palette, "RGB")
-	assert(palette._values[0].max_value == 255 and palette._labels[0].text == "R")
-	palette._values[0].value = 255
+	red.value = 255
+	green.value = 255
+	blue.value = 0
 	assert(app.pen_color.is_equal_approx(Color.YELLOW))
-	palette.get_node("Wheel").color_changed.emit(Color.RED)
-	assert(app.pen_color == Color.RED and palette._values[1].value == 0)
+	wheel.color_changed.emit(Color.RED)
+	assert(app.pen_color == Color.RED and green.value == 0)
+	click(drawer, "CloseButton")
 	for i in range(12):
 		app.apply_color(Color.from_hsv(i / 12.0, 1, 1))
 		app.drawing.begin(Vector2(400 + i * 20, 220), -1)
@@ -243,8 +286,11 @@ func run() -> void:
 	assert(app.color_history.size() == 10)
 	assert(not "ff0000" in app.color_history, "Oldest used color was not evicted")
 	var recalled: String = app.color_history[5]
-	click(palette, "History5")
+	click(app.page, "MobileUI/Toolbar/Tools/PaletteButton")
+	var history_button: Button = drawer.find_child("History5", true, false)
+	click(drawer, drawer.get_path_to(history_button))
 	assert(app.pen_color == Color.html(recalled))
+	click(drawer, "CloseButton")
 	app.drawing.begin(Vector2(750, 260), -1)
 	app.drawing.finish()
 	assert(app.color_history.size() == 10 and app.color_history[0] == recalled)
@@ -256,9 +302,11 @@ func run() -> void:
 	assert(palette_restore.color_history == app.color_history)
 	assert(palette_restore.page.palette.get_node("History0").get_meta("color") == recalled)
 	palette_restore.free()
-	palette.get_node("HexInput").text_submitted.emit("3a9d8f")
+	click(app.page, "MobileUI/Toolbar/Tools/PaletteButton")
+	hex.text_submitted.emit("3a9d8f")
+	click(drawer, "CloseButton")
 	# Modal focus still blocks the inline controls and returns to its source.
-	var source: Button = app.page.get_node("AddTextButton")
+	var source: Button = app.page.get_node("MobileUI/Toolbar").find_child("AddTextButton", true, false)
 	source.grab_focus()
 	click(app.page, "AddTextButton")
 	for control in app.page.find_children("*", "Control", true, false):

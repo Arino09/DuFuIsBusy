@@ -27,7 +27,7 @@ func refresh(values: Dictionary, status: String) -> void:
 	update_status(status)
 
 func update_status(status: String) -> void:
-	_note.text = str(_note.get_meta("description")) + "\n" + status
+	_note.text = str(_note.get_meta("description")) if status.is_empty() else status
 
 func _refresh_toggle(toggle: CheckButton, enabled: bool) -> void:
 	toggle.set_pressed_no_signal(enabled)

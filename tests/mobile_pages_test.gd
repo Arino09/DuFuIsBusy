@@ -36,7 +36,7 @@ func verify_layout(page: Control, extent: Vector2, height: float) -> void:
 		if not control.is_visible_in_tree(): continue
 		check(bounds.encloses(control.get_global_rect()), "%s overflows %s: %s" % [control.get_path(), extent, control.get_global_rect()])
 		if control is BaseButton or control is Slider:
-			check(control.size.x >= 44.0 and control.size.y >= 44.0, "%s has a small touch target at %s: %s" % [control.get_path(), extent, control.size])
+			check(control.size.x >= 55.9 and control.size.y >= 55.9, "%s has a small touch target at %s: %s" % [control.get_path(), extent, control.size])
 		if control.get_parent() is GridContainer:
 			for content in controls(control):
 				check(control.get_global_rect().grow(0.5).encloses(content.get_global_rect()), "%s overflows its gallery card at %s: %s" % [content.get_path(), extent, content.get_global_rect()])

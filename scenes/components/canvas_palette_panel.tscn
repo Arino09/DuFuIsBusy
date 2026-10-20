@@ -1,0 +1,320 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://themes/canvas_theme.tres" id="1_8g33g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2yydb"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h8hdq"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbp2r"]
+bg_color = Color(0.6431373, 0.2627451, 0.19607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_33m7w"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oqcwq"]
+bg_color = Color(0.22745098, 0.6156863, 0.56078434, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h3ka5"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6xstt"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oakvn"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dd4xy"]
+bg_color = Color(0.6431373, 0.2627451, 0.19607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cx4nj"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ax1sh"]
+bg_color = Color(0.22745098, 0.6156863, 0.56078434, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4o0o5"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mqls"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vilm"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_57465"]
+bg_color = Color(0.6431373, 0.2627451, 0.19607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0jdp"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2881i"]
+bg_color = Color(0.22745098, 0.6156863, 0.56078434, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hcdrh"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3p4al"]
+bg_color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_doq5e"]
+bg_color = Color(0.9098039, 0.8901961, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6666667, 0.6392157, 0.5803922, 1)
+
+[node name="PalettePanel" type="VBoxContainer" unique_id=191946745]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 700.0
+size_flags_horizontal = 3
+theme = ExtResource("1_8g33g")
+theme_override_constants/separation = 12
+
+[node name="RecentTitle" type="Label" parent="." unique_id=2085598305]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "最近使用"
+autowrap_mode = 3
+
+[node name="RecentColors" type="HFlowContainer" parent="." unique_id=1998686653]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="History0" type="Button" parent="RecentColors" unique_id=1380996002]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_2yydb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_h8hdq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h8hdq")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_h8hdq")
+
+[node name="History1" type="Button" parent="RecentColors" unique_id=331526624]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_sbp2r")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_33m7w")
+theme_override_styles/hover = SubResource("StyleBoxFlat_33m7w")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_33m7w")
+
+[node name="History2" type="Button" parent="RecentColors" unique_id=1390226822]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_oqcwq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_h3ka5")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h3ka5")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_h3ka5")
+
+[node name="History3" type="Button" parent="RecentColors" unique_id=1640029142]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_6xstt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_oakvn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_oakvn")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_oakvn")
+
+[node name="History4" type="Button" parent="RecentColors" unique_id=1175664976]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_dd4xy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cx4nj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cx4nj")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_cx4nj")
+
+[node name="History5" type="Button" parent="RecentColors" unique_id=525161064]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_ax1sh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4o0o5")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4o0o5")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_4o0o5")
+
+[node name="History6" type="Button" parent="RecentColors" unique_id=908406542]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_1mqls")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7vilm")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vilm")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_7vilm")
+
+[node name="History7" type="Button" parent="RecentColors" unique_id=962702938]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_57465")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_p0jdp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_p0jdp")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_p0jdp")
+
+[node name="History8" type="Button" parent="RecentColors" unique_id=1960776849]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_2881i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_hcdrh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hcdrh")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_hcdrh")
+
+[node name="History9" type="Button" parent="RecentColors" unique_id=1352322610]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_3p4al")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_doq5e")
+theme_override_styles/hover = SubResource("StyleBoxFlat_doq5e")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_doq5e")
+
+[node name="EmptyHint" type="Label" parent="." unique_id=1757055811]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "画过的颜色会显示在这里"
+autowrap_mode = 3
+
+[node name="WidthTitle" type="Label" parent="." unique_id=371330920]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "笔刷粗细"
+autowrap_mode = 3
+
+[node name="BrushWidth" type="HSlider" parent="." unique_id=1681609646]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+min_value = 4.0
+max_value = 56.0
+step = 4.0
+value = 12.0
+
+[node name="ColorTitle" type="Label" parent="." unique_id=488488892]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "选择颜色"
+autowrap_mode = 3
+
+[node name="ColorPicker" type="ColorPicker" parent="." unique_id=511202430]
+layout_mode = 2
+theme_override_constants/sv_width = 200
+theme_override_constants/sv_height = 200
+theme_override_constants/h_width = 24
+color = Color(0.14117648, 0.23921569, 0.20784314, 1)
+edit_alpha = false
+edit_intensity = false
+picker_shape = 1
+sampler_visible = false
+color_modes_visible = false
+sliders_visible = false
+hex_visible = false
+presets_visible = false
+
+[node name="RGB" type="HBoxContainer" parent="." unique_id=1365715753]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RedInput" type="SpinBox" parent="RGB" unique_id=993325130]
+custom_minimum_size = Vector2(76, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 255.0
+value = 36.0
+prefix = "R"
+
+[node name="GreenInput" type="SpinBox" parent="RGB" unique_id=2009034199]
+custom_minimum_size = Vector2(76, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 255.0
+value = 61.0
+prefix = "G"
+
+[node name="BlueInput" type="SpinBox" parent="RGB" unique_id=618165849]
+custom_minimum_size = Vector2(76, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 255.0
+value = 53.0
+prefix = "B"
+
+[node name="HexInput" type="LineEdit" parent="." unique_id=2065444308]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+text = "#243D35"
+placeholder_text = "#243D35"
+max_length = 7

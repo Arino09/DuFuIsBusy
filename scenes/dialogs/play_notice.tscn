@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://themes/ui_theme.tres" id="Theme"]
 [ext_resource type="PackedScene" path="res://scenes/components/modal_frame_large.tscn" id="Frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/ChillLongCangKaiShu_Regular.otf" id="BodyFont"]
 
 [node name="PlayNotice" type="Control"]
 layout_mode = 3
@@ -53,9 +55,11 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
 theme_override_colors/default_color = Color(0.160784, 0.156863, 0.141176, 1)
+theme_override_fonts/normal_font = ExtResource("BodyFont")
 theme_override_font_sizes/normal_font_size = 22
+autowrap_mode = 3
 theme_override_constants/line_separation = 6
-text = "本游戏为TapTap 聚光灯创作比赛参赛作品，仅用于赛事交流展示，未经开发者书面许可，禁止任何形式的商业使用、盈利行为。
+text = "本游戏为 TapTap 聚光灯创作比赛参赛作品，仅用于赛事交流展示，未经开发者书面许可，禁止任何形式的商业使用、盈利行为。
 
 为维护健康文明的游玩氛围，您在使用本游戏画笔功能创作、发布内容时，承诺不制作、不发布、不传播以下内容：
 • 涉及地域、民族、种族、性别、性取向、宗教、政治等方面的歧视、对立言论；
@@ -65,7 +69,9 @@ text = "本游戏为TapTap 聚光灯创作比赛参赛作品，仅用于赛事�
 • 其他违反《TapTap 平台用户协议》、TapTap 社区规范以及本游戏规则的不适宜内容。
 
 1. 玩家通过画笔功能创作的内容，由发布者本人承担全部法律责任。若因违规内容引发纠纷、平台处罚，开发者不承担相关连带责任。
+
 2. 开发者有权对画笔内违规创作内容进行删除、屏蔽处理，并上报 TapTap 平台。
+
 3. 游玩本游戏即代表您已阅读并同意本声明全部条款。"
 selection_enabled = true
 
