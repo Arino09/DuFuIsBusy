@@ -22,11 +22,11 @@
 							<Position X="0" Y="3"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="Play_SFX_Brush_Loop" ID="{63CE7D1A-7C91-4824-B49D-21A867B9F8A5}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<ObjectRef Name="Play_SFX_Enter_Home" ID="{D8E068C1-E86D-4282-BCAC-5B1D9A0DA647}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
 							<Position X="1" Y="0"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="Play_SFX_Enter_Home" ID="{D8E068C1-E86D-4282-BCAC-5B1D9A0DA647}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<ObjectRef Name="Play_SFX_Brush_Loop" ID="{63CE7D1A-7C91-4824-B49D-21A867B9F8A5}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
 							<Position X="1" Y="1"/>
 						</Module>
 						<Module>
@@ -50,6 +50,14 @@
 							<Position X="2" Y="2"/>
 						</Module>
 						<Module>
+							<ObjectRef Name="Play_SFX_Sticker" ID="{1B48C985-4B14-4251-A41C-A6B5FA9E0435}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="2" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_UI_Slider" ID="{C42A4371-49A7-42EB-8627-709FCA12A4F0}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="2" Y="5"/>
+						</Module>
+						<Module>
 							<ObjectRef Name="Play_SFX_Enter_Canvas" ID="{C2D6F963-A6E6-466D-AECD-FC757AA2FEE6}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
 							<Position X="3" Y="0"/>
 						</Module>
@@ -60,6 +68,14 @@
 						<Module>
 							<ObjectRef Name="Play_SFX_Exit_Levels" ID="{94C06EB1-0E0B-4530-AA14-20DF5DE17C00}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
 							<Position X="3" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_UI_Click" ID="{12337A5B-551A-484E-9EF2-8FEDE1C45788}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="3" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Play_SFX_Eraser_Loop" ID="{B3BC3C2C-56D7-471A-B0B6-CF575EF17F5B}" WorkUnitID="{E189EBE9-D305-4F7B-A6B8-1771FFF62147}"/>
+							<Position X="3" Y="5"/>
 						</Module>
 					</ModuleList>
 				</SoundcasterSession>

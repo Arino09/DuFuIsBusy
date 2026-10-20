@@ -12,66 +12,66 @@ app.focus.enter.out		窗口失去焦点（切到别的程序 / 浏览器标签�
 app.focus.enter.in		窗口重新获得焦点
 # ===== UI · 按下（所有按钮自动接入）=====
 # 键格式 ui.press.<角色>.<节点名>。角色来自按钮的主题变体；节点上加 meta「audio_role」可以自定义角色
-ui.press	-	任意按钮按下的兜底音
-ui.press.primary		主操作按钮（深色实心）：开始游戏、完成作品、确认、保存作品、使用贴纸、确定…
-ui.press.quiet		次要按钮（浅色描边）：返回首页、×关闭、撤销、重做、编辑、删除、画廊卡片按钮…
-ui.press.selectable		可选中按钮：画布工具、画廊标签页、画廊筛选
-ui.press.compact_retry		存储失败时出现的「重试保存」小按钮
-ui.press.default		没有主题变体的按钮：自由创作、选关、文字、贴纸、取消、缩放、调色板色块和 RGB/HSV 切换等
-ui.press.primary.LevelsButton	-	首页「开始游戏」
-ui.press.default.FreeDrawButton		首页「自由创作」
-ui.press.quiet.GalleryButton		首页「画廊」
-ui.press.quiet.SettingsButton		首页「设置」
-ui.press.quiet.ExitButton		首页「退出」（只弹出提示，不会真的退出）
-ui.press.quiet.BackButton		各页面左上角「返回首页」
-ui.press.primary.EnterButton	-	选关页每张关卡卡片的「开始画 / 重画」
-ui.press.quiet.CloseButton	-	所有弹窗右上角的 ×。弹窗的关闭声建议配在 dialog.exit，按 Esc 关闭时也会响
-ui.press.primary.OkayButton		提示弹窗的「关闭」
-ui.press.default.CancelButton		确认类弹窗的「取消」（清空草稿 / 恢复默认 / 替换作品）
-ui.press.primary.ConfirmButton	-	确认类弹窗的确认（清空草稿 / 恢复默认 / 替换并编辑）
-ui.press.default.ChangeTopicButton		画布「选关」
-ui.press.selectable.ToolBrush		画布工具「笔刷」；换工具的声音也可以放在 tool.enter.brush
-ui.press.selectable.ToolEraser		画布工具「橡皮」
-ui.press.selectable.ToolMove		画布工具「移动」
-ui.press.default.AddTextButton		画布「文字」，打开文字编辑弹窗
-ui.press.default.StickerButton		画布「贴纸」，打开贴纸选择弹窗
-ui.press.quiet.ReferenceButton		画布「素材」，打开素材目录
-ui.press.quiet.RestartButton	-	画布「清空草稿」，会先弹出确认
-ui.press.quiet.UndoButton		画布「撤销」；真正撤销成功的声音在 canvas.undo
-ui.press.quiet.RedoButton		画布「重做」；真正重做成功的声音在 canvas.redo
-ui.press.quiet.EditObjectButton		画布「编辑」（选中文字时）
-ui.press.quiet.DeleteObjectButton	-	画布「删除」；删除成功的声音在 canvas.object.remove
-ui.press.quiet.DeselectButton		画布「取消」选中
-ui.press.primary.SubmitButton	-	画布「完成作品」（提交）
-ui.press.default.ApplySizeButton		画布「应用尺寸」
-ui.press.default.ZoomInButton		画布放大 +
-ui.press.default.ZoomOutButton		画布缩小 −
-ui.press.default.FitViewButton		画布「适应窗口」
-ui.press.primary.ApplyButton		文字编辑弹窗「确定」
-ui.press.primary.WeaponButton		素材目录「选择贴纸」
-ui.press.default.CityButton		素材目录「科幻都市」参考图
-ui.press.default.MarketButton		素材目录「烟火夜市」参考图
-ui.press.primary.BackButton		素材目录「返回画布」/ 图片查看「返回画廊」
-ui.press.primary.AddDuButton		贴纸「杜甫重剑」使用
-ui.press.primary.AddPinkButton		贴纸「粉刃短刀」使用
-ui.press.primary.AddSilverButton		贴纸「银纹长剑」使用
-ui.press.primary.AddBlueButton		贴纸「冰蓝长刃」使用
-ui.press.primary.AddVioletButton		贴纸「紫晶巨剑」使用
-ui.press.default.ContinueButton		提交结果 / 保存成功弹窗「继续编辑」
-ui.press.primary.SaveButton	-	提交结果「保存作品 / 保存新版本」
-ui.press.default.SaveAsButton		提交结果「保存副本」
-ui.press.default.DownloadButton		提交结果 / 作品查看「下载图片」
-ui.press.primary.GalleryButton		保存成功「查看画廊」
-ui.press.default.NextButton		保存成功「下一关」/ 画廊「下一页」
-ui.press.default.PreviousButton		画廊「上一页」
-ui.press.primary.EditButton		作品查看「打开编辑」
-ui.press.quiet.EditButton		画廊作品卡片「继续画」
-ui.press.quiet.ViewButton		画廊作品 / 示例卡片「查看」
-ui.press.primary.CreateButton		画廊空状态「去画画」
-ui.press.selectable.MyWorksTab		画廊标签「我的作品」
-ui.press.selectable.ExamplesTab		画廊标签「示例」
-ui.press.default.ResetButton		设置「恢复默认设置」
-ui.press.compact_retry.StorageRetry		存储失败「重试保存」
+ui.press	Play_SFX_UI_Click	任意按钮按下的兜底音
+ui.press.primary	Play_SFX_UI_Click	主操作按钮（深色实心）：开始游戏、完成作品、确认、保存作品、使用贴纸、确定…
+ui.press.quiet	Play_SFX_UI_Click	次要按钮（浅色描边）：返回首页、×关闭、撤销、重做、编辑、删除、画廊卡片按钮…
+ui.press.selectable	Play_SFX_UI_Click	可选中按钮：画布工具、画廊标签页、画廊筛选
+ui.press.compact_retry	Play_SFX_UI_Click	存储失败时出现的「重试保存」小按钮
+ui.press.default	Play_SFX_UI_Click	没有主题变体的按钮：自由创作、选关、文字、贴纸、取消、缩放、调色板色块和 RGB/HSV 切换等
+ui.press.primary.LevelsButton	Play_SFX_UI_Click	首页「开始游戏」
+ui.press.default.FreeDrawButton	Play_SFX_UI_Click	首页「自由创作」
+ui.press.quiet.GalleryButton	Play_SFX_UI_Click	首页「画廊」
+ui.press.quiet.SettingsButton	Play_SFX_UI_Click	首页「设置」
+ui.press.quiet.ExitButton	Play_SFX_UI_Click	首页「退出」（只弹出提示，不会真的退出）
+ui.press.quiet.BackButton	Play_SFX_UI_Click	各页面左上角「返回首页」
+ui.press.primary.EnterButton	Play_SFX_UI_Click	选关页每张关卡卡片的「开始画 / 重画」
+ui.press.quiet.CloseButton	Play_SFX_UI_Click	所有弹窗右上角的 ×。弹窗的关闭声建议配在 dialog.exit，按 Esc 关闭时也会响
+ui.press.primary.OkayButton	Play_SFX_UI_Click	提示弹窗的「关闭」
+ui.press.default.CancelButton	Play_SFX_UI_Click	确认类弹窗的「取消」（清空草稿 / 恢复默认 / 替换作品）
+ui.press.primary.ConfirmButton	Play_SFX_UI_Click	确认类弹窗的确认（清空草稿 / 恢复默认 / 替换并编辑）
+ui.press.default.ChangeTopicButton	Play_SFX_UI_Click	画布「选关」
+ui.press.selectable.ToolBrush	Play_SFX_UI_Click	画布工具「笔刷」；换工具的声音也可以放在 tool.enter.brush
+ui.press.selectable.ToolEraser	Play_SFX_UI_Click	画布工具「橡皮」
+ui.press.selectable.ToolMove	Play_SFX_UI_Click	画布工具「移动」
+ui.press.default.AddTextButton	Play_SFX_UI_Click	画布「文字」，打开文字编辑弹窗
+ui.press.default.StickerButton	Play_SFX_UI_Click	画布「贴纸」，打开贴纸选择弹窗
+ui.press.quiet.ReferenceButton	Play_SFX_UI_Click	画布「素材」，打开素材目录
+ui.press.quiet.RestartButton	Play_SFX_UI_Click	画布「清空草稿」，会先弹出确认
+ui.press.quiet.UndoButton	Play_SFX_UI_Click	画布「撤销」；真正撤销成功的声音在 canvas.undo
+ui.press.quiet.RedoButton	Play_SFX_UI_Click	画布「重做」；真正重做成功的声音在 canvas.redo
+ui.press.quiet.EditObjectButton	Play_SFX_UI_Click	画布「编辑」（选中文字时）
+ui.press.quiet.DeleteObjectButton	Play_SFX_UI_Click	画布「删除」；删除成功的声音在 canvas.object.remove
+ui.press.quiet.DeselectButton	Play_SFX_UI_Click	画布「取消」选中
+ui.press.primary.SubmitButton	Play_SFX_UI_Click	画布「完成作品」（提交）
+ui.press.default.ApplySizeButton	Play_SFX_UI_Click	画布「应用尺寸」
+ui.press.default.ZoomInButton	Play_SFX_UI_Click	画布放大 +
+ui.press.default.ZoomOutButton	Play_SFX_UI_Click	画布缩小 −
+ui.press.default.FitViewButton	Play_SFX_UI_Click	画布「适应窗口」
+ui.press.primary.ApplyButton	Play_SFX_UI_Click	文字编辑弹窗「确定」
+ui.press.primary.WeaponButton	Play_SFX_UI_Click	素材目录「选择贴纸」
+ui.press.default.CityButton	Play_SFX_UI_Click	素材目录「科幻都市」参考图
+ui.press.default.MarketButton	Play_SFX_UI_Click	素材目录「烟火夜市」参考图
+ui.press.primary.BackButton	Play_SFX_UI_Click	素材目录「返回画布」/ 图片查看「返回画廊」
+ui.press.primary.AddDuButton	Play_SFX_UI_Click	贴纸「杜甫重剑」使用
+ui.press.primary.AddPinkButton	Play_SFX_UI_Click	贴纸「粉刃短刀」使用
+ui.press.primary.AddSilverButton	Play_SFX_UI_Click	贴纸「银纹长剑」使用
+ui.press.primary.AddBlueButton	Play_SFX_UI_Click	贴纸「冰蓝长刃」使用
+ui.press.primary.AddVioletButton	Play_SFX_UI_Click	贴纸「紫晶巨剑」使用
+ui.press.default.ContinueButton	Play_SFX_UI_Click	提交结果 / 保存成功弹窗「继续编辑」
+ui.press.primary.SaveButton	Play_SFX_UI_Click	提交结果「保存作品 / 保存新版本」
+ui.press.default.SaveAsButton	Play_SFX_UI_Click	提交结果「保存副本」
+ui.press.default.DownloadButton	Play_SFX_UI_Click	提交结果 / 作品查看「下载图片」
+ui.press.primary.GalleryButton	Play_SFX_UI_Click	保存成功「查看画廊」
+ui.press.default.NextButton	Play_SFX_UI_Click	保存成功「下一关」/ 画廊「下一页」
+ui.press.default.PreviousButton	Play_SFX_UI_Click	画廊「上一页」
+ui.press.primary.EditButton	Play_SFX_UI_Click	作品查看「打开编辑」
+ui.press.quiet.EditButton	Play_SFX_UI_Click	画廊作品卡片「继续画」
+ui.press.quiet.ViewButton	Play_SFX_UI_Click	画廊作品 / 示例卡片「查看」
+ui.press.primary.CreateButton	Play_SFX_UI_Click	画廊空状态「去画画」
+ui.press.selectable.MyWorksTab	Play_SFX_UI_Click	画廊标签「我的作品」
+ui.press.selectable.ExamplesTab	Play_SFX_UI_Click	画廊标签「示例」
+ui.press.default.ResetButton	Play_SFX_UI_Click	设置「恢复默认设置」
+ui.press.compact_retry.StorageRetry	Play_SFX_UI_Click	存储失败「重试保存」
 # ===== UI · 悬停 / 开关 / 拖动 / 输入 =====
 ui.hover	-	鼠标移入按钮（仅真实移动鼠标时触发，触屏不会触发）；默认关闭，想要就填事件名
 ui.hover.primary		鼠标移入主操作按钮
@@ -83,7 +83,7 @@ ui.toggle_on.default.MusicToggle	-	由 AudioDirector 直接控制音乐发声体
 ui.toggle_off.default.MusicToggle	-	由 AudioDirector 直接控制音乐发声体音量，避免重复启动音乐
 ui.drag	-	拖动滑条 / 调 SpinBox 数值（仅玩家操作时；代码改值不响）。每一格都会触发，Wwise 里请设播放上限
 ui.drag.default.WidthSlider		画布笔刷粗细滑条（4–56，每格 4）
-ui.drag.default.VolumeSlider		设置音量滑条
+ui.drag.default.VolumeSlider	Play_SFX_UI_Slider	设置音量滑条
 ui.drag.default.CanvasWidth		画布宽度数值框
 ui.drag.default.CanvasHeight		画布高度数值框
 ui.drag.default.FontSizeInput		文字编辑弹窗字号
@@ -142,7 +142,7 @@ message.success	-	成功：桌面版图片导出成功
 # begin 和 end 一定成对出现（切页面、失焦也会补发 end），循环声的开和停放这里
 canvas.drag.begin		在画布上按下开始拖拽的兜底
 canvas.drag.begin.paint	Play_SFX_Brush_Loop	笔刷开始画（落笔）。循环声配合 rtpc.canvas.drag_speed
-canvas.drag.begin.erase	-	橡皮开始擦
+canvas.drag.begin.erase	Play_SFX_Eraser_Loop	橡皮开始擦
 canvas.drag.begin.move	-	移动模式下抓起图层的兜底
 canvas.drag.begin.move.avatar		抓起杜甫头像
 canvas.drag.begin.move.text		抓起文字
@@ -155,18 +155,18 @@ canvas.drag.begin.scale	-	拖动图层四周的方形手柄缩放（后面还可
 canvas.drag.begin.rotate	-	拖动图层上方的圆形手柄旋转（后面还可以接 .<图层种类>）
 canvas.drag.end		松开的兜底
 canvas.drag.end.paint	Stop_SFX_Brush_Loop	笔刷抬笔，或笔画出了纸边被截断
-canvas.drag.end.erase	-	橡皮抬起
+canvas.drag.end.erase	Stop_SFX_Eraser_Loop	橡皮抬起
 canvas.drag.end.move	-	放下图层（后面还可以接 .<图层种类>）
 canvas.drag.end.scale	-	结束缩放
 canvas.drag.end.rotate	-	结束旋转
 # ===== 画布 · 图层与编辑 =====
 canvas.object.add	-	添加图层的兜底
 canvas.object.add.text		添加文字（文字编辑弹窗点「确定」）
-canvas.object.add.weapon_du		添加贴纸「杜甫重剑」
-canvas.object.add.weapon_pink		添加贴纸「粉刃短刀」
-canvas.object.add.weapon_silver		添加贴纸「银纹长剑」
-canvas.object.add.weapon_blue		添加贴纸「冰蓝长刃」
-canvas.object.add.weapon_violet		添加贴纸「紫晶巨剑」
+canvas.object.add.weapon_du	Play_SFX_Sticker	添加贴纸「杜甫重剑」
+canvas.object.add.weapon_pink	Play_SFX_Sticker	添加贴纸「粉刃短刀」
+canvas.object.add.weapon_silver	Play_SFX_Sticker	添加贴纸「银纹长剑」
+canvas.object.add.weapon_blue	Play_SFX_Sticker	添加贴纸「冰蓝长刃」
+canvas.object.add.weapon_violet	Play_SFX_Sticker	添加贴纸「紫晶巨剑」
 canvas.object.edit.text	-	修改已有文字
 canvas.object.remove	-	删除选中图层的兜底（杜甫头像不能删）
 canvas.object.remove.text		删除文字
@@ -214,3 +214,4 @@ rtpc.setting.quality	-	设置「画质」，与声音无关
 rtpc.setting.motion	-	「减少动画」（暂无界面），与声音无关
 rtpc.canvas.drag_speed	Brush_Speed	笔刷速度 0–100（3000 画布像素/秒对应 100）；逐帧平滑，停留时回落，抬笔立即归零。控制笔刷循环声的音量和低通。
 rtpc.canvas.zoom		画布缩放倍数 0.1–4.0（1 = 100%）。待建 Game Parameter（建议 Canvas_Zoom）后填在这里
+rtpc.canvas.erase_speed	Eraser_Speed	橡皮擦移动速度 0–100；停留回落，抬起立即归零。
